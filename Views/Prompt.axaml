@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:controls="using:InklingAi.Views"
+			 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="600"
+             x:Class="InklingAi.Views.Prompt">
+
+	<Grid RowDefinitions=
+			"Auto,*,Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+			Margin="4">
+		<Grid Grid.Row="0" Height="25" Classes="title">
+			<Label>Image Description</Label>
+		</Grid>
+		<Grid Grid.Row="1" >
+			<TextBox>Positive Prompt</TextBox>
+		</Grid>
+		<Grid Grid.Row="2" Height="25" Classes="title">
+			<Label>Unwanted Attributes</Label>
+		</Grid>
+		<Grid Grid.Row="3">
+			<TextBox>Negative Prompt</TextBox>
+		</Grid>
+		<Grid Grid.Row="4" Height="40">
+			<Grid ColumnDefinitions="Auto, Auto, Auto, *">
+				<Image Grid.Column="0" Margin="8,2,8,2" Source="{SvgImage /Assets/portrait.svg}"/>
+				<Image Grid.Column="1" Margin="8" Source="{SvgImage /Assets/square.svg}"/>
+				<Image Grid.Column="2" Margin="8" Source="{SvgImage /Assets/landscape.svg}"/>
+				<Rectangle Grid.Column="3"/>
+			</Grid>
+		</Grid>
+
+		<Grid Grid.Row="5"  Classes="title" Height="25">
+			<Label>Sampling Steps</Label>
+		</Grid>
+		<Grid Grid.Row="6" Height="40">
+			<Grid ColumnDefinitions="*">
+				<controls:NumericSlider Grid.Column="1"/>
+			</Grid>
+		</Grid>
+
+		<Grid Grid.Row="7"  Classes="title" Height="25">
+			<Label>Prompt Weight</Label>
+		</Grid>
+		<Grid Grid.Row="8"  Height="40">
+			<Grid ColumnDefinitions="*">
+				<controls:NumericSlider Grid.Column="1"/>
+			</Grid>
+		</Grid>
+
+		<Grid Grid.Row="9" Classes="title" Height="25">
+			<Label>Image Preservation</Label>
+		</Grid>
+		<Grid Grid.Row="10"  Height="40">
+			<Grid ColumnDefinitions="*">
+				<controls:NumericSlider Grid.Column="1"/>
+			</Grid>
+		</Grid>
+		<Grid Grid.Row="11"  Margin="4" Height="60">
+			<Grid ColumnDefinitions="Auto,*">
+				<Image Grid.Column="0" Margin="6" Source="/Assets/unlock_64.png" />
+
+				<Grid Grid.Column="1" RowDefinitions="*,*" Margin="2">
+					<Grid Grid.Row="0" ColumnDefinitions="*,*">
+						<Label Grid.Column="0"> Seed </Label>
+						<Label Grid.Column="1"> Diffusion </Label>
+					</Grid>
+					
+					<Grid Grid.Row="1" ColumnDefinitions="*,*">
+						<TextBox Grid.Column="0" 
+								 VerticalAlignment="Bottom" HorizontalAlignment="Left"
+								 Height="30" Width="80">123456</TextBox>
+						<ComboBox Grid.Column="1" SelectedIndex="0" 
+								  VerticalAlignment="Top" HorizontalAlignment="Left"
+								  Height="30" Width="80">
+							<ComboBoxItem>
+								<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+									Textured
+								</TextBlock>
+							</ComboBoxItem>
+							<ComboBoxItem>
+								<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+									Smooth
+								</TextBlock>
+							</ComboBoxItem>
+						</ComboBox>
+					</Grid>
+				</Grid>
+				
+			</Grid>
+		</Grid>
+		
+		
+		<Grid Grid.Row="12" Height="70">
+			<Grid ColumnDefinitions="*">
+				<Image Grid.Column="0" Margin="8" Source="/Assets/generate.png"/>
+			</Grid>
+		</Grid>
+
+	</Grid>
+	
+</UserControl>

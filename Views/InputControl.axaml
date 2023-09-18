@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:InklingAi.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="240" d:DesignHeight="200"
+             x:Class="InklingAi.Views.InputControl">
+
+	<Design.DataContext>
+		<vm:DesignTimeInputItem/>
+	</Design.DataContext>
+	
+	<UserControl.Resources>
+		<vm:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
+	</UserControl.Resources>
+
+	<Expander Header="{Binding InputTitle}">
+		<Grid ColumnDefinitions="Auto,*">
+			<Grid RowDefinitions="*,*,*" Grid.Column="0" Margin="4,0,0,0">
+				<Button Grid.Row="0" Margin="0,4" Width="60" Height="40">Active</Button>
+				<Button Grid.Row="1" Margin="0,4" Width="60" Height="40">Show</Button>
+				<Button Grid.Row="2" Margin="0,4" Width="60" Height="40">Edit</Button>
+
+			</Grid>
+			<Image Grid.Column="1" Margin="2" Height="140"
+					Source="{Binding ProcessedPath, Converter={StaticResource PathToBitmapConverter}}"
+					Stretch="Uniform"/>
+		</Grid>
+		
+		
+	</Expander>
+</UserControl>					

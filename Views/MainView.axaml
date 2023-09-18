@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
+             xmlns:vm="clr-namespace:InklingAi.ViewModels"
+			 xmlns:controls="using:InklingAi.Views"
+             xmlns:svg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Svg.Skia"
+             x:Class="InklingAi.Views.MainView"
+             x:DataType="vm:MainViewModel">
+	
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, 
+		 set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+	<Grid RowDefinitions="Auto,*,Auto">
+		<Grid Grid.Row="0" Height="40" ColumnDefinitions="Auto, Auto, *, Auto, Auto">
+			<Rectangle Grid.Column="0" Width="40" Fill="Brown"></Rectangle>
+			<Rectangle Grid.Column="1" Width="40" Fill="Red" ></Rectangle>
+			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<Label Content="{Binding Title}"></Label>
+			</StackPanel>
+			<Image Grid.Column="3" Source="{SvgImage /Assets/down.svg}"/>
+			<Svg Grid.Column="4" Path="/Assets/down.svg"/>
+		</Grid>
+		
+		
+		<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" MinWidth="250" MaxWidth="500" />
+					<ColumnDefinition Width="260"/>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="200"/>
+				</Grid.ColumnDefinitions>
+				<Grid Grid.Column="0">
+					<controls:Prompt  x:Name="myPromptControl"
+						Width="{Binding ActualWidth, RelativeSource=
+						{RelativeSource Mode=FindAncestor, AncestorType=Grid}}"/>
+				</Grid>
+				<Grid Grid.Column="1">
+					<controls:InputControls/>
+				</Grid>
+			<Grid Grid.Column="2">
+				<Image Margin="6" Width="512" Height="512" Source="/Assets/main.png"/>
+			</Grid>
+			<Grid Grid.Column="3">
+				<controls:GalleryControl/>
+			</Grid>
+
+		</Grid>
+		
+		
+		<Grid Grid.Row="2" Height="40">
+			<Label FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">Test</Label>
+		</Grid>
+	</Grid>
+</UserControl>

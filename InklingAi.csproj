@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Remove="Assets\btGenerate.svg" />
+    <None Remove="Assets\down.svg" />
+    <None Remove="Assets\generate.png" />
+    <None Remove="Assets\input.png" />
+    <None Remove="Assets\landscape.svg" />
+    <None Remove="Assets\landscape_d.svg" />
+    <None Remove="Assets\lock_64.png" />
+    <None Remove="Assets\main.png" />
+    <None Remove="Assets\portrait.svg" />
+    <None Remove="Assets\portrait_d.svg" />
+    <None Remove="Assets\square.svg" />
+    <None Remove="Assets\square_d.svg" />
+    <None Remove="Assets\unlock_64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Controls.Skia" Version="11.0.0.1" />
+    <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0.1" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\GalleryControl.axaml.cs">
+      <DependentUpon>GalleryControl.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\InputControl.axaml.cs">
+      <DependentUpon>InputControl.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\InputControls.axaml.cs">
+      <DependentUpon>InputControls.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

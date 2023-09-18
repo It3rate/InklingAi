@@ -1,0 +1,29 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	
+    <Design.PreviewWith>
+		<Border Padding="1">
+			<Panel Height="220" Width="200">
+				<Expander Header="Test Title" VerticalAlignment="Top">
+					<Image Source="/Assets/main.png" Width="140" Height="140"/>
+				</Expander>
+			</Panel>
+		</Border>
+    </Design.PreviewWith>
+
+	<Style Selector="Expander">
+		<Setter Property="Template">
+			<ControlTemplate TargetType="Expander">
+				<StackPanel>
+					<CheckBox IsChecked="{TemplateBinding IsExpanded}" 
+							  Content="{TemplateBinding Header}">
+					</CheckBox>
+					<ContentPresenter x:Name="PART_ContentPresenter" IsVisible="{Binding IsExpanded, 
+                        RelativeSource={RelativeSource TemplatedParent}}" 
+									  Content="{TemplateBinding Content}"/>
+				</StackPanel>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+	
+</Styles>

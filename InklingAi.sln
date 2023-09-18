@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InklingAi", "InklingAi.csproj", "{406D6070-E1B5-44BC-95F5-23E3EFCC5B9A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InklingAi.Desktop", "..\InklingAi.Desktop\InklingAi.Desktop.csproj", "{C0EEA5D0-FA49-4803-8949-C10CE46C5A31}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{406D6070-E1B5-44BC-95F5-23E3EFCC5B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{406D6070-E1B5-44BC-95F5-23E3EFCC5B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{406D6070-E1B5-44BC-95F5-23E3EFCC5B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{406D6070-E1B5-44BC-95F5-23E3EFCC5B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0EEA5D0-FA49-4803-8949-C10CE46C5A31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0EEA5D0-FA49-4803-8949-C10CE46C5A31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0EEA5D0-FA49-4803-8949-C10CE46C5A31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0EEA5D0-FA49-4803-8949-C10CE46C5A31}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7EACBDE4-FA2F-4247-8C03-A49969CE1869}
+	EndGlobalSection
+EndGlobal
