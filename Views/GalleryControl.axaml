@@ -28,7 +28,8 @@
 			
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<Image Source="{Binding, Converter={StaticResource PathToBitmapConverter}}"
+					<Image Source="{Binding, 
+						   Converter={StaticResource PathToBitmapConverter}}"
 						    Stretch="Uniform" 
 						   Width="{Binding $parent[ListBox].Bounds.Width}"/>
 				</DataTemplate>

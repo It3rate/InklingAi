@@ -1,7 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	
-    <Design.PreviewWith>
+
+	<Design.PreviewWith>
 		<Border Padding="1">
 			<Panel Height="220" Width="200">
 				<Expander Header="Test Title" VerticalAlignment="Top">
@@ -9,21 +9,31 @@
 				</Expander>
 			</Panel>
 		</Border>
-    </Design.PreviewWith>
+	</Design.PreviewWith>
 
-	<Style Selector="Expander">
+	<Style Selector="Expander[ExpandDirection=Down]">
 		<Setter Property="Template">
 			<ControlTemplate TargetType="Expander">
-				<StackPanel>
-					<CheckBox IsChecked="{TemplateBinding IsExpanded}" 
-							  Content="{TemplateBinding Header}">
-					</CheckBox>
-					<ContentPresenter x:Name="PART_ContentPresenter" IsVisible="{Binding IsExpanded, 
-                        RelativeSource={RelativeSource TemplatedParent}}" 
-									  Content="{TemplateBinding Content}"/>
-				</StackPanel>
+				<Grid RowDefinitions="Auto,*">
+					<!-- Header -->
+					<Grid Grid.Row="0" ColumnDefinitions="*,Auto"
+						  VerticalAlignment="Top" Height="25">
+						<Label Grid.Column="0" Content="{TemplateBinding Header}"/>
+						<CheckBox Grid.Column="1" Margin="4,0"
+								  IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"/>
+					</Grid>
+					<!-- Content -->
+					<ContentPresenter Grid.Row="1" x:Name="PART_ContentPresenter"
+                                  IsVisible="{Binding IsExpanded, 
+                                        RelativeSource={RelativeSource TemplatedParent}}"
+										Content="{TemplateBinding Content}"
+										ContentTemplate="{TemplateBinding ContentTemplate}"
+										HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+										VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+										Padding="{TemplateBinding Padding}"/>
+				</Grid>
 			</ControlTemplate>
 		</Setter>
 	</Style>
-	
+
 </Styles>

@@ -10,13 +10,20 @@
 	<Design.DataContext>
 		<vm:MainViewModel />
 	</Design.DataContext>
-	
-	<ListBox ItemsSource="{Binding InputItems}">
-		<ListBox.ItemTemplate>
-			<DataTemplate>
-				<controls:InputControl ItemData="{Binding}"/>
-			</DataTemplate>
-		</ListBox.ItemTemplate>
-	</ListBox>
-	
+
+	<Grid RowDefinitions="Auto,*" Margin="4">
+		<Grid Grid.Row="0" Classes="title">
+			<Label>Influencing Images</Label>
+		</Grid>
+		<Grid Grid.Row="1">
+			<ListBox ItemsSource="{Binding InputItems}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<controls:InputControl ItemData="{Binding}"/>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</Grid>
+	</Grid>
+
 </UserControl>

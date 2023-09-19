@@ -5,7 +5,7 @@ using Avalonia.Media.Imaging;
 
 namespace InklingAi.ViewModels
 {
-    internal class PathToBitmapConverter : IValueConverter
+    public class PathToBitmapConverter : IValueConverter
     {
         public static PathToBitmapConverter Instance = new();
 
