@@ -3,11 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:controls="using:InklingAi.Views"
+			 xmlns:vm="clr-namespace:InklingAi.ViewModels"
 			 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="600"
              x:Class="InklingAi.Views.Prompt">
 
+	<Design.DataContext>
+		<vm:MainViewModel />
+	</Design.DataContext>
+
 	<Grid RowDefinitions=
-			"Auto,*,Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+			"Auto,*,Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
 			Margin="4">
 		<Grid Grid.Row="0" Classes="title">
 			<Label>Image Description</Label>
@@ -21,58 +26,55 @@
 		<Grid Grid.Row="3">
 			<TextBox>Negative Prompt</TextBox>
 		</Grid>
-		<Grid Grid.Row="4" Height="40">
-			<Grid ColumnDefinitions="Auto, Auto, Auto, *">
-				<Image Grid.Column="0" Margin="8,2,8,2" Source="{SvgImage /Assets/portrait.svg}"/>
-				<Image Grid.Column="1" Margin="8" Source="{SvgImage /Assets/square.svg}"/>
-				<Image Grid.Column="2" Margin="8" Source="{SvgImage /Assets/landscape.svg}"/>
-				<Rectangle Grid.Column="3"/>
-			</Grid>
+		<Grid Grid.Row="4" Classes="title">
+			<Label>Aspect Ratio</Label>
+		</Grid>
+		<Grid Grid.Row="5" Height="50" Margin="4,0,0,0">
+				<controls:AspectButtons Grid.Column="0"/>
 		</Grid>
 
-		<Grid Grid.Row="5" Classes="title">
+		<Grid Grid.Row="6" Classes="title">
 			<Label>Sampling Steps</Label>
 		</Grid>
-		<Grid Grid.Row="6" Height="40">
+		<Grid Grid.Row="7" Height="40">
 			<Grid ColumnDefinitions="*">
 				<controls:NumericSlider Grid.Column="1"/>
 			</Grid>
 		</Grid>
 
-		<Grid Grid.Row="7"  Classes="title">
+		<Grid Grid.Row="8"  Classes="title">
 			<Label>Prompt Weight</Label>
 		</Grid>
-		<Grid Grid.Row="8"  Height="40">
+		<Grid Grid.Row="9"  Height="40">
 			<Grid ColumnDefinitions="*">
 				<controls:NumericSlider Grid.Column="1"/>
 			</Grid>
 		</Grid>
 
-		<Grid Grid.Row="9" Classes="title">
+		<Grid Grid.Row="10" Classes="title">
 			<Label>Image Preservation</Label>
 		</Grid>
-		<Grid Grid.Row="10"  Height="40">
+		<Grid Grid.Row="11"  Height="40">
 			<Grid ColumnDefinitions="*">
 				<controls:NumericSlider Grid.Column="1"/>
 			</Grid>
 		</Grid>
-		<Grid Grid.Row="11"  Margin="4" Height="60">
+		<Grid Grid.Row="12"  Margin="4" Height="64">
 			<Grid ColumnDefinitions="Auto,*">
 				<Image Grid.Column="0" Margin="6" Source="/Assets/unlock_64.png" />
 
-				<Grid Grid.Column="1" RowDefinitions="*,*" Margin="2">
+				<Grid Grid.Column="1" RowDefinitions="Auto,Auto" Margin="2">
 					<Grid Grid.Row="0" ColumnDefinitions="*,*">
-						<Label Grid.Column="0"> Seed </Label>
-						<Label Grid.Column="1"> Diffusion </Label>
+						<Label Grid.Column="0" Margin="0,4,0,0"> Seed </Label>
+						<Label Grid.Column="1" Margin="0,4,0,0"> Diffusion </Label>
 					</Grid>
-					
 					<Grid Grid.Row="1" ColumnDefinitions="*,*">
 						<TextBox Grid.Column="0" 
-								 VerticalAlignment="Bottom" HorizontalAlignment="Left"
-								 Height="30" Width="80">123456</TextBox>
+								 VerticalAlignment="Top" HorizontalAlignment="Left"
+								 Height="30" Width="90">123456</TextBox>
 						<ComboBox Grid.Column="1" SelectedIndex="0" 
 								  VerticalAlignment="Top" HorizontalAlignment="Left"
-								  Height="30" Width="80">
+								  Height="30" Width="90">
 							<ComboBoxItem>
 								<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
 									Textured
@@ -91,8 +93,8 @@
 		</Grid>
 		
 		
-		<Grid Grid.Row="12" Height="70">
-			<Grid ColumnDefinitions="*">
+		<Grid Grid.Row="13" Height="70">
+			<Grid ColumnDefinitions="*" VerticalAlignment="Bottom">
 				<Image Grid.Column="0" Margin="8" Source="/Assets/generate.png"/>
 			</Grid>
 		</Grid>

@@ -32,7 +32,7 @@ public partial class MainViewModel : ViewModelBase
     {
         LoadInputControls();
         LoadNextPage();
-    }
+}
 
     private int currentPage = 0;
     private const int itemsPerPage = 10;

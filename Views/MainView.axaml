@@ -11,11 +11,9 @@
              x:CompileBindings="True">
 	
   <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, 
-		 set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
+	
 	<Grid RowDefinitions="Auto,*,Auto">
 		<Grid Grid.Row="0" Height="40" ColumnDefinitions="Auto, Auto, *, Auto, Auto">
 			<Rectangle Grid.Column="0" Width="40" Fill="Brown"></Rectangle>
@@ -36,9 +34,7 @@
 					<ColumnDefinition Width="200"/>
 				</Grid.ColumnDefinitions>
 				<Grid Grid.Column="0">
-					<controls:Prompt  x:Name="myPromptControl"
-						Width="{Binding Width, RelativeSource=
-						{RelativeSource Mode=FindAncestor, AncestorType=Grid}}"/>
+					<controls:Prompt  x:Name="myPromptControl"/>
 				</Grid>
 				<Grid Grid.Column="1">
 					<controls:InputControls/>

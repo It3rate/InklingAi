@@ -3,6 +3,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <!--AvaloniaXamlIlDebuggerLaunch>true</AvaloniaXamlIlDebuggerLaunch -->
   </PropertyGroup>
 
   
@@ -31,6 +32,7 @@
     <PackageReference Include="Avalonia" Version="11.0.4" />
     <PackageReference Include="Avalonia.Controls.Skia" Version="11.0.0.1" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
     <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0.1" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.4" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
@@ -49,5 +51,9 @@
     <Compile Update="Views\InputControls.axaml.cs">
       <DependentUpon>InputControls.axaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controls\" />
   </ItemGroup>
 </Project>

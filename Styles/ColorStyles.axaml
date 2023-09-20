@@ -1,31 +1,40 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.PreviewWith>
-        <Border Padding="20">
-			<Panel Height="180">
-				<StackPanel>
-					<Grid Height="25" Classes="title">
-						<Label>Unwanted Attributes</Label>
-					</Grid>
-					<TextBox>Negative Prompt</TextBox>
-					<TextBox>Negative Prompt</TextBox>
-				</StackPanel>
-			</Panel>
-        </Border>
-    </Design.PreviewWith>
+﻿
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:controls="clr-namespace:InklingAi.Views"
+		xmlns:vm="clr-namespace:InklingAi.ViewModels">
 
+	<Design.PreviewWith>
+		<StackPanel>
+			<Button>test</Button>
+			<Button Classes="image">test2</Button>
+		</StackPanel>
+	</Design.PreviewWith>
+	
 	<Style Selector="Label">
 		<Setter Property="FontWeight" Value="Bold"/>
 		<Setter Property="FontSize" Value="12"/>
 		<Setter Property="Height" Value="26"/>
-		<Setter Property="Margin" Value="4,8,0,-2"/>
+		<Setter Property="Margin" Value="4,8,0,-4"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
 	</Style>
 	<Style Selector="TextBox">
 		<Setter Property="FontWeight" Value="Normal"/>
 		<Setter Property="FontSize" Value="14"/>
 	</Style>
-
+	
+	<Style Selector="Button.image">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+	</Style>
+	<Style Selector="Button.image:pointerover">
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderBrush" Value="#800000FF"/>
+	</Style>
+	
+	
+	
 	<!--Style Selector="Panel">
 		<Setter Property="Background" Value="#FFF8F0F0"/>
 	</Style>

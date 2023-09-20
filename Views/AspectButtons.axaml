@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="50"
+             x:Class="InklingAi.Views.AspectButtons">
+
+	<Grid ColumnDefinitions="Auto, Auto, Auto, *">
+		<Button Grid.Column="0" Classes="image" 
+				Name="btPortrait" Click="OnClick">
+			<Svg Name="svgPortrait" Path="/Assets/portrait.svg" Stretch="Uniform"/>
+		</Button>
+		<Button Grid.Column="1" Classes="image" Margin="5,5"
+				Name="btSquare" Click="OnClick">
+			<Svg Name="svgSquare" Path="/Assets/square.svg" Stretch="Uniform"/>
+		</Button>
+		<Button Grid.Column="2" Classes="image" Margin="0,5"
+				Name="btLandscape" Click="OnClick">
+			<Svg Name="svgLandscape" Path="/Assets/landscape.svg" Stretch="Uniform"/>
+		</Button>
+	</Grid>
+	
+</UserControl>
