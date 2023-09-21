@@ -15,14 +15,10 @@
   </Design.DataContext>
 	
 	<Grid RowDefinitions="Auto,*,Auto">
-		<Grid Grid.Row="0" Height="40" ColumnDefinitions="Auto, Auto, *, Auto, Auto">
-			<Rectangle Grid.Column="0" Width="40" Fill="Brown"></Rectangle>
-			<Rectangle Grid.Column="1" Width="40" Fill="Red" ></Rectangle>
-			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-				<Label Content="{Binding Title}"></Label>
-			</StackPanel>
-			<Image Grid.Column="3" Source="{SvgImage /Assets/down.svg}"/>
-			<Svg Grid.Column="4" Path="/Assets/down.svg"/>
+		<Grid Grid.Row="0" Height="25">
+			<DockPanel>
+				<controls:AppMenu />
+			</DockPanel>
 		</Grid>
 		
 		
@@ -49,8 +45,8 @@
 		</Grid>
 		
 		
-		<Grid Grid.Row="2" Height="40">
-			<Label FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">Test</Label>
+		<Grid Grid.Row="2" Height="20">
+			<Label FontSize="12" FontWeight="Light" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,10,0">Status: Ready</Label>
 		</Grid>
 	</Grid>
 </UserControl>
