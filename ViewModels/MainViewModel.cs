@@ -20,7 +20,7 @@ public partial class MainViewModel : ViewModelBase
     //    set => SetProperty(ref _imagePaths, value);
     //}
 
-    private string _mainImagePath;
+    private string _mainImagePath = "";
     public string MainImagePath
     {
         get => _mainImagePath;

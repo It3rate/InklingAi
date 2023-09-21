@@ -32,7 +32,7 @@ namespace InklingAi.Views
 
         private void UpdateHalfWidth()
         {
-            HalfWidth = (int)System.Math.Floor(lbGallery.Bounds.Width / 3f) - 6;
+            HalfWidth = (int)(Math.Floor(lbGallery.Bounds.Width / 3f)-(8/3f));
         }
         private Avalonia.Point? _startPoint;
 

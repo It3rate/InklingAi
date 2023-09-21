@@ -17,22 +17,6 @@
 	</UserControl.Resources>
 
 	<UserControl.Styles>
-		<Style Selector="Image">
-			<Setter Property="IsHitTestVisible" Value="True"/>
-			<Setter Property="Focusable" Value="True"/>
-			<Setter Property="Margin" Value="0"/>
-		</Style>
-		<Style Selector="Border.image">
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="BorderBrush" Value="Transparent"/>
-		</Style>
-		<Style Selector="Border.image:pointerover">
-			<Setter Property="BorderBrush" Value="#D080B0FF"/>
-		</Style>
-		<Style Selector="Border.image:focus-within">
-			<Setter Property="BorderBrush" Value="#D0FF0000"/>
-		</Style>
-		
 		<Style Selector="ListBox">
 			<Setter Property="Background" Value="Transparent"/>
 		</Style>
@@ -57,17 +41,18 @@
 		</Style>
 	</UserControl.Styles>
 
-	
+
 	<Grid RowDefinitions="Auto, *">
 		<Border Classes="image">
-		<Image Grid.Row="0"
-			Source="{Binding MainImagePath,Converter={StaticResource PathToBitmapConverter}}"
-			Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-			Margin="0,0,0,4"/>
+			<Image Grid.Row="0"
+				Source="{Binding MainImagePath,Converter={StaticResource PathToBitmapConverter}}"
+				Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
+				Margin="0,0,0,4"/>
 		</Border>
-		
+
 		<ListBox Grid.Row="1"
 			Name="lbGallery"
+			Padding="0"
 			ItemsSource="{Binding ImagePairPaths}"
 			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 			ScrollViewer.VerticalScrollBarVisibility="Hidden">
@@ -76,38 +61,28 @@
 				<DataTemplate>
 
 					<StackPanel Orientation="Horizontal" Background="Transparent">
-						<Border Classes="image">
-						<Image Source="{Binding Path=[0], Converter={StaticResource PathToBitmapConverter}}"
-							   Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-							   PointerPressed="OnImagePointerPressed"
-							   PointerMoved="OnImagePointerMoved"
-							   PointerReleased="OnImagePointerReleased"
+						<controls:InkImage
+							Source="{Binding Path=[0]}" Margin="2,0,0,0"
+							Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
-						</Border>
-						<Border Classes="image">
-						<Image Source="{Binding Path=[1], Converter={StaticResource PathToBitmapConverter}}"
-							   Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-							   PointerPressed="OnImagePointerPressed"
-							   PointerMoved="OnImagePointerMoved"
-							   PointerReleased="OnImagePointerReleased"
-							   IsHitTestVisible="True"
+						<controls:InkImage
+							Source="{Binding Path=[1]}" Margin="2,2,2,0"
+							Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
-						</Border>
-						<Border Classes="image">
-						<Image Source="{Binding Path=[2], Converter={StaticResource PathToBitmapConverter}}"
-							   Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-							   PointerPressed="OnImagePointerPressed"
-							   PointerMoved="OnImagePointerMoved"
-							   PointerReleased="OnImagePointerReleased"
-							   IsHitTestVisible="True"
+						<controls:InkImage
+							Source="{Binding Path=[2]}"
+							Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
-						</Border>
 					</StackPanel>
 
 					<!--<StackPanel Orientation="Horizontal">
 					<ItemsControl ItemsSource="{Binding}">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
+							<controls:InkImage
+								Source="{Binding}"
+								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
+							   />
 								<Image Source="{Binding Converter={StaticResource PathToBitmapConverter}}"
 										Stretch="Uniform"
 										Width="{Binding HalfWidth, 

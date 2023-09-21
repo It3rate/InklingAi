@@ -39,8 +39,8 @@
 				<Grid Grid.Column="1">
 					<controls:InputControls/>
 				</Grid>
-			<Grid Grid.Column="2">
-				<Image Margin="6" Width="512" Height="512" Source="/Assets/main.png"/>
+			<Grid Grid.Column="2" Name="mainContainer">
+				<controls:InkImage Padding="90" />
 			</Grid>
 			<Grid Grid.Column="3">
 				<controls:GalleryControl/>
