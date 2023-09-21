@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="220" d:DesignHeight="800"
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
+             xmlns:controls="clr-namespace:InklingAi.Views"
              x:Class="InklingAi.Views.GalleryControl"
              x:DataType="vm:MainViewModel" >
 
@@ -15,23 +16,40 @@
 		<vm:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
 	</UserControl.Resources>
 	
-	<Grid>
-		<ListBox ItemsSource="{Binding ImagePaths}"
-         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-         ScrollViewer.VerticalScrollBarVisibility="Hidden" >
+	<Grid RowDefinitions="Auto, *">
+		<Image Grid.Row="0"
+			Source="{Binding MainImagePath,Converter={StaticResource PathToBitmapConverter}}"
+			Stretch="Uniform"
+			Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
+			Margin="4"/>
+
+		<ListBox Grid.Row="1"
+			Name="lbGallery" ItemsSource="{Binding ImagePairPaths}"
+			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+			ScrollViewer.VerticalScrollBarVisibility="Hidden">
 			<ListBox.Styles>
 				<Style Selector="ListBoxItem">
 					<Setter Property="Padding" Value="0"/>
-					<Setter Property="Margin" Value="2"/>
+					<Setter Property="Margin" Value="0"/>
 				</Style>
 			</ListBox.Styles>
 			
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<Image Source="{Binding, 
-						   Converter={StaticResource PathToBitmapConverter}}"
-						    Stretch="Uniform" 
-						   Width="{Binding $parent[ListBox].Bounds.Width}"/>
+					<StackPanel Orientation="Horizontal">
+						<Image Source="{Binding Path=[0], Converter={StaticResource PathToBitmapConverter}}"
+							   Stretch="Uniform"
+							   Width="{Binding HalfWidth, 
+							   RelativeSource={RelativeSource FindAncestor, 
+							   AncestorType=controls:GalleryControl}}"
+							   Margin="2"/>
+						<Image Source="{Binding Path=[1], Converter={StaticResource PathToBitmapConverter}}"		
+							   Stretch="Uniform"
+							   Width="{Binding HalfWidth, 
+							   RelativeSource={RelativeSource FindAncestor, 
+							   AncestorType=controls:GalleryControl}}"
+							   Margin="2"/>
+					</StackPanel>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 			
@@ -40,7 +58,9 @@
 					<VirtualizingStackPanel Orientation="Vertical"/>
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
+			
 		</ListBox>
 	</Grid>
+	
 </UserControl>
 	

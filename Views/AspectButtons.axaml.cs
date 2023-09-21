@@ -22,7 +22,7 @@ namespace InklingAi.Views
                 if (button.Content is Svg svg)
                 {
                     _images.Add(svg);
-                    var path = svg.Path;
+                    var path = svg.Path!; // needs to be set
                     _onStates[svg] = path;
                     var disabledPath = path.Substring(0, path.Length - 4) + "_d.svg";
                     _offStates[svg] = disabledPath;

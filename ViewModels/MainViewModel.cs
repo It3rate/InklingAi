@@ -1,8 +1,8 @@
 ﻿namespace InklingAi.ViewModels;
 
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using CommunityToolkit.Mvvm.ComponentModel;
+using Avalonia;
+using Avalonia.Controls;
+using InklingAi.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,12 +13,27 @@ public partial class MainViewModel : ViewModelBase
 {
     public static string Title => "Inkling";
 
-    private ObservableCollection<string> _imagePaths = new();
-    public ObservableCollection<string> ImagePaths
+    //private ObservableCollection<string> _imagePaths = new();
+    //public ObservableCollection<string> ImagePaths
+    //{
+    //    get => _imagePaths;
+    //    set => SetProperty(ref _imagePaths, value);
+    //}
+
+    private string _mainImagePath;
+    public string MainImagePath
     {
-        get => _imagePaths;
-        set => SetProperty(ref _imagePaths, value);
+        get => _mainImagePath;
+        set => SetProperty(ref _mainImagePath, value);
     }
+
+    private ObservableCollection<string[]> _imagePairPaths = new();
+    public ObservableCollection<string[]> ImagePairPaths
+    {
+        get => _imagePairPaths;
+        set => SetProperty(ref _imagePairPaths, value);
+    }
+
 
     private Dictionary<string, InputItem>? _inputMap;
     private ObservableCollection<InputItem> _inputItems = new();
@@ -35,18 +50,28 @@ public partial class MainViewModel : ViewModelBase
 }
 
     private int currentPage = 0;
-    private const int itemsPerPage = 10;
+    private const int itemsPerPage = 30;
     private void LoadNextPage()
     {
         string dirPath = @"C:\Users\Robin\InklingAI\SD\images\"; 
         var allFiles = Directory.GetFiles(dirPath, "*.png")
                          .OrderByDescending(file => new FileInfo(file).LastWriteTime)
                          .ToArray();
-        var filesToLoad = allFiles.Skip(currentPage * itemsPerPage).Take(itemsPerPage);
 
+        MainImagePath = allFiles.Length > 0 ? allFiles[0] : "";
+
+        var filesToLoad = allFiles.Skip(currentPage * itemsPerPage + 1).Take(itemsPerPage);
+
+        var imagePair = new List<String>();
         foreach (var file in filesToLoad)
         {
-            ImagePaths.Add(file);
+            //ImagePaths.Add(file);
+            imagePair.Add(file);
+            if (imagePair.Count == 2)
+            {
+                ImagePairPaths.Add(imagePair.ToArray());
+                imagePair.Clear();
+            }
         }
         currentPage++;
     }
