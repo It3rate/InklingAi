@@ -26,11 +26,12 @@
 		<Grid Grid.Row="3">
 			<TextBox>Negative Prompt</TextBox>
 		</Grid>
+		
 		<Grid Grid.Row="4" Classes="title">
 			<Label>Aspect Ratio</Label>
 		</Grid>
 		<Grid Grid.Row="5" Height="50" Margin="4,0,0,0">
-				<controls:AspectButtons Grid.Column="0"/>
+			<controls:AspectButtons Grid.Column="0"/>
 		</Grid>
 
 		<Grid Grid.Row="6" Classes="title">
@@ -38,7 +39,11 @@
 		</Grid>
 		<Grid Grid.Row="7" Height="40">
 			<Grid ColumnDefinitions="*">
-				<controls:NumericSlider Grid.Column="1"/>
+				<controls:NumericSlider Grid.Column="1"
+					Minimum="0"
+					Maximum="50"
+					TickFrequency="1"
+				/>
 			</Grid>
 		</Grid>
 
@@ -47,7 +52,12 @@
 		</Grid>
 		<Grid Grid.Row="9"  Height="40">
 			<Grid ColumnDefinitions="*">
-				<controls:NumericSlider Grid.Column="1"/>
+				<controls:NumericSlider Grid.Column="1"
+					Minimum="0"
+					Maximum="12"
+					TickFrequency="0.5"
+					NumberFormat="0.0"
+				/>
 			</Grid>
 		</Grid>
 
@@ -56,7 +66,11 @@
 		</Grid>
 		<Grid Grid.Row="11"  Height="40">
 			<Grid ColumnDefinitions="*">
-				<controls:NumericSlider Grid.Column="1"/>
+				<controls:NumericSlider Grid.Column="1"
+					Minimum="0"
+					Maximum="100"
+					TickFrequency="1"
+					NumberFormat="0'%'"/>
 			</Grid>
 		</Grid>
 		<Grid Grid.Row="12"  Margin="4" Height="64">
