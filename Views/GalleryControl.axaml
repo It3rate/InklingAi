@@ -27,57 +27,50 @@
 			<Setter Property="BorderBrush" Value="Transparent"/>
 		</Style>
 		<Style Selector="Border.image:pointerover">
-			<Setter Property="BorderBrush" Value="LightBlue"/>
+			<Setter Property="BorderBrush" Value="#D080B0FF"/>
 		</Style>
 		<Style Selector="Border.image:focus-within">
-			<Setter Property="BorderBrush" Value="Red"/>
+			<Setter Property="BorderBrush" Value="#D0FF0000"/>
+		</Style>
+		
+		<Style Selector="ListBox">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBoxItem">
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBoxItem /template/ ContentPresenter:pointerover">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBoxItem /template/ ContentPresenter:selected">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBoxItem /template/ ContentPresenter:focus-within">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBoxItem /template/ ContentPresenter:selected:pointerover">
+			<Setter Property="Background" Value="Transparent"/>
 		</Style>
 	</UserControl.Styles>
 
 	
 	<Grid RowDefinitions="Auto, *">
+		<Border Classes="image">
 		<Image Grid.Row="0"
 			Source="{Binding MainImagePath,Converter={StaticResource PathToBitmapConverter}}"
 			Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 			Margin="0,0,0,4"/>
-
+		</Border>
+		
 		<ListBox Grid.Row="1"
 			Name="lbGallery"
 			ItemsSource="{Binding ImagePairPaths}"
 			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 			ScrollViewer.VerticalScrollBarVisibility="Hidden">
-
-			<ListBox.Styles>
-				<Style Selector="ListBox">
-					<Setter Property="Background" Value="Transparent"/>
-				</Style>
-				<Style Selector="ListBoxItem">
-					<Setter Property="Padding" Value="0"/>
-					<Setter Property="Margin" Value="0"/>
-					<Setter Property="BorderThickness" Value="0"/>
-					<Setter Property="BorderBrush" Value="Transparent"/>
-					<Setter Property="Background" Value="Transparent"/>
-				</Style>
-				<Style Selector="ListBoxItem /template/ ContentPresenter:pointerover">
-					<Setter Property="Background" Value="Transparent"/>
-				</Style>
-				<Style Selector="ListBoxItem /template/ ContentPresenter:selected">
-					<Setter Property="Background" Value="Transparent"/>
-				</Style>
-				<Style Selector="ListBoxItem /template/ ContentPresenter:focus-within">
-					<Setter Property="Background" Value="Transparent"/>
-				</Style>
-				<Style Selector="ListBoxItem /template/ ContentPresenter:selected:pointerover">
-					<Setter Property="Background" Value="Transparent"/>
-				</Style>
-			</ListBox.Styles>
-			
-
-			<!--<ListBox.ItemsPanel>
-				<ItemsPanelTemplate>
-					<VirtualizingStackPanel Orientation="Vertical"/>
-				</ItemsPanelTemplate>
-			</ListBox.ItemsPanel>-->
 
 			<ListBox.ItemTemplate>
 				<DataTemplate>
