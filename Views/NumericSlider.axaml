@@ -31,6 +31,7 @@
                 IsSnapToTickEnabled="True"
 				LargeChange="5"
 				SmallChange="1"
+				Value="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:NumericSlider}}"
 				Minimum="{Binding Minimum, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:NumericSlider}}"
 				Maximum="{Binding Maximum, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:NumericSlider}}"
 				TickFrequency="{Binding TickFrequency, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:NumericSlider}}"

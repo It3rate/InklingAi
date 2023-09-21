@@ -11,6 +11,14 @@ namespace InklingAi.Views
 
     public partial class NumericSlider : UserControl
     {
+        public static readonly StyledProperty<double> ValueProperty =
+            AvaloniaProperty.Register<GalleryControl, double>(nameof(Value), 1);
+        public double Value
+        {
+            get => GetValue(ValueProperty);
+            set => SetValue(ValueProperty, value);
+        }
+
         public static readonly StyledProperty<string> NumberFormatProperty =
             AvaloniaProperty.Register<GalleryControl, string>(nameof(NumberFormat), "0");
         public string NumberFormat

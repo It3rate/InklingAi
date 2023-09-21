@@ -2,40 +2,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="250"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="250"
              x:Class="InklingAi.Views.AppMenu">
 	
-			<Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top" Margin="4,4,0,0">
+			<Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top" 
+				  Margin="4,4,0,0" 
+				  >
 				<!-- File Menu -->
-				<MenuItem Header="File">
+				<MenuItem Header="File" Name="mnFile">
 					<MenuItem Header="New" Name="mnNew" Click="OnMenuItemClicked"/>
-					<MenuItem Header="Open" Name="mnOpen" />
-					<MenuItem Header="Save" Name="mnSave" />
+					<MenuItem Header="Open" Name="mnOpen" Click="OnMenuItemClicked" />
+					<MenuItem Header="Save" Name="mnSave" Click="OnMenuItemClicked" />
 					<Separator/>
-					<MenuItem Header="Exit" Name="mnExit" />
+					<MenuItem Header="Exit" Name="mnExit" Click="OnMenuItemClicked" />
 				</MenuItem>
 
 				<!-- Edit Menu -->
 				<MenuItem Header="Edit" Name="mnEdit" >
-					<MenuItem Header="Undo" Name="mnUndo" />
-					<MenuItem Header="Redo" Name="mnRedo" />
+					<MenuItem Header="Undo" Name="mnUndo" Click="OnMenuItemClicked" />
+					<MenuItem Header="Redo" Name="mnRedo" Click="OnMenuItemClicked" />
 					<Separator/>
-					<MenuItem Header="Cut" Name="mnCut" />
-					<MenuItem Header="Copy" Name="mnCopy" />
-					<MenuItem Header="Paste" Name="mnPaste" />
+					<MenuItem Header="Cut" Name="mnCut" Click="OnMenuItemClicked" />
+					<MenuItem Header="Copy" Name="mnCopy" Click="OnMenuItemClicked" />
+					<MenuItem Header="Paste" Name="mnPaste" Click="OnMenuItemClicked" />
 				</MenuItem>
 
 				<!-- Model Menu -->
 				<MenuItem Header="Model" Name="mnModel" >
-					<MenuItem Header="RevAutomated" Name="mnRevAutomated" />
-					<MenuItem Header="Deliberate" Name="mnDeliberate" />
-					<MenuItem Header="Realistic Vision" Name="mnRealisticVision" />
-					<MenuItem Header="DreamShaper" Name="mnDreamShaper" />
+					<MenuItem Header="RevAutomated" Name="mnRevAutomated" Click="OnMenuItemClicked" />
+					<MenuItem Header="Deliberate" Name="mnDeliberate" Click="OnMenuItemClicked" />
+					<MenuItem Header="Realistic Vision" Name="mnRealisticVision" Click="OnMenuItemClicked" />
+					<MenuItem Header="DreamShaper" Name="mnDreamShaper" Click="OnMenuItemClicked" />
 				</MenuItem>
 				
 				<!-- Help Menu -->
 				<MenuItem Header="Help" Name="mnHelp" >
-					<MenuItem Header="About" Name="mnAbout" />
+					<MenuItem Header="About" Name="mnAbout" Click="OnMenuItemClicked" />
 				</MenuItem>
 			</Menu>
 

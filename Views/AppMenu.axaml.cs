@@ -11,7 +11,10 @@ namespace InklingAi.Views
         }
         private void OnMenuItemClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            Trace.WriteLine(sender);
+            if(sender is MenuItem menuItem)
+            {
+                Trace.WriteLine(menuItem.Name);
+            }
         }
     }
 }
