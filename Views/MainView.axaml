@@ -31,7 +31,7 @@
 					<ColumnDefinition Width="*" MinWidth="250" MaxWidth="500" />
 					<ColumnDefinition Width="260"/>
 					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="260"/>
+					<ColumnDefinition Width="320"/>
 				</Grid.ColumnDefinitions>
 				<Grid Grid.Column="0">
 					<controls:Prompt  x:Name="myPromptControl"/>

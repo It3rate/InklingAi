@@ -33,6 +33,10 @@
 		<Setter Property="BorderBrush" Value="#800000FF"/>
 	</Style>
 	
+	<Style Selector="Image">
+		<Setter Property="Margin" Value="1"/>
+		<Setter Property="Stretch" Value="Uniform"/>
+	</Style>
 	
 	
 	<!--Style Selector="Panel">

@@ -15,52 +15,75 @@
 	<UserControl.Resources>
 		<vm:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
 	</UserControl.Resources>
-	
+
 	<Grid RowDefinitions="Auto, *">
 		<Image Grid.Row="0"
 			Source="{Binding MainImagePath,Converter={StaticResource PathToBitmapConverter}}"
-			Stretch="Uniform"
 			Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-			Margin="4"/>
+			Margin="0,0,0,4"/>
 
-		<ListBox Grid.Row="1"
-			Name="lbGallery" ItemsSource="{Binding ImagePairPaths}"
+		<ListBox Grid.Row="1" 
+			Name="lbGallery" 
+			ItemsSource="{Binding ImagePairPaths}"
 			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 			ScrollViewer.VerticalScrollBarVisibility="Hidden">
+			
 			<ListBox.Styles>
 				<Style Selector="ListBoxItem">
 					<Setter Property="Padding" Value="0"/>
 					<Setter Property="Margin" Value="0"/>
 				</Style>
 			</ListBox.Styles>
-			
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<Image Source="{Binding Path=[0], Converter={StaticResource PathToBitmapConverter}}"
-							   Stretch="Uniform"
-							   Width="{Binding HalfWidth, 
-							   RelativeSource={RelativeSource FindAncestor, 
-							   AncestorType=controls:GalleryControl}}"
-							   Margin="2"/>
-						<Image Source="{Binding Path=[1], Converter={StaticResource PathToBitmapConverter}}"		
-							   Stretch="Uniform"
-							   Width="{Binding HalfWidth, 
-							   RelativeSource={RelativeSource FindAncestor, 
-							   AncestorType=controls:GalleryControl}}"
-							   Margin="2"/>
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-			
-			<ListBox.ItemsPanel>
+
+			<!--<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<VirtualizingStackPanel Orientation="Vertical"/>
 				</ItemsPanelTemplate>
-			</ListBox.ItemsPanel>
+			</ListBox.ItemsPanel>-->
 			
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					
+					<StackPanel Orientation="Horizontal" IsHitTestVisible="False" >
+						<Image Source="{Binding Path=[0], Converter={StaticResource PathToBitmapConverter}}"
+							   Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
+							   PointerPressed="OnImagePointerPressed"
+							   PointerMoved="OnImagePointerMoved"
+							   PointerReleased="OnImagePointerReleased"
+							   />
+						<Image Source="{Binding Path=[1], Converter={StaticResource PathToBitmapConverter}}"
+							   Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
+							   PointerPressed="OnImagePointerPressed"
+							   PointerMoved="OnImagePointerMoved"
+							   PointerReleased="OnImagePointerReleased"
+							   />
+						<Image Source="{Binding Path=[2], Converter={StaticResource PathToBitmapConverter}}"
+							   Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
+							   PointerPressed="OnImagePointerPressed"
+							   PointerMoved="OnImagePointerMoved"
+							   PointerReleased="OnImagePointerReleased"
+							   />
+					</StackPanel>
+					
+					<!--<StackPanel Orientation="Horizontal">
+					<ItemsControl ItemsSource="{Binding}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Image Source="{Binding Converter={StaticResource PathToBitmapConverter}}"
+										Stretch="Uniform"
+										Width="{Binding HalfWidth, 
+												RelativeSource={RelativeSource FindAncestor, 
+												AncestorType=controls:GalleryControl}}"
+										Margin="2"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>-->
+					
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+
 		</ListBox>
 	</Grid>
-	
+
 </UserControl>
-	

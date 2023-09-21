@@ -49,8 +49,9 @@ public partial class MainViewModel : ViewModelBase
         LoadNextPage();
 }
 
+    private int itemsPerRow = 3;
     private int currentPage = 0;
-    private const int itemsPerPage = 30;
+    private const int itemsPerPage = 31;
     private void LoadNextPage()
     {
         string dirPath = @"C:\Users\Robin\InklingAI\SD\images\"; 
@@ -67,7 +68,7 @@ public partial class MainViewModel : ViewModelBase
         {
             //ImagePaths.Add(file);
             imagePair.Add(file);
-            if (imagePair.Count == 2)
+            if (imagePair.Count == itemsPerRow)
             {
                 ImagePairPaths.Add(imagePair.ToArray());
                 imagePair.Clear();
