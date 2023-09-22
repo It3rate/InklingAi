@@ -30,12 +30,12 @@
 					<ColumnDefinition Width="320"/>
 				</Grid.ColumnDefinitions>
 				<Grid Grid.Column="0">
-					<controls:Prompt  x:Name="myPromptControl"/>
+					<controls:Prompt  x:Name="_prompt"/>
 				</Grid>
 				<Grid Grid.Column="1">
 					<controls:InputControls/>
 				</Grid>
-			<Grid Grid.Column="2" Name="mainContainer">
+			<Grid Grid.Column="2" Name="_mainContainer">
 				<controls:InkImage Padding="90" />
 			</Grid>
 			<Grid Grid.Column="3">

@@ -35,7 +35,8 @@
 	</UserControl.Styles>
 	
 	<Border Name="__borderOuter">
-		<Border Name="__border" Classes="image" >
+		<Border Name="__border" Classes="image" 
+				DragDrop.AllowDrop="True">
 			<Image  Name="__image"
 					Source="{Binding Source, 
 						RelativeSource={RelativeSource FindAncestor, AncestorType=controls:InkImage},

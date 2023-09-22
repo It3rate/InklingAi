@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:controls="using:InklingAi.Views"
 			 xmlns:vm="clr-namespace:InklingAi.ViewModels"
-			 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="600"
+			 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="800"
              x:Class="InklingAi.Views.Prompt">
 
 	<Design.DataContext>
