@@ -1,42 +1,44 @@
 namespace InklingAi.Views
 {
-    using Avalonia;
-    using Avalonia.Controls;
-    using Avalonia.Input;
-    using Avalonia.Platform.Storage;
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
-    using static SkiaSharp.HarfBuzz.SKShaper;
+    using System.Collections.Generic;
+    using Avalonia;
+    using Avalonia.Input;
+    using Avalonia.Controls;
+    using Avalonia.Platform.Storage;
 
     public partial class InkImage : UserControl
     {
         public float _widthExtra = 2f;
-        private Avalonia.Point? _startPoint;
-        private int _minDragDistance = 5;
+        private Point? _startPoint;
+        private int _minDragDistance = 8;
 
+        #region StyledProperties
         public static readonly StyledProperty<string> SourceProperty =
-            AvaloniaProperty.Register<GalleryControl, string>(nameof(Source), @"C:\Users\Robin\InklingAI\SD\working\input.png");
+            AvaloniaProperty.Register<GalleryControl, string>(nameof(Source), @"C:\Users\Robin\InklingAI\SD\working\edit.png");
         public string Source
         {
             get { return GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
+        #endregion
 
         public InkImage()
-        {
+        { 
             InitializeComponent();
+
+            SetValue(DragDrop.AllowDropProperty, true);
+            PointerPressed += OnImagePointerPressed;
+            PointerMoved += OnImagePointerMoved;
+            PointerReleased += OnImagePointerReleased;
 
             AddHandler(DragDrop.DropEvent, OnDrop);
             AddHandler(DragDrop.DragOverEvent, OnDragOver);
         }
-
+        #region Mouse Events
         private void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
         {
             _startPoint = e.GetPosition(this);
@@ -59,12 +61,12 @@ namespace InklingAi.Views
         private void OnDrop(object? sender, DragEventArgs e)
         {
             var result = e.DragEffects;
-            if((result & DragDropEffects.Copy) != DragDropEffects.None)
+            if ((result & DragDropEffects.Copy) != DragDropEffects.None)
             {
                 if (e.Data.Contains(DataFormats.Files))
                 {
                     var data = e.Data.Get(DataFormats.Files);
-                    if(data is IEnumerable<IStorageItem> dataList)
+                    if (data is IEnumerable<IStorageItem> dataList)
                     {
                         var firstFile = dataList.FirstOrDefault();
                         var path = firstFile?.Path.AbsolutePath ?? "";
@@ -73,7 +75,7 @@ namespace InklingAi.Views
                             Source = path;
                         }
                     }
-                    else if (data is string filename)
+                    else if (data is string filename && filename != Source)
                     {
                         Source = filename;
                     }
@@ -94,11 +96,10 @@ namespace InklingAi.Views
             }
         }
 
-        private void OnImagePointerReleased(object sender, PointerReleasedEventArgs e)
+        private void OnImagePointerReleased(object? sender, PointerReleasedEventArgs e)
         {
             _startPoint = null;
         }
-
-
+        #endregion
     }
 }

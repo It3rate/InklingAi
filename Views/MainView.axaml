@@ -36,7 +36,7 @@
 					<controls:InputControls/>
 				</Grid>
 			<Grid Grid.Column="2" Name="_mainContainer">
-				<controls:InkImage Padding="90" />
+				<controls:InkImage Padding="90" Source="C:\Users\Robin\InklingAI\SD\working\input.png"/>
 			</Grid>
 			<Grid Grid.Column="3">
 				<controls:GalleryControl/>

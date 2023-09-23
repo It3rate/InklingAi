@@ -33,20 +33,14 @@
 			<Setter Property="BorderBrush" Value="#D0FF0000"/>
 		</Style>
 	</UserControl.Styles>
-	
-	<Border Name="__borderOuter">
-		<Border Name="__border" Classes="image" 
-				DragDrop.AllowDrop="True">
-			<Image  Name="__image"
-					Source="{Binding Source, 
-						RelativeSource={RelativeSource FindAncestor, AncestorType=controls:InkImage},
-						Converter={StaticResource PathToBitmapConverter}}"
-					Stretch="Uniform"
-					PointerPressed="OnImagePointerPressed"
-					PointerMoved="OnImagePointerMoved"
-					PointerReleased="OnImagePointerReleased"
-		/>
-		</Border>
+
+	<Border Name="_border" Classes="image" >
+		<controls:MultiImage  Name="contentImage"
+				Source="{Binding Source, 
+					RelativeSource={RelativeSource FindAncestor, 
+					AncestorType=controls:InkImage},
+					Converter={StaticResource PathToBitmapConverter}}"
+				Stretch="Uniform"/>
 	</Border>
-	
+
 </UserControl>
