@@ -13,12 +13,6 @@ public partial class MainViewModel : ViewModelBase
 {
     public static string Title => "Inkling";
 
-    //private ObservableCollection<string> _imagePaths = new();
-    //public ObservableCollection<string> ImagePaths
-    //{
-    //    get => _imagePaths;
-    //    set => SetProperty(ref _imagePaths, value);
-    //}
 
     private string _mainImagePath = "";
     public string MainImagePath
@@ -27,13 +21,12 @@ public partial class MainViewModel : ViewModelBase
         set => SetProperty(ref _mainImagePath, value);
     }
 
-    private ObservableCollection<string[]> _imagePairPaths = new();
-    public ObservableCollection<string[]> ImagePairPaths
+    private ObservableCollection<string[]> _imageTuplePaths = new();
+    public ObservableCollection<string[]> ImageTuplePaths
     {
-        get => _imagePairPaths;
-        set => SetProperty(ref _imagePairPaths, value);
+        get => _imageTuplePaths;
+        set => SetProperty(ref _imageTuplePaths, value);
     }
-
 
     private Dictionary<string, InputItem>? _inputMap;
     private ObservableCollection<InputItem> _inputItems = new();
@@ -42,6 +35,10 @@ public partial class MainViewModel : ViewModelBase
         get => _inputItems;
         set => SetProperty(ref _inputItems, value);
     }
+    //public IEnumerable<string> ActiveItems => new List<string>() { @"C:\Users\Robin\InklingAI\SD\images\edit.png" };// InputItems.Where(item => item.IsActive);
+
+    private ObservableCollection<string> _activeItems = new ObservableCollection<string>() { @"C:\Users\Robin\InklingAI\SD\working\edit.png"};
+    public List<InputItem> ActiveItems => InputItems.Where(item => item.IsActive).ToList();
 
     public MainViewModel()
     {
@@ -70,7 +67,7 @@ public partial class MainViewModel : ViewModelBase
             imagePair.Add(file);
             if (imagePair.Count == itemsPerRow)
             {
-                ImagePairPaths.Add(imagePair.ToArray());
+                ImageTuplePaths.Add(imagePair.ToArray());
                 imagePair.Clear();
             }
         }

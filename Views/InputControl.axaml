@@ -2,17 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:InklingAi.ViewModels"
              mc:Ignorable="d" d:DesignWidth="240" d:DesignHeight="200"
+             xmlns:vm="clr-namespace:InklingAi.ViewModels"
+             xmlns:controls="clr-namespace:InklingAi.Views"
              x:Class="InklingAi.Views.InputControl">
 
 	<Design.DataContext>
 		<vm:DesignTimeInputItem/>
 	</Design.DataContext>
-	
-	<UserControl.Resources>
-		<vm:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
-	</UserControl.Resources>
 
 	<Expander Header="{Binding InputTitle}">
 		<Grid ColumnDefinitions="Auto,*">
@@ -22,9 +19,8 @@
 				<Button Grid.Row="2" Margin="0,4" Width="60" Height="40">Edit</Button>
 
 			</Grid>
-			<Image Grid.Column="1" Margin="2" Height="140"
-					Source="{Binding ProcessedPath, Converter={StaticResource PathToBitmapConverter}}"
-					Stretch="Uniform"/>
+			<controls:InkImage Grid.Column="1" Margin="2" Height="140"
+					Source="{Binding ProcessedPath}"/>
 		</Grid>
 		
 		

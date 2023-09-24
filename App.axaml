@@ -6,7 +6,7 @@
 
     <Application.Styles>
 		<SimpleTheme  />
-		<StyleInclude Source="/Styles/ColorStyles.axaml"/>
+		<StyleInclude Source="/Styles/AppStyles.axaml"/>
 		<StyleInclude Source="/Styles/ExpanderStyles.axaml"/>
     </Application.Styles>
 </Application>

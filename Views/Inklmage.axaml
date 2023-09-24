@@ -11,28 +11,6 @@
 		<vm:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
 	</UserControl.Resources>
 
-	<UserControl.Styles>
-		<Style Selector="Image">
-			<Setter Property="IsHitTestVisible" Value="True"/>
-			<Setter Property="Focusable" Value="True"/>
-			<Setter Property="Margin" Value="0"/>
-		</Style>
-		<Style Selector="Border">
-			<Setter Property="Margin" Value="0"/>
-		</Style>
-		<Style Selector="Border.image">
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="BorderBrush" Value="Transparent"/>
-			<Setter Property="HorizontalAlignment" Value="Center"/>
-			<Setter Property="VerticalAlignment" Value="Center"/>
-		</Style>
-		<Style Selector="Border.image:pointerover">
-			<Setter Property="BorderBrush" Value="#D080B0FF"/>
-		</Style>
-		<Style Selector="Border.image:focus-within">
-			<Setter Property="BorderBrush" Value="#D0FF0000"/>
-		</Style>
-	</UserControl.Styles>
 
 	<Border Name="_border" Classes="image" >
 		<controls:MultiImage  Name="contentImage"

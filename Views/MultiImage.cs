@@ -1,14 +1,10 @@
 ﻿namespace InklingAi.Views
 {
     using Avalonia;
-    using Avalonia.Automation.Peers;
-    using Avalonia.Controls;
-    using Avalonia.Controls.Automation.Peers;
-    using Avalonia.Input;
     using Avalonia.Media;
-    using Avalonia.Media.Imaging;
+    using Avalonia.Controls;
     using Avalonia.Metadata;
-    using Avalonia.Platform.Storage;
+
     using System;
     using System.Collections.Generic;
     using System.IO;
