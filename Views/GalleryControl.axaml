@@ -40,8 +40,8 @@
 
 	<Grid RowDefinitions="Auto, *">
 		<Border Classes="image">
-			<controls:InkImage Grid.Row="0"
-				Source="{Binding MainImagePath}"
+			<controls:SingleImage Grid.Row="0"
+				PrimarySource="{Binding MainImagePath}"
 				Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 				Margin="0,0,0,4"/>
 		</Border>

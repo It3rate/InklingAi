@@ -28,9 +28,9 @@ public partial class MainViewModel : ViewModelBase
         set => SetProperty(ref _imageTuplePaths, value);
     }
 
-    private Dictionary<string, InputItem>? _inputMap;
-    private ObservableCollection<InputItem> _inputItems = new();
-    public ObservableCollection<InputItem> InputItems
+    private Dictionary<string, ImageData>? _inputMap;
+    private ObservableCollection<ImageData> _inputItems = new();
+    public ObservableCollection<ImageData> InputItems
     {
         get => _inputItems;
         set => SetProperty(ref _inputItems, value);
@@ -38,7 +38,7 @@ public partial class MainViewModel : ViewModelBase
     //public IEnumerable<string> ActiveItems => new List<string>() { @"C:\Users\Robin\InklingAI\SD\images\edit.png" };// InputItems.Where(item => item.IsActive);
 
     private ObservableCollection<string> _activeItems = new ObservableCollection<string>() { @"C:\Users\Robin\InklingAI\SD\working\edit.png"};
-    public List<InputItem> ActiveItems => InputItems.Where(item => item.IsActive).ToList();
+    public List<ImageData> ActiveItems => InputItems.Where(item => item.IsActive).ToList();
 
     public MainViewModel()
     {
@@ -78,7 +78,7 @@ public partial class MainViewModel : ViewModelBase
     {
         _inputItems.Clear();
         string dirPath = @"C:\Users\Robin\InklingAI\SD\working\";
-        _inputMap = InputItem.GenerateInputItems(dirPath);
+        _inputMap = ImageData.GenerateInputItems(dirPath);
         foreach (var val in _inputMap.Values)
         {
             InputItems.Add(val);

@@ -10,9 +10,9 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class DesignTimeInputItem : InputItem
+    public class DesignTimeInputItem : ImageData
     {
-        public DesignTimeInputItem() : base("scratch0", "Scratch 1", @"C:\Users\Robin\InklingAI\SD\working\")
+        public DesignTimeInputItem() : base(ImageKind.Scratch0, "Scratch 1", @"C:\Users\Robin\InklingAI\SD\working\")
         {
         }
     }

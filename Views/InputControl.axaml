@@ -19,8 +19,8 @@
 				<Button Grid.Row="2" Margin="0,4" Width="60" Height="40">Edit</Button>
 
 			</Grid>
-			<controls:InkImage Grid.Column="1" Margin="2" Height="140"
-					Source="{Binding ProcessedPath}"/>
+			<controls:SingleImage Grid.Column="1" Margin="2" Height="140"
+					PrimarySource="{Binding ProcessedPath}"/>
 		</Grid>
 		
 		

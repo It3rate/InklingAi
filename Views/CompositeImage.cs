@@ -9,7 +9,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class CompositeImage : InkImage
+    public class CompositeImage : BaseImage
     {
         //protected override void OnRender(DrawingContext context)
         //{
@@ -19,5 +19,6 @@
         //    var pen = new Pen(Brushes.Red, 2);
         //    context.DrawRectangle(pen, new Rect(0, 0, Bounds.Width, Bounds.Height));
         //}
+        public override string PrimarySource { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }
