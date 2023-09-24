@@ -1,6 +1,9 @@
 ﻿namespace InklingAi.ViewModels
 {
     using Avalonia.Controls;
+    using Avalonia.Media;
+    using Avalonia.Media.Imaging;
+    using DynamicData;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -14,29 +17,68 @@
         public ImageKind ImageKind { get; set; }
         public string InputTitle { get; set; }
         public bool IsActive { get; set; } = true;
-        public string InputImagePath { get; set; }
+
+        public string InputPath { get; set; }
+        private IImage? _inputImage;
+        public IImage? InputImage {
+            get
+            {
+                if (_inputImage == null)
+                {
+                    _inputImage = LoadImage(InputPath);
+                }
+                return _inputImage;
+            }
+            set { _inputImage = value; }
+        }
+
         public string ProcessedPath { get; set; }
-        // undo image
-        // reset image
-        // latent data/image
+        private IImage? _processedImage;
+        public IImage? ProcessedImage
+        {
+            get
+            {
+                if (_processedImage == null)
+                {
+                    _processedImage = LoadImage(ProcessedPath);
+                }
+                return _processedImage;
+            }
+            set { _processedImage = value; }
+        }
+
+        private IImage? _undoImage;
+        private IImage? _resetImage;
+        //private IImage? _latentImage;
+
         public ImageData(ImageKind kind, string title, string folder) 
         { 
             IsActive = true;
             ImageKind = kind;
             InputTitle = title;
             Folder = folder;
-            InputImagePath = folder + kind.Name() + "_input.png";
+            InputPath = folder + kind.Name() + "_input.png";
             ProcessedPath = folder + kind.Name() + ".png";
         }
         public ImageData(ImageKind kind, string path)
         {
             ImageKind = kind;
-            Folder = Path.GetPathRoot(path);
-            InputImagePath = path;
+            Folder = Path.GetPathRoot(path) ?? "";
+            InputPath = path;
             ProcessedPath = path;
         }
 
-            public static Dictionary<string, ImageData> GenerateInputItems(string folder)
+        private IImage? LoadImage(string? path)
+        {
+            IImage? result = null;
+            if (path != null &&  File.Exists(path))
+            {
+                result = new Bitmap(path);
+            }
+            return result;
+        }
+
+        public static Dictionary<string, ImageData> GenerateInputItems(string folder)
         {
             Dictionary<string, ImageData> result = new();
             foreach (var kind in inputKinds.Keys)
