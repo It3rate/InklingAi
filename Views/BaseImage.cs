@@ -28,6 +28,7 @@
         }
 
         public abstract string PrimarySource { get; set; }
+        public string[] Paths { get; set; }
 
         public BaseImage()
         {
@@ -51,6 +52,7 @@
                     if (change != null && change.NewValue != null && change.NewValue is string rawUri && File.Exists(rawUri))
                     {
                         _images.Add(new Bitmap(rawUri));
+                        Paths = new string[] { rawUri };
                     }
                     InvalidateVisual();
                     break;
@@ -68,7 +70,7 @@
         private async Task DoDrag(object? sender, PointerEventArgs e)
         {
             var dragData = new DataObject();
-            dragData.Set(DataFormats.Files, PrimarySource);
+            dragData.Set(DataFormats.Files, Paths);
             var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
             _startPoint = null;
         }
@@ -93,6 +95,14 @@
                         if (path != "" && File.Exists(path))
                         {
                             PrimarySource = path;
+                        }
+                    }
+                    else if (data is IEnumerable<string> stringList)
+                    {
+                        var first = stringList.First();
+                        if(first != null)
+                        {
+                            PrimarySource = first;
                         }
                     }
                     else if (data is string filename && filename != PrimarySource)
