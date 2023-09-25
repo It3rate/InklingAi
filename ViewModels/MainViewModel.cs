@@ -2,6 +2,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.VisualTree;
 using InklingAi.Views;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,16 @@ public partial class MainViewModel : ViewModelBase
 {
     public static string Title => "Inkling";
 
+    private Size _aspectSize = new Size(640, 512); //(512, 640); //
+    public Size AspectSize
+    {
+        get => _aspectSize;
+        set => SetProperty(ref _aspectSize, value);
+    }
 
-    private string _mainImagePath = "";
+    public double AspectRatio => AspectSize.Width / AspectSize.Height;
+
+    private string _mainImagePath = @"C:\Users\Robin\InklingAI\SD\working\main.png";
     public string MainImagePath
     {
         get => _mainImagePath;
@@ -86,5 +95,19 @@ public partial class MainViewModel : ViewModelBase
 
     }
 
+    public static MainViewModel? GetRootDataContext(Visual? control)
+    {
+        MainViewModel? result = null;
+        while (control != null && !(control is Window))
+        {
+            control = control.GetVisualParent();
+        }
+
+        if (control is Window window && window.DataContext is MainViewModel mvm)
+        {
+            result = mvm;
+        }
+        return result;
+    }
 }
 

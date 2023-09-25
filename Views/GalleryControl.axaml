@@ -40,10 +40,10 @@
 
 	<Grid RowDefinitions="Auto, *">
 		<Border Classes="image">
-			<controls:SingleImage Grid.Row="0"
+			<controls:SingleImage Grid.Row="0" Margin="0,0,0,4"
 				Source="{Binding MainImagePath}"
 				Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-				Margin="0,0,0,4"/>
+				/>
 		</Border>
 
 		<ListBox Grid.Row="1"

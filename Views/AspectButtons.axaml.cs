@@ -3,8 +3,10 @@ namespace InklingAi.Views
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Svg.Skia;
+    using InklingAi.ViewModels;
 
     public partial class AspectButtons : UserControl
     {
@@ -29,12 +31,28 @@ namespace InklingAi.Views
                 }
             }
 
-            ResetButtons(btSquare);
+            ResetButtons(btLandscape);
         }
 
         private void OnClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             ResetButtons(sender as Button);
+            var viewModel = MainViewModel.GetRootDataContext(this);
+            if (viewModel != null)
+            {
+                if (sender == btPortrait)
+                {
+                    viewModel.AspectSize = new Size(512, 640);
+                }
+                else if (sender == btSquare)
+                {
+                    viewModel.AspectSize = new Size(512, 512);
+                }
+                else if (sender == btLandscape)
+                {
+                    viewModel.AspectSize = new Size(640, 512);
+                }
+            }
         }
 
         private void ResetButtons(Button? selected)

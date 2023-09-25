@@ -35,11 +35,12 @@
 				<Grid Grid.Column="1">
 					<controls:InputControls/>
 				</Grid>
-			<Grid Grid.Column="2" Name="_mainContainer">
-				<Border Name="_border" Classes="image" Margin="90">
-				<controls:SingleImage
-						  PrimarySource="{Binding ActiveItems[0]}"/>
-				</Border>
+			<Grid Grid.Column="2" Name="_mainContainer" >
+				<Viewbox Stretch="Uniform">
+					<Border Name="_border" Classes="image" Margin="90">
+					<controls:SingleImage ImageDataItem="{Binding ActiveItems[0]}"/>
+					</Border>
+				</Viewbox>
 			</Grid>
 			<Grid Grid.Column="3">
 				<controls:GalleryControl/>

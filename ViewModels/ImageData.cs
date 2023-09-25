@@ -1,5 +1,6 @@
 ﻿namespace InklingAi.ViewModels
 {
+    using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Media;
     using Avalonia.Media.Imaging;
@@ -11,7 +12,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ImageData
+    public class ImageData : IDisposable
     {
         public string Folder { get; set; }
         public ImageKind ImageKind { get; set; }
@@ -59,6 +60,7 @@
             Folder = folder;
             InputPath = folder + kind.Name() + "_input.png";
             ProcessedPath = folder + kind.Name() + ".png";
+            LoadImage(ProcessedPath);
         }
         public ImageData(ImageKind kind, string path)
         {
@@ -66,12 +68,13 @@
             Folder = Path.GetPathRoot(path) ?? "";
             InputPath = path;
             ProcessedPath = path;
+            LoadImage(ProcessedPath);
         }
 
         private IImage? LoadImage(string? path)
         {
             IImage? result = null;
-            if (path != null &&  File.Exists(path))
+            if (path != null &&  path != "" && File.Exists(path))
             {
                 result = new Bitmap(path);
             }
@@ -87,6 +90,31 @@
             }
             return result;
         }
+
+        public void Dispose()
+        {
+            if (_inputImage is IDisposable disposableInput)
+            {
+                disposableInput.Dispose();
+                _inputImage = null;
+            }
+            if (_processedImage is IDisposable disposableProcessed)
+            {
+                disposableProcessed.Dispose();
+                _processedImage = null;
+            }
+            if (_undoImage is IDisposable disposableUndo)
+            {
+                disposableUndo.Dispose();
+                _undoImage = null;
+            }
+            if (_resetImage is IDisposable disposableReset)
+            {
+                disposableReset.Dispose();
+                _resetImage = null;
+            }
+        }
+
         public static readonly Dictionary<ImageKind, string> inputKinds = new ()
         {
             //{ "main", "Main Image" },

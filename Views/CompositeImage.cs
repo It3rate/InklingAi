@@ -20,6 +20,6 @@
         //    var pen = new Pen(Brushes.Red, 2);
         //    context.DrawRectangle(pen, new Rect(0, 0, Bounds.Width, Bounds.Height));
         //}
-        public override ImageData PrimarySource { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override ImageData ImageDataItem { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

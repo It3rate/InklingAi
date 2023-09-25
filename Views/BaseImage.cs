@@ -12,23 +12,34 @@
     using Avalonia.Media.Imaging;
     using Avalonia.Platform.Storage;
     using InklingAi.ViewModels;
+    using Avalonia.Data;
+    using Avalonia.VisualTree;
 
     public abstract class BaseImage : UserControl
     {
-        protected List<ImageData> _images = new();
+        protected List<ImageData> _imageDataList = new();
         public float _widthExtra = 2f;
         private Point? _startPoint;
         private int _minDragDistance = 8;
 
-        public static readonly StyledProperty<Stretch> StretchProperty =
-            AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.Uniform);
+        #region Avalonia Properties
+
+        public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.UniformToFill);
         public Stretch Stretch
         {
             get { return GetValue(StretchProperty); }
             set { SetValue(StretchProperty, value); }
         }
 
-        public abstract ImageData PrimarySource { get; set; }
+        public static readonly StyledProperty<Size> AspectSizeProperty = AvaloniaProperty.Register<BaseImage, Size>(nameof(AspectSize), new Size(640,512));
+        public Size AspectSize
+        {
+            get { return GetValue(AspectSizeProperty); }
+            set { SetValue(AspectSizeProperty, value); }
+        }
+
+        public abstract ImageData ImageDataItem { get; set; }
+        #endregion
 
         public BaseImage()
         {
@@ -39,6 +50,22 @@
 
             AddHandler(DragDrop.DropEvent, OnDrop);
             AddHandler(DragDrop.DragOverEvent, OnDragOver);
+
+            AttachedToVisualTree += OnLoaded;
+        }
+
+        private void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
+        {
+            var mvm = MainViewModel.GetRootDataContext(this);
+            if (mvm != null)
+            {
+                var binding = new Binding("AspectSize")
+                {
+                    Mode = BindingMode.OneWay,
+                    Source = mvm
+                };
+                this.Bind(AspectSizeProperty, binding);
+            }
         }
 
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -47,17 +74,23 @@
             var prop = change.Property;
             switch (prop.Name)
             {
-                case nameof(PrimarySource):
-                    _images.Clear();
+                case nameof(AspectSize):
+                    InvalidateMeasure();
+                    InvalidateVisual();
+                    break;
+                case nameof(ImageDataItem):
+                    _imageDataList.Clear();
                     if (change != null && change.NewValue != null && change.NewValue is ImageData imageData)
                     {
-                        _images.Add(imageData);
+                        _imageDataList.Add(imageData);
                     }
                     InvalidateVisual();
                     break;
             }
         }
 
+        protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize, StretchDirection.Both);
+        protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize);
 
         #region Mouse Events
         private void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
@@ -69,7 +102,7 @@
         private async Task DoDrag(object? sender, PointerEventArgs e)
         {
             var dragData = new DataObject();
-            dragData.Set(DataFormats.Files, _images);
+            dragData.Set(DataFormats.Files, _imageDataList);
             var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
             _startPoint = null;
         }
@@ -93,7 +126,7 @@
                         var path = firstFile?.Path.AbsolutePath ?? "";
                         if (path != "" && File.Exists(path))
                         {
-                            PrimarySource = new ImageData(ImageKind.File, path);
+                            ImageDataItem = new ImageData(ImageKind.File, path);
                         }
                     }
                     else if (data is IEnumerable<ImageData> stringList)
@@ -101,12 +134,12 @@
                         var first = stringList.First();
                         if(first != null)
                         {
-                            PrimarySource = first;
+                            ImageDataItem = first;
                         }
                     }
-                    else if (data is string filename && filename != PrimarySource.InputPath)
+                    else if (data is string filename && filename != ImageDataItem.InputPath)
                     {
-                        PrimarySource = new ImageData(ImageKind.File, filename);
+                        ImageDataItem = new ImageData(ImageKind.File, filename);
                     }
                 }
             }

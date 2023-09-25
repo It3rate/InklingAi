@@ -24,28 +24,20 @@
 
         public string Source
         {
-            get => _images.Count > 0 ? _images[0].ProcessedPath : "";
+            get => _imageDataList.Count > 0 ? _imageDataList[0].ProcessedPath : "";
             set
             {
                 var imgData = new ImageData(ImageKind.File, value);
-                SetValue(PrimarySourceProperty, imgData);
+                SetValue(ImageDataItemProperty, imgData);
             }
         }
 
-        //public static readonly StyledProperty<string> SourceProperty =
-        //    AvaloniaProperty.Register<SingleImage, string>(nameof(Source), @"C:\Users\Robin\InklingAI\SD\working\edit.png");
-        //public string Source
-        //{
-        //    get { return GetValue(SourceProperty); }
-        //    set { SetValue(SourceProperty, value); }
-        //}
-
-        public static readonly StyledProperty<ImageData> PrimarySourceProperty =
-            AvaloniaProperty.Register<SingleImage, ImageData>(nameof(PrimarySource));
-        public override ImageData PrimarySource
+        public static readonly StyledProperty<ImageData?> ImageDataItemProperty =
+            AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(ImageDataItem));
+        public override ImageData? ImageDataItem
         {
-            get { return GetValue(PrimarySourceProperty); }
-            set { SetValue(PrimarySourceProperty, value); }
+            get => GetValue(ImageDataItemProperty);
+            set => SetValue(ImageDataItemProperty, value);
         }
         #endregion
 
@@ -53,38 +45,11 @@
         {
         }
 
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            var source = _images.Count > 0 ? _images[0] : null;
-            var result = new Size();
-
-            if (source != null && source.ProcessedImage != null)
-            {
-                result = Stretch.CalculateSize(availableSize, source.ProcessedImage.Size, StretchDirection.Both);
-            }
-
-            return result;
-        }
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            Size result;
-            var source = _images.Count > 0 ? _images[0] : null;
-            if (source != null && source.ProcessedImage != null)
-            {
-                var sourceSize = source.ProcessedImage.Size;
-                result = Stretch.CalculateSize(finalSize, sourceSize);
-            }
-            else
-            {
-                result = new Size();
-            }
-            return result;
-        }
         public override void Render(DrawingContext context)
         {
             base.Render(context);
 
-            var bmp = _images.Count > 0 && _images[0].ProcessedImage != null ? _images[0].ProcessedImage : null;
+            var bmp = _imageDataList.Count > 0 ? _imageDataList[0].ProcessedImage : null;
             if (bmp != null && Bounds.Width > 0 && Bounds.Height > 0)
             {
                 Rect viewPort = new Rect(Bounds.Size);
@@ -92,6 +57,7 @@
 
                 Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
                 Size scaledSize = sourceSize * scale;
+
                 Rect destRect = viewPort
                     .CenterRect(new Rect(scaledSize))
                     .Intersect(viewPort);
@@ -99,11 +65,6 @@
                     .CenterRect(new Rect(destRect.Size / scale));
 
                 context.DrawImage(bmp, sourceRect, destRect);
-
-                //if (IsPointerOver)
-                //{
-                //    context.DrawRectangle(Brushes.LightBlue, null, destRect);
-                //}
             }
         }
 
