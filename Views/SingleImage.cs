@@ -10,13 +10,39 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+    using InklingAi.ViewModels;
 
     public class SingleImage : BaseImage
     {
-        #region StyledProperties
-        public static readonly StyledProperty<string> PrimarySourceProperty =
-            AvaloniaProperty.Register<GalleryControl, string>(nameof(PrimarySource), @"C:\Users\Robin\InklingAI\SD\working\edit.png");
-        public override string PrimarySource
+        #region AvaloniaProperties
+
+        public static readonly DirectProperty<SingleImage, string> SourceProperty =
+        AvaloniaProperty.RegisterDirect<SingleImage, string>(
+            nameof(Source),
+            o => o.Source,
+            (o, v) => o.Source = v);
+
+        public string Source
+        {
+            get => _images.Count > 0 ? _images[0].ProcessedPath : "";
+            set
+            {
+                var imgData = new ImageData(ImageKind.File, value);
+                SetValue(PrimarySourceProperty, imgData);
+            }
+        }
+
+        //public static readonly StyledProperty<string> SourceProperty =
+        //    AvaloniaProperty.Register<SingleImage, string>(nameof(Source), @"C:\Users\Robin\InklingAI\SD\working\edit.png");
+        //public string Source
+        //{
+        //    get { return GetValue(SourceProperty); }
+        //    set { SetValue(SourceProperty, value); }
+        //}
+
+        public static readonly StyledProperty<ImageData> PrimarySourceProperty =
+            AvaloniaProperty.Register<SingleImage, ImageData>(nameof(PrimarySource));
+        public override ImageData PrimarySource
         {
             get { return GetValue(PrimarySourceProperty); }
             set { SetValue(PrimarySourceProperty, value); }
@@ -32,9 +58,9 @@
             var source = _images.Count > 0 ? _images[0] : null;
             var result = new Size();
 
-            if (source != null)
+            if (source != null && source.ProcessedImage != null)
             {
-                result = Stretch.CalculateSize(availableSize, source.Size, StretchDirection.Both);
+                result = Stretch.CalculateSize(availableSize, source.ProcessedImage.Size, StretchDirection.Both);
             }
 
             return result;
@@ -43,9 +69,9 @@
         {
             Size result;
             var source = _images.Count > 0 ? _images[0] : null;
-            if (source != null)
+            if (source != null && source.ProcessedImage != null)
             {
-                var sourceSize = source.Size;
+                var sourceSize = source.ProcessedImage.Size;
                 result = Stretch.CalculateSize(finalSize, sourceSize);
             }
             else
@@ -58,7 +84,7 @@
         {
             base.Render(context);
 
-            var bmp = _images.Count > 0 ? _images[0] : null;
+            var bmp = _images.Count > 0 && _images[0].ProcessedImage != null ? _images[0].ProcessedImage : null;
             if (bmp != null && Bounds.Width > 0 && Bounds.Height > 0)
             {
                 Rect viewPort = new Rect(Bounds.Size);

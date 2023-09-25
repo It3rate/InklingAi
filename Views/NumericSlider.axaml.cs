@@ -12,7 +12,7 @@ namespace InklingAi.Views
     public partial class NumericSlider : UserControl
     {
         public static readonly StyledProperty<double> ValueProperty =
-            AvaloniaProperty.Register<GalleryControl, double>(nameof(Value), 1);
+            AvaloniaProperty.Register<NumericSlider, double>(nameof(Value), 1);
         public double Value
         {
             get => GetValue(ValueProperty);
@@ -20,7 +20,7 @@ namespace InklingAi.Views
         }
 
         public static readonly StyledProperty<string> NumberFormatProperty =
-            AvaloniaProperty.Register<GalleryControl, string>(nameof(NumberFormat), "0");
+            AvaloniaProperty.Register<NumericSlider, string>(nameof(NumberFormat), "0");
         public string NumberFormat
         {
             get => GetValue(NumberFormatProperty);
@@ -28,7 +28,7 @@ namespace InklingAi.Views
         }
 
         public static readonly StyledProperty<int> MinimumProperty =
-            AvaloniaProperty.Register<GalleryControl, int>(nameof(Minimum), 0);
+            AvaloniaProperty.Register<NumericSlider, int>(nameof(Minimum), 0);
         public int Minimum
         {
             get => GetValue(MinimumProperty);
@@ -37,7 +37,7 @@ namespace InklingAi.Views
 
 
         public static readonly StyledProperty<int> MaximumProperty =
-            AvaloniaProperty.Register<GalleryControl, int>(nameof(Maximum), 100);
+            AvaloniaProperty.Register<NumericSlider, int>(nameof(Maximum), 100);
         public int Maximum
         {
             get => GetValue(MaximumProperty);
@@ -45,7 +45,7 @@ namespace InklingAi.Views
         }
 
         public static readonly StyledProperty<double> TickFrequencyProperty =
-            AvaloniaProperty.Register<GalleryControl, double>(nameof(TickFrequency), 1);
+            AvaloniaProperty.Register<NumericSlider, double>(nameof(TickFrequency), 1);
         public double TickFrequency
         {
             get => GetValue(TickFrequencyProperty);

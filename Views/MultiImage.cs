@@ -17,7 +17,7 @@
 
         #region StyledProperties
         public static readonly StyledProperty<Stretch> StretchProperty =
-            AvaloniaProperty.Register<Image, Stretch>(nameof(Stretch), Stretch.Uniform);
+            AvaloniaProperty.Register<MultiImage, Stretch>(nameof(Stretch), Stretch.Uniform);
         public Stretch Stretch
         {
             get { return GetValue(StretchProperty); }
@@ -25,7 +25,7 @@
         }
 
         public static readonly StyledProperty<IImage?> SourceProperty =
-            AvaloniaProperty.Register<Image, IImage?>(nameof(Source));
+            AvaloniaProperty.Register<MultiImage, IImage?>(nameof(Source));
         [Content]
         public IImage? Source
         {

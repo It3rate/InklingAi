@@ -3,6 +3,7 @@
     using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Media;
+    using InklingAi.ViewModels;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -19,6 +20,6 @@
         //    var pen = new Pen(Brushes.Red, 2);
         //    context.DrawRectangle(pen, new Rect(0, 0, Bounds.Width, Bounds.Height));
         //}
-        public override string PrimarySource { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override ImageData PrimarySource { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

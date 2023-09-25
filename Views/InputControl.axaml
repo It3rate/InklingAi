@@ -20,7 +20,7 @@
 
 			</Grid>
 			<controls:SingleImage Grid.Column="1" Margin="2" Height="140"
-					PrimarySource="{Binding ProcessedPath}"/>
+					Source="{Binding ProcessedPath}"/>
 		</Grid>
 		
 		

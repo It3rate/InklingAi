@@ -38,7 +38,7 @@
 			<Grid Grid.Column="2" Name="_mainContainer">
 				<Border Name="_border" Classes="image" Margin="90">
 				<controls:SingleImage
-						  PrimarySource="{Binding ActiveItems[0].InputPath}"/>
+						  PrimarySource="{Binding ActiveItems[0]}"/>
 				</Border>
 			</Grid>
 			<Grid Grid.Column="3">

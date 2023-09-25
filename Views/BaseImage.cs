@@ -11,24 +11,24 @@
     using Avalonia.Controls;
     using Avalonia.Media.Imaging;
     using Avalonia.Platform.Storage;
+    using InklingAi.ViewModels;
 
     public abstract class BaseImage : UserControl
     {
-        protected List<IImage> _images = new();
+        protected List<ImageData> _images = new();
         public float _widthExtra = 2f;
         private Point? _startPoint;
         private int _minDragDistance = 8;
 
         public static readonly StyledProperty<Stretch> StretchProperty =
-            AvaloniaProperty.Register<Image, Stretch>(nameof(Stretch), Stretch.Uniform);
+            AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.Uniform);
         public Stretch Stretch
         {
             get { return GetValue(StretchProperty); }
             set { SetValue(StretchProperty, value); }
         }
 
-        public abstract string PrimarySource { get; set; }
-        public string[] Paths { get; set; }
+        public abstract ImageData PrimarySource { get; set; }
 
         public BaseImage()
         {
@@ -49,10 +49,9 @@
             {
                 case nameof(PrimarySource):
                     _images.Clear();
-                    if (change != null && change.NewValue != null && change.NewValue is string rawUri && File.Exists(rawUri))
+                    if (change != null && change.NewValue != null && change.NewValue is ImageData imageData)
                     {
-                        _images.Add(new Bitmap(rawUri));
-                        Paths = new string[] { rawUri };
+                        _images.Add(imageData);
                     }
                     InvalidateVisual();
                     break;
@@ -70,7 +69,7 @@
         private async Task DoDrag(object? sender, PointerEventArgs e)
         {
             var dragData = new DataObject();
-            dragData.Set(DataFormats.Files, Paths);
+            dragData.Set(DataFormats.Files, _images);
             var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
             _startPoint = null;
         }
@@ -94,10 +93,10 @@
                         var path = firstFile?.Path.AbsolutePath ?? "";
                         if (path != "" && File.Exists(path))
                         {
-                            PrimarySource = path;
+                            PrimarySource = new ImageData(ImageKind.File, path);
                         }
                     }
-                    else if (data is IEnumerable<string> stringList)
+                    else if (data is IEnumerable<ImageData> stringList)
                     {
                         var first = stringList.First();
                         if(first != null)
@@ -105,9 +104,9 @@
                             PrimarySource = first;
                         }
                     }
-                    else if (data is string filename && filename != PrimarySource)
+                    else if (data is string filename && filename != PrimarySource.InputPath)
                     {
-                        PrimarySource = filename;
+                        PrimarySource = new ImageData(ImageKind.File, filename);
                     }
                 }
             }
