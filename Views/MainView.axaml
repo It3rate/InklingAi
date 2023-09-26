@@ -36,9 +36,9 @@
 					<controls:InputControls/>
 				</Grid>
 			<Grid Grid.Column="2" Name="_mainContainer" >
-				<Viewbox Stretch="Uniform">
+				<Viewbox Name="_viewbox" Stretch="Uniform">
 					<Border Name="_border" Classes="image" Margin="70">
-					<controls:CompositeImage ImageDataItems="{Binding ActiveItems}"/>
+						<controls:CompositeImage ImageDataItems="{Binding ActiveItems}"/>
 					</Border>
 				</Viewbox>
 			</Grid>

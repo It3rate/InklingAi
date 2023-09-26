@@ -31,6 +31,8 @@
 
         protected override void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
         {
+            base.OnLoaded(sender, e);
+
             var mvm = MainViewModel.GetRootDataContext(this);
             if (mvm != null)
             {
