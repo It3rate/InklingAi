@@ -46,8 +46,17 @@ public partial class MainViewModel : ViewModelBase
     }
     //public IEnumerable<string> ActiveItems => new List<string>() { @"C:\Users\Robin\InklingAI\SD\images\edit.png" };// InputItems.Where(item => item.IsActive);
 
-    private ObservableCollection<string> _activeItems = new ObservableCollection<string>() { @"C:\Users\Robin\InklingAI\SD\working\edit.png"};
-    public List<ImageData> ActiveItems => InputItems.Where(item => item.IsActive).ToList();
+    //public ObservableCollection<ImageData[]> ActiveItems => InputItems.Where(item => item.IsActive).ToArray();
+    private ObservableCollection<ImageData> _activeItems = new();
+    public ObservableCollection<ImageData> ActiveItems
+    {
+        get => _activeItems;
+        set => SetProperty(ref _activeItems, value);
+    }
+    public void ResetActiveItems()
+    {
+        ActiveItems = new ObservableCollection<ImageData>(InputItems.Where(item => item.IsActive));
+    }
 
     public MainViewModel()
     {

@@ -3,6 +3,7 @@ namespace InklingAi.Views
     using Avalonia;
     using Avalonia.Controls;
     using InklingAi.ViewModels;
+    using System.Diagnostics;
 
     public partial class InputControl : UserControl
     {
@@ -17,6 +18,28 @@ namespace InklingAi.Views
         public InputControl()
         {
             InitializeComponent();
+            _expander.Expanded += OnExpanded;
+            _expander.Collapsed += OnCollapsed;
+        }
+
+
+        private void OnExpanded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            ItemData.IsActive = true;
+            var mvm = MainViewModel.GetRootDataContext(this);
+            if (mvm != null)
+            {
+                mvm.ResetActiveItems();
+            }
+        }
+        private void OnCollapsed(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            ItemData.IsActive = false;
+            var mvm = MainViewModel.GetRootDataContext(this);
+            if(mvm != null)
+            {
+                mvm.ResetActiveItems();
+            }
         }
     }
 }

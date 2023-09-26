@@ -38,7 +38,6 @@
             set { SetValue(AspectSizeProperty, value); }
         }
 
-        public abstract ImageData ImageDataItem { get; set; }
         #endregion
 
         public BaseImage()
@@ -54,7 +53,7 @@
             AttachedToVisualTree += OnLoaded;
         }
 
-        private void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
+        protected virtual void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
         {
             var mvm = MainViewModel.GetRootDataContext(this);
             if (mvm != null)
@@ -78,19 +77,46 @@
                     InvalidateMeasure();
                     InvalidateVisual();
                     break;
-                case nameof(ImageDataItem):
-                    _imageDataList.Clear();
-                    if (change != null && change.NewValue != null && change.NewValue is ImageData imageData)
-                    {
-                        _imageDataList.Add(imageData);
-                    }
-                    InvalidateVisual();
-                    break;
             }
         }
 
         protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize, StretchDirection.Both);
         protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize);
+
+        protected void DrawImage(IImage? img, DrawingContext context, double alpha = 1.0)
+        {
+            if (img != null && Bounds.Width > 0 && Bounds.Height > 0)
+            {
+                Rect viewPort = new Rect(Bounds.Size);
+                Size sourceSize = img.Size;
+
+                Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
+                Size scaledSize = sourceSize * scale;
+
+                Rect destRect = viewPort
+                    .CenterRect(new Rect(scaledSize))
+                    .Intersect(viewPort);
+                Rect sourceRect = new Rect(sourceSize)
+                    .CenterRect(new Rect(destRect.Size / scale));
+
+                if(alpha != 1.0 && img is IImageBrushSource iibs)
+                {
+                    var imageBrush = new ImageBrush(iibs)
+                    {
+                        //SourceRect = new RelativeRect(sourceRect, RelativeUnit.Absolute),
+                        //DestinationRect = new RelativeRect(destRect, RelativeUnit.Absolute),
+                        Opacity = alpha,
+                        Stretch = Stretch.Fill
+                    };
+                    context.FillRectangle(imageBrush, destRect);
+
+                }
+                else
+                {
+                    context.DrawImage(img, sourceRect, destRect);
+                }
+            }
+        }
 
         #region Mouse Events
         private void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
@@ -106,44 +132,12 @@
             var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
             _startPoint = null;
         }
-        private void OnDragOver(object? sender, DragEventArgs e)
+        protected virtual void OnDragOver(object? sender, DragEventArgs e)
         {
-            e.DragEffects = DragDropEffects.Copy;
-            e.Handled = true;
         }
 
-        private void OnDrop(object? sender, DragEventArgs e)
-        {
-            var result = e.DragEffects;
-            if ((result & DragDropEffects.Copy) != DragDropEffects.None)
-            {
-                if (e.Data.Contains(DataFormats.Files))
-                {
-                    var data = e.Data.Get(DataFormats.Files);
-                    if (data is IEnumerable<IStorageItem> dataList)
-                    {
-                        var firstFile = dataList.FirstOrDefault();
-                        var path = firstFile?.Path.AbsolutePath ?? "";
-                        if (path != "" && File.Exists(path))
-                        {
-                            ImageDataItem = new ImageData(ImageKind.File, path);
-                        }
-                    }
-                    else if (data is IEnumerable<ImageData> stringList)
-                    {
-                        var first = stringList.First();
-                        if(first != null)
-                        {
-                            ImageDataItem = first;
-                        }
-                    }
-                    else if (data is string filename && filename != ImageDataItem.InputPath)
-                    {
-                        ImageDataItem = new ImageData(ImageKind.File, filename);
-                    }
-                }
-            }
-        }
+        protected abstract void OnDrop(object? sender, DragEventArgs e);
+
         private void OnImagePointerMoved(object? sender, PointerEventArgs e)
         {
             if (!_startPoint.HasValue)

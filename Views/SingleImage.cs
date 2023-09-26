@@ -11,6 +11,9 @@
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using InklingAi.ViewModels;
+    using Avalonia.Input;
+    using Avalonia.Platform.Storage;
+    using System.IO;
 
     public class SingleImage : BaseImage
     {
@@ -34,7 +37,7 @@
 
         public static readonly StyledProperty<ImageData?> ImageDataItemProperty =
             AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(ImageDataItem));
-        public override ImageData? ImageDataItem
+        public ImageData? ImageDataItem
         {
             get => GetValue(ImageDataItemProperty);
             set => SetValue(ImageDataItemProperty, value);
@@ -45,27 +48,67 @@
         {
         }
 
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+            var prop = change.Property;
+            switch (prop.Name)
+            {
+                case nameof(ImageDataItem):
+                    _imageDataList.Clear();
+                    if (change != null && change.NewValue != null && change.NewValue is ImageData imageData)
+                    {
+                        _imageDataList.Add(imageData);
+                    }
+                    InvalidateMeasure();
+                    InvalidateVisual();
+                    break;
+            }
+        }
+
+        protected override void OnDragOver(object? sender, DragEventArgs e)
+        {
+            e.DragEffects = DragDropEffects.Copy;
+            e.Handled = true;
+        }
+
+        protected override void OnDrop(object? sender, DragEventArgs e)
+        {
+            var result = e.DragEffects;
+            if ((result & DragDropEffects.Copy) != DragDropEffects.None)
+            {
+                if (e.Data.Contains(DataFormats.Files))
+                {
+                    var data = e.Data.Get(DataFormats.Files);
+                    if (data is IEnumerable<IStorageItem> dataList)
+                    {
+                        var firstFile = dataList.FirstOrDefault();
+                        var path = firstFile?.Path.AbsolutePath ?? "";
+                        if (path != "" && File.Exists(path))
+                        {
+                            ImageDataItem = new ImageData(ImageKind.File, path);
+                        }
+                    }
+                    else if (data is IEnumerable<ImageData> stringList)
+                    {
+                        var first = stringList.First();
+                        if (first != null)
+                        {
+                            ImageDataItem = first;
+                        }
+                    }
+                    else if (data is string filename && filename != ImageDataItem.InputPath)
+                    {
+                        ImageDataItem = new ImageData(ImageKind.File, filename);
+                    }
+                }
+            }
+        }
+
         public override void Render(DrawingContext context)
         {
-            base.Render(context);
-
             var bmp = _imageDataList.Count > 0 ? _imageDataList[0].ProcessedImage : null;
-            if (bmp != null && Bounds.Width > 0 && Bounds.Height > 0)
-            {
-                Rect viewPort = new Rect(Bounds.Size);
-                Size sourceSize = bmp.Size;
-
-                Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
-                Size scaledSize = sourceSize * scale;
-
-                Rect destRect = viewPort
-                    .CenterRect(new Rect(scaledSize))
-                    .Intersect(viewPort);
-                Rect sourceRect = new Rect(sourceSize)
-                    .CenterRect(new Rect(destRect.Size / scale));
-
-                context.DrawImage(bmp, sourceRect, destRect);
-            }
+            DrawImage(bmp, context);
         }
 
     }

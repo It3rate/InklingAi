@@ -2,24 +2,77 @@
 {
     using Avalonia;
     using Avalonia.Controls;
+    using Avalonia.Data;
+    using Avalonia.Input;
     using Avalonia.Media;
     using InklingAi.ViewModels;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
     public class CompositeImage : BaseImage
     {
-        //protected override void OnRender(DrawingContext context)
-        //{
-        //    base.Render(context);
+        public static readonly StyledProperty<ObservableCollection<ImageData>> ImageDataItemsProperty =
+            AvaloniaProperty.Register<SingleImage, ObservableCollection<ImageData>>(nameof(ImageDataItems));
+        public ObservableCollection<ImageData> ImageDataItems
+        {
+            get => GetValue(ImageDataItemsProperty);
+            set => SetValue(ImageDataItemsProperty, value);
+        }
 
-        //    // Draw a red border around the image
-        //    var pen = new Pen(Brushes.Red, 2);
-        //    context.DrawRectangle(pen, new Rect(0, 0, Bounds.Width, Bounds.Height));
-        //}
-        public override ImageData ImageDataItem { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public CompositeImage()
+        {
+        }
+
+        protected override void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
+        {
+            var mvm = MainViewModel.GetRootDataContext(this);
+            if (mvm != null)
+            {
+                var binding = new Binding("ActiveItems")
+                {
+                    Mode = BindingMode.OneWay,
+                    Source = mvm
+                };
+                this.Bind(ImageDataItemsProperty, binding);
+            }
+        }
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+            var prop = change.Property;
+            switch (prop.Name)
+            {
+                case nameof(ImageDataItems):
+                    _imageDataList.Clear();
+                    if (change != null && change.NewValue != null && change.NewValue is IEnumerable<ImageData> imageData)
+                    {
+                        _imageDataList.AddRange(imageData);
+                    }
+                    InvalidateMeasure();
+                    InvalidateVisual();
+                    break;
+            }
+        }
+
+        public override void Render(DrawingContext context)
+        {
+            if(_imageDataList.Count > 0)
+            {
+                var alpha = 1.0 / _imageDataList.Count;
+                foreach (ImageData imageData in _imageDataList)
+                {
+                    DrawImage(imageData.ProcessedImage, context, alpha);
+                }
+            }
+        }
+
+        protected override void OnDrop(object? sender, DragEventArgs e)
+        {
+        }
     }
 }

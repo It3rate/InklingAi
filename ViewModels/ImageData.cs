@@ -17,7 +17,7 @@
         public string Folder { get; set; }
         public ImageKind ImageKind { get; set; }
         public string InputTitle { get; set; }
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = false;
 
         public string InputPath { get; set; }
         private IImage? _inputImage;
@@ -54,7 +54,6 @@
 
         public ImageData(ImageKind kind, string title, string folder) 
         { 
-            IsActive = true;
             ImageKind = kind;
             InputTitle = title;
             Folder = folder;
