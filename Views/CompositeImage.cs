@@ -15,6 +15,7 @@
 
     public class CompositeImage : BaseImage
     {
+
         public static readonly StyledProperty<ObservableCollection<ImageData>> ImageDataItemsProperty =
             AvaloniaProperty.Register<SingleImage, ObservableCollection<ImageData>>(nameof(ImageDataItems));
         public ObservableCollection<ImageData> ImageDataItems

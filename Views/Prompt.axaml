@@ -84,7 +84,14 @@
 		</Grid>
 		<Grid Grid.Row="14"  Margin="4" Height="64">
 			<Grid ColumnDefinitions="Auto,*">
-				<Image Grid.Column="0" Margin="6" Source="/Assets/unlock_64.png" />
+				<ToggleButton Grid.Column="0" Classes="image_button" Margin="6"  IsThreeState="False"
+							  Name="_seed" IsChecked="{Binding SeedLocked}">
+					<Panel>
+						<Image Classes="seed_locked" Source="/Assets/unlock_64.png" />
+						<Image Classes="seed_unlocked" Source="/Assets/lock_64.png" />
+					</Panel>
+				</ToggleButton>
+				<!--Image Classes="seed" Grid.Column="0" Margin="6" Source="/Assets/unlock_64.png" /-->
 
 				<Grid Grid.Column="1" RowDefinitions="Auto,Auto" Margin="2">
 					<Grid Grid.Row="0" ColumnDefinitions="*,*">
@@ -92,9 +99,9 @@
 						<Label Grid.Column="1" Margin="0,4,0,0"> Diffusion </Label>
 					</Grid>
 					<Grid Grid.Row="1" ColumnDefinitions="*,*">
-						<TextBox Grid.Column="0" 
+						<TextBox Grid.Column="0" Text="{Binding Seed}"
 								 VerticalAlignment="Top" HorizontalAlignment="Left"
-								 Height="30" Width="90">123456</TextBox>
+								 Height="30" Width="90" />
 						<ComboBox Grid.Column="1" SelectedIndex="0" 
 								  VerticalAlignment="Top" HorizontalAlignment="Left"
 								  Height="30" Width="90">

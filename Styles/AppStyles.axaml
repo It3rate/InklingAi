@@ -8,6 +8,12 @@
 		<StackPanel>
 			<Button>test</Button>
 			<Button Classes="image">test2</Button>
+			<ToggleButton Classes="image_button" IsChecked="True" Width="40">
+				<Panel>
+					<Image Classes="seed_locked" Source="/Assets/unlock_64.png" />
+					<Image Classes="seed_unlocked" Source="/Assets/lock_64.png" />
+				</Panel>
+			</ToggleButton>
 		</StackPanel>
 	</Design.PreviewWith>
 	
@@ -25,7 +31,7 @@
 	
 	<Style Selector="Button.image">
 		<Setter Property="Background" Value="Transparent"/>
-		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="BorderBrush" Value="Transparent"/>
 	</Style>
 	<Style Selector="Button.image:pointerover">
@@ -53,5 +59,34 @@
 	<Style Selector="Border.image:focus-within">
 		<Setter Property="BorderBrush" Value="#D0FF0000"/>
 	</Style>
+	
+	
+	<Style Selector="ToggleButton.image_button:checked /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+	<Style Selector="ToggleButton.image_button:unchecked">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+	<Style Selector="ToggleButton.image_button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+	
+	<Style Selector="ToggleButton:unchecked Image.seed_unlocked">
+		<Setter Property="IsVisible" Value="False"/>
+	</Style>
+	<Style Selector="ToggleButton:checked Image.seed_unlocked">
+		<Setter Property="IsVisible" Value="True"/>
+	</Style>
+	<Style Selector="ToggleButton:unchecked Image.seed_locked">
+		<Setter Property="IsVisible" Value="True"/>
+	</Style>
+	<Style Selector="ToggleButton:checked Image.seed_locked">
+		<Setter Property="IsVisible" Value="False"/>
+	</Style>
+
 	
 </Styles>

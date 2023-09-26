@@ -19,6 +19,28 @@
         public string InputTitle { get; set; }
         public bool IsActive { get; set; } = false;
 
+        private IImage? _undoImage;
+        private IImage? _resetImage;
+        //private IImage? _latentImage;
+        // transform matrix
+        // source rect
+        // mask/alpha channel (can be vector)
+        // latent data
+        // process config (eg canny settings, or config that created the image)
+        // application settings (skip last steps, etc - can be in config)
+
+        // Composite settings:
+        // Images[]
+        // Blend stack
+        // Blend percents
+        
+        // Text:
+        // letters, styles, font, size, spans etc
+        // path, matrix etc
+        // ocr
+        // gen vs overlay
+
+
         public string InputPath { get; set; }
         private IImage? _inputImage;
         public IImage? InputImage {
@@ -48,9 +70,6 @@
             set { _processedImage = value; }
         }
 
-        private IImage? _undoImage;
-        private IImage? _resetImage;
-        //private IImage? _latentImage;
 
         public ImageData(ImageKind kind, string title, string folder) 
         { 

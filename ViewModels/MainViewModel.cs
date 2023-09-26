@@ -14,6 +14,19 @@ public partial class MainViewModel : ViewModelBase
 {
     public static string Title => "Inkling";
 
+    private bool _seedUnlocked = true;
+    public bool SeedUnlocked
+    {
+        get => _seedUnlocked;
+        set => SetProperty(ref _seedUnlocked, value);
+    }
+    private int _seed = 987654;
+    public int Seed
+    {
+        get => _seed;
+        set => SetProperty(ref _seed, value);
+    }
+
     private Size _aspectSize = new Size(640, 512); //(512, 640); //
     public Size AspectSize
     {
@@ -62,7 +75,7 @@ public partial class MainViewModel : ViewModelBase
     {
         LoadInputControls();
         LoadNextPage();
-}
+    }
 
     private int itemsPerRow = 3;
     private int currentPage = 0;
@@ -103,7 +116,14 @@ public partial class MainViewModel : ViewModelBase
         }
 
     }
-
+    private Random _random = new Random();
+    public void RandomizeSeed()
+    {
+        if (SeedUnlocked)
+        {
+            Seed = _random.Next();
+        }
+    }
     public static MainViewModel? GetRootDataContext(Visual? control)
     {
         MainViewModel? result = null;
