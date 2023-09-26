@@ -63,10 +63,10 @@
         {
             if(_imageDataList.Count > 0)
             {
-                var alpha = 1.0 / _imageDataList.Count;
-                foreach (ImageData imageData in _imageDataList)
+                for (int i = 0; i < _imageDataList.Count; i++)
                 {
-                    DrawImage(imageData.ProcessedImage, context, alpha);
+                    var alpha = 1.0 / (i + 1.0);
+                    DrawImage(_imageDataList[i].ProcessedImage, context, alpha);
                 }
             }
         }

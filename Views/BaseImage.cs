@@ -103,8 +103,6 @@
                 {
                     var imageBrush = new ImageBrush(iibs)
                     {
-                        //SourceRect = new RelativeRect(sourceRect, RelativeUnit.Absolute),
-                        //DestinationRect = new RelativeRect(destRect, RelativeUnit.Absolute),
                         Opacity = alpha,
                         Stretch = Stretch.Fill
                     };

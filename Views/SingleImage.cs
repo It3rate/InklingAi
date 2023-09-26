@@ -14,6 +14,7 @@
     using Avalonia.Input;
     using Avalonia.Platform.Storage;
     using System.IO;
+    using Avalonia.Media.Imaging;
 
     public class SingleImage : BaseImage
     {
@@ -66,6 +67,20 @@
             }
         }
 
+        private void SetImage(ImageData? imageData)
+        {
+            if(_imageDataList.Count > 0)
+            {
+                _imageDataList[0].ProcessedImage = imageData.ProcessedImage;
+                MainViewModel.GetRootDataContext(this).ResetActiveItems();
+                InvalidateMeasure();
+                InvalidateVisual();
+            }
+            else
+            {
+                ImageDataItem = imageData;
+            }
+        }
         protected override void OnDragOver(object? sender, DragEventArgs e)
         {
             e.DragEffects = DragDropEffects.Copy;
@@ -94,7 +109,8 @@
                         var first = stringList.First();
                         if (first != null)
                         {
-                            ImageDataItem = first;
+                            SetImage(first);
+                            //ImageDataItem = first;
                         }
                     }
                     else if (data is string filename && filename != ImageDataItem.InputPath)
