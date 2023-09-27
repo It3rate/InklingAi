@@ -9,7 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using InklingAi.StableDiffusion;
 using InklingAi.Utils;
-using System.Drawing;
+using Avalonia.Media;
+using Avalonia;
+using SkiaSharp;
 
 public class SDController
 {
@@ -20,7 +22,7 @@ public class SDController
     public VaeDecoder _vaeDecoder;
     public SchedulerBase _scheduler;
 
-    public delegate void UpdateStepCallback(int currentIndex, Image? img);
+    public delegate void UpdateStepCallback(int currentIndex, SKBitmap? img);
     public event UpdateStepCallback? OnUpdateStep;
 
     public SDController(UpdateStepCallback? callback = null) 
@@ -75,7 +77,7 @@ public class SDController
         //IOUtils.SaveEncoding(latents, IOUtils.SDWorkingFolder + "latent_test.bin");
 
         List<NamedOnnxValue> input;
-        Image? image = null;
+        SKBitmap? image = null;
         int t;
         for (t = 0; t < timesteps.Length; t++)
         {
@@ -120,11 +122,11 @@ public class SDController
         return latents;
     }
 
-    public Image? DecodePath(string latentPath, Size size)
+    public SKBitmap? DecodePath(string latentPath, Size size)
     {
         return _vaeDecoder.DecodePath(latentPath, size);
     }
-    public DenseTensor<Float16> EncodeImage(Image sourceBmp)
+    public DenseTensor<Float16> EncodeImage(SKBitmap sourceBmp)
     {
         return _vaeEncoder.EncodeImage(sourceBmp);
     }

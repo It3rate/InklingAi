@@ -1,11 +1,12 @@
 ﻿namespace InklingAi.Onnx;
 
+using Avalonia.Media;
 using InklingAi.Utils;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ public class VaeEncoder
         inferenceSession = OnnxUtils.GetCudaSession(modelPath); // ,@"F:\tmp\vae\sd_ink\clean\vae_encoder\model.onnx");
     }
 
-    unsafe public DenseTensor<Float16> EncodeImage(Image sourceBmp)
+    unsafe public DenseTensor<Float16> EncodeImage(SKBitmap sourceBmp)
     {
         // might need to resize
         var tensor = IOUtils.GetTensorFromImage(sourceBmp);

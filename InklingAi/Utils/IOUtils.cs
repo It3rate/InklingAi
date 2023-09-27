@@ -1,22 +1,23 @@
 ﻿namespace InklingAi.Utils
 {
     using System;
+    using System.IO;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Drawing.Imaging;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
 
     using ExifLibrary;
-    using System.IO;
-    using Newtonsoft.Json;
-    using System.Runtime.InteropServices;
     using InklingAi.StableDiffusion;
     using System.Net.Http;
     using Microsoft.ML.OnnxRuntime.Tensors;
-    using System.Drawing;
     using Microsoft.ML.OnnxRuntime;
+    using Avalonia.Media;
+    using Avalonia.Controls;
+    using Avalonia.Media.Imaging;
+    using Avalonia.Platform.Storage;
+    using SkiaSharp;
 
     //using Microsoft.ML.OnnxRuntime.Tensors;
     //using PAI2.Onnx;
@@ -404,82 +405,76 @@
 
 
 
-        //public static bool SaveWorkingFolder()
-        //{
-        //    bool result = false;
-        //    var config = StableDiffusionConfig.LoadFromJson(SDWorkingFolder + ConfigFilemame);
-        //    if (config != null)
-        //    {
-        //        SaveFileDialog saveFileDialog = new SaveFileDialog();
-        //        saveFileDialog.Filter = "PNG Image|*.png";
-        //        saveFileDialog.Title = "Save Generated Folder";
-        //        saveFileDialog.FileName = config.GeneratedImageName;
-        //        var dialogResult = saveFileDialog.ShowDialog();
-        //        string outputFilePath = saveFileDialog.FileName;
+        public async static Task<bool> SaveWorkingFolder(Window window)
+        {
+            bool result = false;
+            var config = StableDiffusionConfig.LoadFromJson(SDWorkingFolder + ConfigFilemame);
+            if (config != null)
+            {
+                var storage = window.StorageProvider;
 
-        //        if (dialogResult == DialogResult.OK && outputFilePath != "")
-        //        {
-        //            try
-        //            {
-        //                var bitmap = GetLocalImage(SDImageFolder + config.GeneratedImageName);
-        //                if (bitmap == null)
-        //                {
-        //                    bitmap = GetLocalImage(ImagePath("main"));
-        //                }
-        //                bitmap?.Save(outputFilePath, System.Drawing.Imaging.ImageFormat.Jpeg);
-        //                var outputFolderPath = CachedImageFolderName(outputFilePath);
-        //                result = CopyCacheFolder(SDWorkingFolder, outputFolderPath);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Trace.WriteLine("Error saving working folder. " + ex.Message);
-        //            }
-        //        }
-        //    }
-        //    return result;
-        //}
+                FilePickerSaveOptions saveOptions = new FilePickerSaveOptions();
+                saveOptions.FileTypeChoices = new List<FilePickerFileType>() { FilePickerFileTypes.ImagePng };
+                saveOptions.DefaultExtension = "PNG Image|*.png";
+                saveOptions.Title = "Save Generated Folder";
+                saveOptions.SuggestedFileName = config.GeneratedImageName;
+                var dialogResult = await storage.SaveFilePickerAsync(saveOptions);
+                var outputFilePath = dialogResult?.Path.ToString();
 
-        //public static Image? GetLocalImage(string folder, string filename = "")
-        //{
-        //    Bitmap? result = null;
-        //    var path = folder + filename; // folder can hold the full file path is filename is ""
-        //    try
-        //    {
-        //        if (File.Exists(path))
-        //        {
-        //            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-        //            {
-        //                using (var img = Image.FromStream(fs))
-        //                {
-        //                    using (Bitmap? bmp = (Bitmap?)img)
-        //                    {
-        //                        if (bmp != null)
-        //                        {
-        //                            result = new Bitmap(bmp);
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Trace.WriteLine("Error getting local image. " + ex.Message);
-        //    }
-        //    return result;
-        //}
-        public static string SaveLocalImage(Image? bmp, string? filename, StableDiffusionConfig? exifData = null)
+                if (dialogResult != null && outputFilePath != null && outputFilePath != "")
+                {
+                    try
+                    {
+                        var bitmap = GetLocalImage(SDImageFolder + config.GeneratedImageName);
+                        if (bitmap == null)
+                        {
+                            bitmap = GetLocalImage(ImagePath("main"));
+                        }
+                        bitmap?.Save(outputFilePath);
+                        var outputFolderPath = CachedImageFolderName(outputFilePath);
+                        result = CopyCacheFolder(SDWorkingFolder, outputFolderPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine("Error saving working folder. " + ex.Message);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public static Bitmap? GetLocalImage(string folder, string filename = "")
+        {
+            Bitmap? result = null;
+            var path = folder + filename; // folder can hold the full file path is filename is ""
+            try
+            {
+                if (File.Exists(path))
+                {
+                    result = new Bitmap(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Error getting local image. " + ex.Message);
+            }
+            return result;
+        }
+        public static string SaveLocalImage(SKBitmap? img, string? filename, StableDiffusionConfig? exifData = null)
         {
             var success = false;
-            if (bmp != null && filename != null && filename != "")
+            if (img != null && filename != null && filename != "")
             {
                 try
                 {
-                    var format = Path.GetExtension(filename).ToUpper() == ".PNG" ? ImageFormat.Png : ImageFormat.Jpeg;
-                    using (var file = new FileStream(filename, FileMode.Create))
-                    {
-                        bmp.Save(file, format);
-                    }
+                    //if (img is Bitmap bitmap)
+                    //{
+                    //    bitmap.Save(filename);
+                    //}
+                    //else
+                    //{
+                    //    // deal with svg etc if needed
+                    //}
 
                     if (exifData != null)
                     {
@@ -496,7 +491,7 @@
             return success ? filename : "";
         }
 
-        public static DenseTensor<byte> GetTensorFromImage(Image sourceBmp)
+        public static DenseTensor<byte> GetTensorFromImage(SKBitmap sourceBmp)
         {
             //var bmp = GraphicUtils.ConvertToRGBIfNeeded(sourceBmp);
             //var tensorShape = new int[] { bmp.Height, bmp.Width, 3 };

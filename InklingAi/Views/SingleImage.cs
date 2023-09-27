@@ -15,6 +15,7 @@
     using Avalonia.Platform.Storage;
     using System.IO;
     using Avalonia.Media.Imaging;
+    using SkiaSharp;
 
     public class SingleImage : BaseImage
     {
