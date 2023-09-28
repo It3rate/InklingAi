@@ -6,6 +6,7 @@
     using Avalonia.Input;
     using Avalonia.Media;
     using InklingAi.ViewModels;
+    using SkiaSharp;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -62,19 +63,25 @@
             }
         }
 
+        protected override void OnDrop(object? sender, DragEventArgs e)
+        {
+        }
+
+
         public override void Render(DrawingContext context)
         {
-            if(_imageDataList.Count > 0)
+            base.Render(context);
+            if (_imageDataList.Count > 0)
             {
                 for (int i = 0; i < _imageDataList.Count; i++)
                 {
                     var alpha = 1.0 / (i + 1.0);
-                    DrawImage(_imageDataList[i].ProcessedImage, context, alpha);
+                    DrawImage(context, _imageDataList[i].ProcessedImage, alpha);
                 }
             }
         }
 
-        protected override void OnDrop(object? sender, DragEventArgs e)
+        protected override void RenderSkia(SKCanvas canvas)
         {
         }
     }

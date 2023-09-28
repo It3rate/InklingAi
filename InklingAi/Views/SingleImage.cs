@@ -2,8 +2,15 @@
 {
     using Avalonia;
     using Avalonia.Media;
+    using Avalonia.Skia;
+    using Avalonia.Input;
+    using Avalonia.Platform;
+    using Avalonia.Platform.Storage;
+    using Avalonia.Media.Imaging;
+    using Avalonia.Rendering.SceneGraph;
     using Avalonia.Controls;
     using Avalonia.Metadata;
+    using SkiaSharp;
 
     using System;
     using System.Linq;
@@ -11,11 +18,8 @@
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using InklingAi.ViewModels;
-    using Avalonia.Input;
-    using Avalonia.Platform.Storage;
     using System.IO;
-    using Avalonia.Media.Imaging;
-    using SkiaSharp;
+    using Avalonia.Interactivity;
 
     public class SingleImage : BaseImage
     {
@@ -72,8 +76,8 @@
         {
             if(_imageDataList.Count > 0)
             {
-                _imageDataList[0].ProcessedImage = imageData.ProcessedImage;
-                MainViewModel.GetRootDataContext(this).ResetActiveItems();
+                _imageDataList[0].ProcessedImage = imageData?.ProcessedImage;
+                MainViewModel.GetRootDataContext(this)?.ResetActiveItems();
                 InvalidateMeasure();
                 InvalidateVisual();
             }
@@ -124,8 +128,12 @@
 
         public override void Render(DrawingContext context)
         {
+            base.Render(context);
             var bmp = _imageDataList.Count > 0 ? _imageDataList[0].ProcessedImage : null;
-            DrawImage(bmp, context);
+            DrawImage(context, bmp);
+        }
+        protected override void RenderSkia(SKCanvas canvas)
+        {
         }
 
     }
