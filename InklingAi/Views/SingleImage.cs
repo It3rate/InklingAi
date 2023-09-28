@@ -126,14 +126,10 @@
             }
         }
 
-        public override void Render(DrawingContext context)
-        {
-            base.Render(context);
-            var bmp = _imageDataList.Count > 0 ? _imageDataList[0].ProcessedImage : null;
-            DrawImage(context, bmp);
-        }
         protected override void RenderSkia(SKCanvas canvas)
         {
+            var bmp = _imageDataList.Count > 0 ? _imageDataList[0].ProcessedImage : null;
+            DrawImage(canvas, bmp);
         }
 
     }

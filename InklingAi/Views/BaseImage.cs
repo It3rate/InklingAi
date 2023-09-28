@@ -18,7 +18,8 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using SkiaSharp;
-using System.Diagnostics.Tracing;
+using InklingAi.Utils;
+using Avalonia.Threading;
 
 public abstract class BaseImage : UserControl
 {
@@ -77,7 +78,7 @@ public abstract class BaseImage : UserControl
         }
     }
 
-
+    Stretch _stretch = Stretch.UniformToFill;
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -87,6 +88,10 @@ public abstract class BaseImage : UserControl
             case nameof(AspectSize):
                 InvalidateMeasure();
                 InvalidateVisual();
+                break;
+
+            case nameof(Stretch):
+                _stretch = Stretch;
                 break;
         }
     }
@@ -140,36 +145,38 @@ public abstract class BaseImage : UserControl
     protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize, StretchDirection.Both);
     protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize);
 
-    protected void DrawImage(DrawingContext context, IImage? img, double alpha = 1.0)
+    protected void DrawImage(SKCanvas canvas, SKBitmap? img, double alpha = 1.0)
     {
         if (img != null && Bounds.Width > 0 && Bounds.Height > 0)
         {
             Rect viewPort = new Rect(Bounds.Size);
-            Size sourceSize = img.Size;
+            Size sourceSize = new Size(img.Width, img.Height);
 
-            Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
-            Size scaledSize = sourceSize * scale;
+                Vector scale = _stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
+                Size scaledSize = sourceSize * scale;
 
-            Rect destRect = viewPort
-                .CenterRect(new Rect(scaledSize))
-                .Intersect(viewPort);
-            Rect sourceRect = new Rect(sourceSize)
-                .CenterRect(new Rect(destRect.Size / scale));
+                Rect destRect = viewPort
+                    .CenterRect(new Rect(scaledSize))
+                    .Intersect(viewPort);
+                Rect sourceRect = new Rect(sourceSize)
+                    .CenterRect(new Rect(destRect.Size / scale));
 
-            if (alpha != 1.0 && img is IImageBrushSource iibs)
-            {
-                var imageBrush = new ImageBrush(iibs)
+                var skSource = sourceRect.ToSKRect();
+                var skDest = destRect.ToSKRect();
+
+                if (alpha != 1.0)
                 {
-                    Opacity = alpha,
-                    Stretch = Stretch.Fill
-                };
-                context.FillRectangle(imageBrush, destRect);
+                    using (SKPaint paint = new SKPaint())
+                    {
+                        paint.BlendMode = SKBlendMode.ColorDodge;
+                        canvas.DrawBitmap(img, skSource, skDest, paint);
+                    }
 
-            }
-            else
-            {
-                context.DrawImage(img, sourceRect, destRect);
-            }
+                }
+                else
+                {
+                    canvas.DrawBitmap(img, skSource, skDest);
+                }
         }
     }
 

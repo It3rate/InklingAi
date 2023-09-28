@@ -5,6 +5,7 @@
     using Avalonia.Media;
     using Avalonia.Media.Imaging;
     using DynamicData;
+    using SkiaSharp;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -42,13 +43,13 @@
 
 
         public string InputPath { get; set; }
-        private IImage? _inputImage;
-        public IImage? InputImage {
+        private SKBitmap? _inputImage;
+        public SKBitmap? InputImage {
             get
             {
                 if (_inputImage == null)
                 {
-                    _inputImage = LoadImage(InputPath);
+                    _inputImage = LoadSKImage(InputPath);
                 }
                 return _inputImage;
             }
@@ -56,14 +57,14 @@
         }
 
         public string ProcessedPath { get; set; }
-        private IImage? _processedImage;
-        public IImage? ProcessedImage
+        private SKBitmap? _processedImage;
+        public SKBitmap? ProcessedImage
         {
             get
             {
                 if (_processedImage == null)
                 {
-                    _processedImage = LoadImage(ProcessedPath);
+                    _processedImage = LoadSKImage(ProcessedPath);
                 }
                 return _processedImage;
             }
@@ -89,6 +90,18 @@
             LoadImage(ProcessedPath);
         }
 
+        private SKBitmap? LoadSKImage(string? path)
+        {
+            SKBitmap? result = null;
+            if (path != null &&  path != "" && File.Exists(path))
+            {
+                using (SKFileStream stream = new SKFileStream(path))
+                {
+                    result = SKBitmap.Decode(stream);
+                }
+            }
+            return result;
+        }
         private IImage? LoadImage(string? path)
         {
             IImage? result = null;
