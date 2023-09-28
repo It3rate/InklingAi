@@ -141,6 +141,7 @@ public abstract class BaseImage : UserControl
     {
         renderingLogic.Bounds = new Rect(0, 0, this.Bounds.Width, this.Bounds.Height);
         context.Custom((ICustomDrawOperation)renderingLogic);
+        base.Render(context);
     }
     protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize, StretchDirection.Both);
     protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize);
@@ -197,7 +198,7 @@ public class RenderingLogic : ICustomDrawOperation
     public Rect Bounds { get; set; }
     public void Dispose() { }
     public bool Equals(ICustomDrawOperation? other) => other == this;
-    public bool HitTest(Point p) { return false; }
+    public bool HitTest(Point p) { return true; }
 
     public void Render(ImmediateDrawingContext context)
     {
