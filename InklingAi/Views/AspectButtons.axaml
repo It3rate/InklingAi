@@ -6,18 +6,18 @@
              x:Class="InklingAi.Views.AspectButtons">
 
 	<Grid ColumnDefinitions="Auto, Auto, Auto, *">
-		<Button Grid.Column="0" Classes="image" Click="OnClick"
-				Command="{Binding ChangeAspectSizeCommand}" CommandParameter="Portrait">
+		<Button Grid.Column="0" Classes="image"
+				CommandParameter="Portrait">
 			<Svg Path="/Assets/portrait.svg" Stretch="Uniform"/>
 		</Button>
-		<Button Grid.Column="1" Classes="image" Margin="5,5" Click="OnClick"
-				Command="{Binding ChangeAspectSizeCommand}" CommandParameter="Square">
+		<Button Grid.Column="1" Classes="image" Margin="5,5"
+				CommandParameter="Square">
 			<Svg Path="/Assets/square.svg" Stretch="Uniform"/>
 		</Button>
-		<Button Grid.Column="2" Classes="image" Margin="0,5" Click="OnClick"
-				Command="{Binding ChangeAspectSizeCommand}" CommandParameter="Landscape">
+		<Button Grid.Column="2" Classes="image" Margin="0,5"
+				CommandParameter="Landscape">
 			<Svg Path="/Assets/landscape.svg" Stretch="Uniform"/>
 		</Button>
 	</Grid>
-	
+
 </UserControl>
