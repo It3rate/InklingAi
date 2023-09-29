@@ -67,27 +67,12 @@ public partial class MainViewModel : ViewModelBase
     }
 
 
-
-
-
-    private bool _seedUnlocked = true;
-    public bool SeedUnlocked
-    {
-        get => _seedUnlocked;
-        set => SetProperty(ref _seedUnlocked, value);
-    }
-    private int _seed = 987654;
-    public int Seed
-    {
-        get => _seed;
-        set => SetProperty(ref _seed, value);
-    }
     private Random _random = new Random();
     public void RandomizeSeed()
     {
-        if (SeedUnlocked)
+        if (SDConfig.SeedUnlocked)
         {
-            Seed = _random.Next();
+            SDConfig.Seed = _random.Next();
         }
     }
 

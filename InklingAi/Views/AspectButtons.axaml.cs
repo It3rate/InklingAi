@@ -1,20 +1,11 @@
-namespace InklingAi.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Avalonia;
-    using Avalonia.Controls;
-    using Avalonia.Svg.Skia;
-    using Avalonia.VisualTree;
-    using InklingAi.ViewModels;
+namespace InklingAi.Views;
 
-    public partial class AspectButtons : ButtonSet
+using Avalonia.Controls;
+
+public partial class AspectButtons : ButtonSet
+{
+    public AspectButtons()
     {
-        public AspectButtons()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

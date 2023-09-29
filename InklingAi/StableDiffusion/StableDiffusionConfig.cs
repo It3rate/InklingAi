@@ -23,8 +23,6 @@
         private string _maskImageName = "";
         private int[] _maskBounds = new int[0];
         private float _imagePreservation = 1f; // noise strength
-        private int _width = 640;
-        private int _height = 512;
         private string[] _activeInputs = new string[0];
 
         private int _startInferenceStep = 0;
@@ -71,6 +69,12 @@
         public IntSize _aspectSize = new IntSize(640, 512);
         public IntSize AspectSize { get => _aspectSize; set => SetProperty(ref _aspectSize, value); }
 
+        private bool _seedUnlocked = true;
+        public bool SeedUnlocked
+        {
+            get => _seedUnlocked;
+            set => SetProperty(ref _seedUnlocked, value);
+        }
 
 
         [JsonProperty("controlnet")]

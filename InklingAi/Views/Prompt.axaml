@@ -10,6 +10,11 @@
 	<Design.DataContext>
 		<vm:MainViewModel />
 	</Design.DataContext>
+	
+	<UserControl.Resources>
+		<vm:PercentageConverter x:Key="PercentageConverter" />
+		<vm:IntStringConverter x:Key="IntStringConverter" />
+	</UserControl.Resources>
 
 	<Grid RowDefinitions=
 			"Auto,*,Auto,*,Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
@@ -46,7 +51,7 @@
 		<Grid Grid.Row="9" Height="40">
 			<Grid ColumnDefinitions="*">
 				<controls:NumericSlider Grid.Column="1"
-					Value="21"
+					Value="{Binding SDConfig.NumInferenceSteps}"
 					Minimum="0"
 					Maximum="50"
 					TickFrequency="1"
@@ -60,7 +65,7 @@
 		<Grid Grid.Row="11"  Height="40">
 			<Grid ColumnDefinitions="*">
 				<controls:NumericSlider Grid.Column="1"
-					Value="7.5"
+					Value="{Binding SDConfig.GuidanceScale}"
 					Minimum="0"
 					Maximum="12"
 					TickFrequency="0.5"
@@ -75,7 +80,8 @@
 		<Grid Grid.Row="13"  Height="40">
 			<Grid ColumnDefinitions="*">
 				<controls:NumericSlider Grid.Column="1"
-					Value="35"
+					Value="{Binding SDConfig.ImagePreservation, 
+					Converter={StaticResource PercentageConverter}}"
 					Minimum="0"
 					Maximum="100"
 					TickFrequency="1"
@@ -85,7 +91,7 @@
 		<Grid Grid.Row="14"  Margin="4" Height="64">
 			<Grid ColumnDefinitions="Auto,*">
 				<ToggleButton Grid.Column="0" Classes="image_button" Margin="6"  IsThreeState="False"
-							  Name="_seed" IsChecked="{Binding SeedUnlocked}">
+							  Name="_seed" IsChecked="{Binding SDConfig.SeedUnlocked}">
 					<Panel>
 						<Image Classes="seed_locked" Source="/Assets/unlock_64.png" />
 						<Image Classes="seed_unlocked" Source="/Assets/lock_64.png" />
@@ -98,12 +104,14 @@
 						<Label Grid.Column="1" Margin="0,4,0,0"> Diffusion </Label>
 					</Grid>
 					<Grid Grid.Row="1" ColumnDefinitions="*,*">
-						<TextBox Grid.Column="0" Text="{Binding Seed}"
+						<TextBox Grid.Column="0" Name="txSeed"
+								 Text="{Binding SDConfig.Seed, Converter={StaticResource IntStringConverter}}"
+								 TextChanging = "OnNumericOnly"
 								 VerticalAlignment="Top" HorizontalAlignment="Left"
-								 Height="30" Width="90" />
+								 Height="30" />
 						<ComboBox Grid.Column="1" SelectedIndex="0" 
 								  VerticalAlignment="Top" HorizontalAlignment="Left"
-								  Height="30" Width="90">
+								  Height="30">
 							<ComboBoxItem>
 								<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
 									Textured
