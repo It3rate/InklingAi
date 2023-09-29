@@ -38,7 +38,7 @@
 			<Grid Grid.Column="2" Name="_mainContainer" >
 				<Viewbox Name="_viewbox" Stretch="Uniform">
 					<Border Name="_border" Classes="image" Margin="70">
-						<controls:CompositeImage ImageDataItems="{Binding ActiveItems}"/>
+						<controls:CompositeImage ImageDataItems="{Binding InfluenceData.ActiveItems}"/>
 					</Border>
 				</Viewbox>
 			</Grid>

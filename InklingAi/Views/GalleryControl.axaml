@@ -41,7 +41,7 @@
 	<Grid RowDefinitions="Auto, *">
 		<Border Classes="image">
 			<controls:SingleImage Grid.Row="0" Margin="0,0,0,4"
-				Source="{Binding MainImagePath}"
+				Source="{Binding GalleryData.MainImagePath}"
 				Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 				/>
 		</Border>
@@ -49,7 +49,7 @@
 		<ListBox Grid.Row="1"
 			Name="lbGallery"
 			Padding="0"
-			ItemsSource="{Binding ImageTuplePaths}"
+			ItemsSource="{Binding GalleryData.ImageTuplePaths}"
 			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 			ScrollViewer.VerticalScrollBarVisibility="Hidden">
 

@@ -37,7 +37,7 @@
             var mvm = MainViewModel.GetRootDataContext(this);
             if (mvm != null)
             {
-                var binding = new Binding("ActiveItems")
+                var binding = new Binding("InfluenceData.ActiveItems")
                 {
                     Mode = BindingMode.OneWay,
                     Source = mvm

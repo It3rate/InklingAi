@@ -3,9 +3,11 @@ namespace InklingAi.Views
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Svg.Skia;
+    using Avalonia.VisualTree;
     using InklingAi.ViewModels;
 
     public partial class AspectButtons : UserControl
@@ -17,42 +19,33 @@ namespace InklingAi.Views
         public AspectButtons()
         {
             InitializeComponent();
-            _buttons.AddRange(new Button[] { btPortrait, btSquare, btLandscape });
-            _images.AddRange(new Svg[] { svgPortrait, svgSquare, svgLandscape });
-            foreach (var button in _buttons)
-            {
-                if (button.Content is Svg svg)
-                {
-                    _images.Add(svg);
-                    var path = svg.Path!; // needs to be set
-                    _onStates[svg] = path;
-                    var disabledPath = path.Substring(0, path.Length - 4) + "_d.svg";
-                    _offStates[svg] = disabledPath;
-                }
-            }
+            this.AttachedToVisualTree += OnAttachedToVisualTree;
+        }
 
-            ResetButtons(btLandscape);
+        private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _buttons = this.GetVisualDescendants().OfType<Button>().ToList();
+                _images = this.GetVisualDescendants().OfType<Svg>().ToList();
+                foreach (var button in _buttons)
+                {
+                    if (button.Content is Svg svg)
+                    {
+                        _images.Add(svg);
+                        var path = svg.Path!;
+                        _onStates[svg] = path;
+                        var disabledPath = path.Substring(0, path.Length - 4) + "_d.svg";
+                        _offStates[svg] = disabledPath;
+                    }
+                }
+                ResetButtons(_buttons[0]);
+            });
         }
 
         private void OnClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             ResetButtons(sender as Button);
-            var viewModel = MainViewModel.GetRootDataContext(this);
-            if (viewModel != null)
-            {
-                if (sender == btPortrait)
-                {
-                    viewModel.AspectSize = new Size(512, 640);
-                }
-                else if (sender == btSquare)
-                {
-                    viewModel.AspectSize = new Size(512, 512);
-                }
-                else if (sender == btLandscape)
-                {
-                    viewModel.AspectSize = new Size(640, 512);
-                }
-            }
         }
 
         private void ResetButtons(Button? selected)
@@ -76,7 +69,6 @@ namespace InklingAi.Views
                     }
                 }
             }
-
         }
     }
 }

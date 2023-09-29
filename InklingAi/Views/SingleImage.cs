@@ -77,7 +77,7 @@
             if(_imageDataList.Count > 0)
             {
                 _imageDataList[0].ProcessedImage = imageData?.ProcessedImage;
-                MainViewModel.GetRootDataContext(this)?.ResetActiveItems();
+                MainViewModel.GetRootDataContext(this)?.InfluenceData.ResetActiveItems();
                 InvalidateMeasure();
                 InvalidateVisual();
             }

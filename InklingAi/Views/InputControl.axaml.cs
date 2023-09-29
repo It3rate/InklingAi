@@ -29,7 +29,7 @@ namespace InklingAi.Views
             var mvm = MainViewModel.GetRootDataContext(this);
             if (mvm != null)
             {
-                mvm.ResetActiveItems();
+                mvm.InfluenceData.ResetActiveItems();
             }
         }
         private void OnCollapsed(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -38,7 +38,7 @@ namespace InklingAi.Views
             var mvm = MainViewModel.GetRootDataContext(this);
             if(mvm != null)
             {
-                mvm.ResetActiveItems();
+                mvm.InfluenceData.ResetActiveItems();
             }
         }
     }
