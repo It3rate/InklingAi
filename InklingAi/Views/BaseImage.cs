@@ -39,8 +39,8 @@ public abstract class BaseImage : UserControl
         set { SetValue(StretchProperty, value); }
     }
 
-    public static readonly StyledProperty<Size> AspectSizeProperty = AvaloniaProperty.Register<BaseImage, Size>(nameof(AspectSize), new Size(640,512));
-    public Size AspectSize
+    public static readonly StyledProperty<IntSize> AspectSizeProperty = AvaloniaProperty.Register<BaseImage, IntSize>(nameof(AspectSize));
+    public IntSize AspectSize
     {
         get { return GetValue(AspectSizeProperty); }
         set { SetValue(AspectSizeProperty, value); }
@@ -69,7 +69,7 @@ public abstract class BaseImage : UserControl
         var mvm = MainViewModel.GetRootDataContext(this);
         if (mvm != null)
         {
-            var binding = new Binding("AspectSize")
+            var binding = new Binding("SDConfig.AspectSize")
             {
                 Mode = BindingMode.OneWay,
                 Source = mvm
@@ -143,8 +143,8 @@ public abstract class BaseImage : UserControl
         context.Custom((ICustomDrawOperation)renderingLogic);
         base.Render(context);
     }
-    protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize, StretchDirection.Both);
-    protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize);
+    protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, (Size)AspectSize, StretchDirection.Both);
+    protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, (Size)AspectSize);
 
     protected void DrawImage(SKCanvas canvas, SKBitmap? img, double alpha = 1.0)
     {

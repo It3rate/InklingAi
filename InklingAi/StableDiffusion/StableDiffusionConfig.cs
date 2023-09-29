@@ -1,49 +1,76 @@
 ﻿namespace InklingAi.StableDiffusion
 {
+    using InklingAi.Utils;
+    using InklingAi.ViewModels;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text.RegularExpressions;
 
-    public class StableDiffusionConfig
+    public class StableDiffusionConfig : ViewModelBase
     {
+        private string _prompt = "";
+        private string _negativePrompt = "";
+        private int _numInferenceSteps = 25;
+        private float _guidanceScale = 7.5f;
+        private int _seed = -1;
+        private int _callbackSteps = 1;
+        private string _initialImageName = "";
+        private string _initialLatentsName = "";
+        private string _generatedImageName = "";
+        private string _maskImageName = "";
+        private int[] _maskBounds = new int[0];
+        private float _imagePreservation = 1f; // noise strength
+        private int _width = 640;
+        private int _height = 512;
+        private string[] _activeInputs = new string[0];
+
+        private int _startInferenceStep = 0;
+        private string _initialImageSource = "";
+
         [JsonProperty("prompt")]
-        public string Prompt { get; set; } = "";
+        public string Prompt { get => _prompt; set => SetProperty(ref _prompt, value); }
         [JsonProperty("negative_prompt")]
-        public string NegativePrompt { get; set; } = "";
+        public string NegativePrompt { get => _negativePrompt; set => SetProperty(ref _negativePrompt, value); }
         [JsonProperty("num_inference_steps")]
-        public int NumInferenceSteps { get; set; } = 25;
+        public int NumInferenceSteps { get => _numInferenceSteps; set => SetProperty(ref _numInferenceSteps, value); }
         [JsonProperty("guidance_scale")]
-        public float GuidanceScale { get; set; } = 7.5f;
+        public float GuidanceScale { get => _guidanceScale; set => SetProperty(ref _guidanceScale, value); }
         // todo: Sampler, batchSize, maskBlur, batchPos 
         [JsonProperty("seed")]
-        public int Seed { get; set; } = -1;
+        public int Seed { get => _seed; set => SetProperty(ref _seed, value); }
         [JsonProperty("callback_steps")]
-        public int CallbackSteps { get; set; } = 1;
+        public int CallbackSteps { get => _callbackSteps; set => SetProperty(ref _callbackSteps, value); }
         [JsonProperty("initial_image_name")]
-        public string InitialImageName { get; set; } = "";
+        public string InitialImageName { get => _initialImageName; set => SetProperty(ref _initialImageName, value); }
         [JsonProperty("initial_latents_name")]
-        public string InitialLatentsName { get; set; } = "";
+        public string InitialLatentsName { get => _initialLatentsName; set => SetProperty(ref _initialLatentsName, value); }
         [JsonProperty("generated_image_name")]
-        public string GeneratedImageName { get; set; } = "";
+        public string GeneratedImageName { get => _generatedImageName; set => SetProperty(ref _generatedImageName, value); }
         [JsonProperty("mask_image_name")]
-        public string MaskImageName { get; set; } = "";
+        public string MaskImageName { get => _maskImageName; set => SetProperty(ref _maskImageName, value); }
         [JsonProperty("mask_bounds")]
-        public int[] MaskBounds { get; set; } = new int[0];
+        public int[] MaskBounds { get => _maskBounds; set => SetProperty(ref _maskBounds, value); }
         [JsonProperty("image_preservation")]
-        public float ImagePreservation { get; set; } = 1; // noise strength
+        public float ImagePreservation { get => _imagePreservation; set => SetProperty(ref _imagePreservation, value); }
         [JsonProperty("width")]
-        public int Width { get; set; } = 640;
+        public int Width { get => _aspectSize.Width; set => SetProperty(ref _aspectSize, new IntSize(value, _aspectSize.Height)); }
         [JsonProperty("height")]
-        public int Height { get; set; } = 512;
+        public int Height { get => _aspectSize.Height; set => SetProperty(ref _aspectSize, new IntSize(_aspectSize.Width, value)); }
         [JsonProperty("active_inputs")]
-        public string[] ActiveInputs { get; set; } = new string[0];
+        public string[] ActiveInputs { get => _activeInputs; set => SetProperty(ref _activeInputs, value); }
 
         [JsonProperty("start_inference_step")]
-        public int StartInferenceStep { get; set; } = 0;
+        public int StartInferenceStep { get => _startInferenceStep; set => SetProperty(ref _startInferenceStep, value); }
         [JsonProperty("initial_image_source")]
-        public string InitialImageSource { get; set; } = "";
+        public string InitialImageSource { get => _initialImageSource; set => SetProperty(ref _initialImageSource, value); }
+
+
+        public IntSize _aspectSize = new IntSize(640, 512);
+        public IntSize AspectSize { get => _aspectSize; set => SetProperty(ref _aspectSize, value); }
+
 
 
         [JsonProperty("controlnet")]
@@ -54,7 +81,7 @@
 
         [JsonConstructor]
         public StableDiffusionConfig(
-            string prompt, string negativePrompt, int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
+            string prompt = "positive", string negativePrompt = "negative", int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
             int seed = -1, int callbackSteps = 5, float imagePreservation = 1f,
             string initialImageName = "", string initialLatentsName = "",
             string generatedImageName = "", string maskImageName = "", int[]? maskBounds = null,
@@ -270,28 +297,27 @@
         }
 
         public bool HasRegion => MaskBounds.Length == 4 && MaskBounds[2] > 0 && MaskBounds[3] > 0;
-        //public System.Drawing.Rectangle MaskRectangle()
-        //{
-        //    return MaskBounds.ToRectangle();
-        //}
+
         public System.Drawing.Size GeneratedSize()
         {
-            return HasRegion ? new System.Drawing.Size(GeneratedRegionSize[2], GeneratedRegionSize[3]) : new System.Drawing.Size(Width, Height);
+            return HasRegion && GeneratedRegionSize != null ? 
+                new System.Drawing.Size(GeneratedRegionSize[2], GeneratedRegionSize[3]) :
+                new System.Drawing.Size(Width, Height);
         }
 
 
-        //public void WriteJson(string path)
-        //{
-        //    File.WriteAllText(path, GetJson());
-        //}
+        public void WriteJson(string path)
+        {
+            File.WriteAllText(path, GetJson());
+        }
         public static StableDiffusionConfig? LoadFromJson(string path)
         {
             StableDiffusionConfig? result = null;
-            //if (File.Exists(path))
-            //{
-            //    var jsonString = File.ReadAllText(path);
-            //    result = JsonConvert.DeserializeObject<StableDiffusionConfig>(jsonString);
-            //}
+            if (File.Exists(path))
+            {
+                var jsonString = File.ReadAllText(path);
+                result = JsonConvert.DeserializeObject<StableDiffusionConfig>(jsonString);
+            }
             return result;
         }
     }

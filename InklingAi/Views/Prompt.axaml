@@ -18,7 +18,7 @@
 			<Label>Image Description</Label>
 		</Grid>
 		<Grid Grid.Row="1" >
-			<TextBox TextWrapping="Wrap">A baltimore oriole on a birthday card.</TextBox>
+			<TextBox TextWrapping="Wrap" Text="{Binding SDConfig.Prompt}"/>
 		</Grid>
 		<Grid Grid.Row="2" Classes="title">
 			<Label>Style</Label>
@@ -30,7 +30,7 @@
 			<Label>Unwanted Attributes</Label>
 		</Grid>
 		<Grid Grid.Row="5">
-			<TextBox TextWrapping="Wrap">lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature</TextBox>
+			<TextBox TextWrapping="Wrap" Text="{Binding SDConfig.NegativePrompt}" />
 		</Grid>
 		
 		<Grid Grid.Row="6" Classes="title">

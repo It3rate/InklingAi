@@ -39,7 +39,7 @@ namespace InklingAi.Views
                         _offStates[svg] = disabledPath;
                     }
                 }
-                ResetButtons(_buttons[0]);
+                ResetButtons(_buttons[2]); // temp
             });
         }
 
