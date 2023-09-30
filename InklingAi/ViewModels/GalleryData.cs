@@ -1,5 +1,7 @@
 ﻿namespace InklingAi.ViewModels
 {
+    using Avalonia;
+    using InklingAi.Views;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -13,6 +15,7 @@
         private int itemsPerRow = 3;
         private int currentPage = 0;
         private const int itemsPerPage = 31;
+
 
         private string _mainImagePath = @"C:\Users\Robin\InklingAI\SD\working\main.png";
         public string MainImagePath
@@ -28,8 +31,12 @@
             set => SetProperty(ref _imageTuplePaths, value);
         }
 
-        public void LoadNextPage()
+        public void LoadNextPage(int startIndex = -1)
         {
+            if(startIndex >= 0)
+            {
+                currentPage = startIndex;
+            }
             string dirPath = @"C:\Users\Robin\InklingAI\SD\images\";
             var allFiles = Directory.GetFiles(dirPath, "*.png")
                              .OrderByDescending(file => new FileInfo(file).LastWriteTime)
@@ -39,17 +46,18 @@
 
             var filesToLoad = allFiles.Skip(currentPage * itemsPerPage + 1).Take(itemsPerPage);
 
+            var imageTuplePaths = new ObservableCollection<string[]>();
             var imagePair = new List<String>();
             foreach (var file in filesToLoad)
             {
-                //ImagePaths.Add(file);
                 imagePair.Add(file);
                 if (imagePair.Count == itemsPerRow)
                 {
-                    ImageTuplePaths.Add(imagePair.ToArray());
+                    imageTuplePaths.Add(imagePair.ToArray());
                     imagePair.Clear();
                 }
             }
+            ImageTuplePaths = imageTuplePaths;
             currentPage++;
         }
     }

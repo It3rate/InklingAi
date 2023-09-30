@@ -20,25 +20,36 @@
     using InklingAi.ViewModels;
     using System.IO;
     using Avalonia.Interactivity;
+    using Avalonia.Data;
+    using MathNet.Numerics;
 
     public class SingleImage : BaseImage
     {
         #region AvaloniaProperties
 
-        public static readonly DirectProperty<SingleImage, string> SourceProperty =
-        AvaloniaProperty.RegisterDirect<SingleImage, string>(
-            nameof(Source),
-            o => o.Source,
-            (o, v) => o.Source = v);
+        //public static readonly DirectProperty<SingleImage, string> SourceProperty =
+        //AvaloniaProperty.RegisterDirect<SingleImage, string>(
+        //    nameof(Source),
+        //    o => o.Source,
+        //    (o, v) => o.Source = v);
+
+        //public string Source
+        //{
+        //    get => _imageDataList.Count > 0 ? _imageDataList[0].ProcessedPath : "";
+        //    set
+        //    {
+        //        var imgData = new ImageData(ImageKind.File, value);
+        //        SetValue(ImageDataItemProperty, imgData);
+        //    }
+        //}
+        public static readonly StyledProperty<string> SourceProperty =
+            AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
+                defaultBindingMode: BindingMode.TwoWay);
 
         public string Source
         {
-            get => _imageDataList.Count > 0 ? _imageDataList[0].ProcessedPath : "";
-            set
-            {
-                var imgData = new ImageData(ImageKind.File, value);
-                SetValue(ImageDataItemProperty, imgData);
-            }
+            get => GetValue(SourceProperty);
+            set => SetValue(SourceProperty, value);
         }
 
         public static readonly StyledProperty<ImageData?> ImageDataItemProperty =
@@ -68,6 +79,13 @@
                     }
                     InvalidateMeasure();
                     InvalidateVisual();
+                    break;
+                case nameof(Source):
+                    if(change.NewValue is string source)
+                    {
+                        var imgData = new ImageData(ImageKind.File, source);
+                        SetValue(ImageDataItemProperty, imgData);
+                    }
                     break;
             }
         }

@@ -40,7 +40,7 @@
 
 	<Grid RowDefinitions="Auto, *">
 		<Border Classes="image">
-			<controls:SingleImage Grid.Row="0" Margin="0,0,0,4"
+			<controls:SingleImage Grid.Row="0" Margin="0,0,0,4" Name="imgMain"
 				Source="{Binding GalleryData.MainImagePath}"
 				Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 				/>

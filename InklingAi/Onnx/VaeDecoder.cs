@@ -58,13 +58,39 @@
             var h = tensor.Dimensions[0];
             var w = tensor.Dimensions[1];
             var bytes = tensor.ToArray<byte>();
+            bytes = ConvertBGRToRGBA(bytes);
             GCHandle bytesHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-            SKBitmap result = new SKBitmap(w, h, SKColorType.Rgb888x, SKAlphaType.Opaque);
-            result.SetPixels(bytesHandle.AddrOfPinnedObject());
-            //bytesHandle.Free();
-            return result;
+            try
+            {
+                SKBitmap result = new SKBitmap(w, h, SKColorType.Rgba8888, SKAlphaType.Opaque);
+                result.SetPixels(bytesHandle.AddrOfPinnedObject());
+                return result;
+            }
+            finally
+            {
+                bytesHandle.Free();
+            }
         }
 
+        private byte[] ConvertBGRToRGBA(byte[] original)
+        {
+            int length = original.Length;
+            if (length % 3 != 0)
+            {
+                throw new ArgumentException("Invalid 24-bit RGB data");
+            }
+
+            byte[] converted = new byte[(length / 3) * 4];
+            for (int i = 0, j = 0; i < length; i += 3, j += 4)
+            {
+                converted[j + 2] = original[i];     // R
+                converted[j + 1] = original[i + 1]; // G
+                converted[j + 0] = original[i + 2]; // B
+                converted[j + 3] = 255; // Ignored byte, can be any value
+            }
+
+            return converted;
+        }
         public void Dispose()
         {
             inferenceSession?.Dispose();

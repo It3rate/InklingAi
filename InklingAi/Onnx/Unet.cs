@@ -89,6 +89,7 @@ public class Unet
         // Run Inference
         var input = CreateStartInput(latentModelInput, timestep, textEmbeddings);
         var output = inferenceSessionIn.Run(input).ToList();
+
         var outputTensor = (output[0].Value as DenseTensor<Float16>);
         var emb = (output[1].Value as DenseTensor<Float16>);
         var hints = output.GetRange(2, 12);

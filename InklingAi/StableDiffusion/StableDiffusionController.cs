@@ -37,16 +37,18 @@
             _vaeDecoder = new VaeDecoder();
         }
 
-        public string Generate(StableDiffusionConfig config)
+        public SKBitmap? Generate(StableDiffusionConfig config)
         {
             var latents = GenerateLatents(config);
             var image = _vaeDecoder.Decode(latents);
-            var path = IOUtils.IterationStepPath(config.NumInferenceSteps);
-            IOUtils.SaveLocalImage(image, path);
+            //var path = IOUtils.IterationStepPath(config.NumInferenceSteps);
+            //IOUtils.SaveLocalImage(image, path);
 
+            var path = config.ImageNameFromConfig();
+            IOUtils.SaveLocalImage(image, path);
             //var path = IOUtils.IterationStepPath(999);
             //IOUtils.SaveLocalImage(image, path);
-            return path;
+            return image;
         }
 
         private DenseTensor<Float16> GenerateLatents(StableDiffusionConfig config)
@@ -64,6 +66,7 @@
                 embeds[1, i / 768, i % 768] = positiveEmbed[i];
             }
 
+            // THIS IS NOT EQUIVILENT
             //var pos = OnnxUtils.CreateTensor(positiveEmbed, new[] { 1, 77, 768 });
             //var neg = OnnxUtils.CreateTensor(negativeEmbed, new[] { 1, 77, 768 });
             //var embeds2 = pos.AddTensors(neg);

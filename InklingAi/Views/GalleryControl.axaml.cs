@@ -12,6 +12,7 @@ namespace InklingAi.Views
 
     public partial class GalleryControl : UserControl
     {
+        public SingleImage Main => imgMain;
 
         public static readonly StyledProperty<int> HalfWidthProperty =
             AvaloniaProperty.Register<GalleryControl, int>(nameof(HalfWidth));

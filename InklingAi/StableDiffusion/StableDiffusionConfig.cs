@@ -28,7 +28,7 @@
         private int _startInferenceStep = 0;
         private string _initialImageSource = "";
 
-        [JsonProperty("prompt")]
+        [JsonProperty("promptName")]
         public string Prompt { get => _prompt; set => SetProperty(ref _prompt, value); }
         [JsonProperty("negative_prompt")]
         public string NegativePrompt { get => _negativePrompt; set => SetProperty(ref _negativePrompt, value); }
@@ -148,7 +148,7 @@
         {
             return new Dictionary<string, object>
             {
-                { "prompt", Prompt },
+                { "promptName", Prompt },
                 { "negative_prompt", NegativePrompt },
                 { "num_inference_steps", NumInferenceSteps },
                 { "start_inference_step", StartInferenceStep },
@@ -192,7 +192,7 @@
 
             string[] separators = { "\r\n", "\r", "\n" };
             string[] lines = description.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string negPromptTag = "Negative prompt: ";
+            string negPromptTag = "Negative promptName: ";
             if (lines.Length == 3 && lines[1].StartsWith(negPromptTag))
             {
                 var prompt = lines[0];
@@ -224,7 +224,7 @@
         {
             var sb = new System.Text.StringBuilder();
             sb.Append(Prompt + "\n");
-            sb.Append("Negative prompt: " + NegativePrompt + "\n");
+            sb.Append("Negative promptName: " + NegativePrompt + "\n");
 
             sb.Append("Steps: " + NumInferenceSteps + ", ");
             sb.Append("Sampler: " + "DDIM" + ", ");
@@ -256,7 +256,7 @@
                     case "parameters":
                         Prompt = value;
                         break;
-                    case "Negative prompt":
+                    case "Negative promptName":
                         NegativePrompt = value;
                         break;
                     case "Steps":
@@ -323,6 +323,16 @@
                 result = JsonConvert.DeserializeObject<StableDiffusionConfig>(jsonString);
             }
             return result;
+        }
+
+        public string ImageNameFromConfig()
+        {
+            var promptName = Prompt;
+            promptName = promptName.Trim();
+            promptName = Regex.Replace(promptName, @"[^\w-]+", "_");
+            promptName = promptName.Substring(0, Math.Min(64, promptName.Length));
+            var filename = IOUtils.SDImageFolder + promptName + Seed.ToString() + ".png";
+            return filename;
         }
     }
 }

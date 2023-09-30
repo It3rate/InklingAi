@@ -76,16 +76,16 @@
 	</Style>
 	
 	<Style Selector="ToggleButton:unchecked Image.seed_unlocked">
-		<Setter Property="IsVisible" Value="False"/>
+		<Setter Property="IsVisible" Value="True"/>
 	</Style>
 	<Style Selector="ToggleButton:checked Image.seed_unlocked">
-		<Setter Property="IsVisible" Value="True"/>
+		<Setter Property="IsVisible" Value="False"/>
 	</Style>
 	<Style Selector="ToggleButton:unchecked Image.seed_locked">
-		<Setter Property="IsVisible" Value="True"/>
+		<Setter Property="IsVisible" Value="False"/>
 	</Style>
 	<Style Selector="ToggleButton:checked Image.seed_locked">
-		<Setter Property="IsVisible" Value="False"/>
+		<Setter Property="IsVisible" Value="True"/>
 	</Style>
 
 	

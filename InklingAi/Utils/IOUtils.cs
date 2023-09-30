@@ -475,6 +475,14 @@
                     //{
                     //    // deal with svg etc if needed
                     //}
+                    using (var image = SKImage.FromBitmap(img))
+                    using (var data = image.Encode())
+                    {
+                        using (var stream = File.OpenWrite(filename))
+                        {
+                            data.SaveTo(stream);
+                        }
+                    }
 
                     if (exifData != null)
                     {

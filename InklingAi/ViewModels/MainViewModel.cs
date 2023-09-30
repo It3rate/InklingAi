@@ -18,6 +18,7 @@ public partial class MainViewModel : ViewModelBase
 {
     public static string Title => "Inkling";
 
+    public StableDiffusionConfig _sdConfig = new();
     public StableDiffusionController sdController;
     public GalleryData GalleryData { get; } = new();
     public InfluenceData InfluenceData { get; } = new();
@@ -28,16 +29,17 @@ public partial class MainViewModel : ViewModelBase
         InfluenceData.LoadInputControls();
         ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
         GenerateCommand = new RelayCommand(OnGenerate);
-        //sdController = new StableDiffusionController();
+        sdController = new StableDiffusionController();
     }
 
     public ICommand GenerateCommand { get; }
     public void OnGenerate()
     {
-
+        RandomizeSeed();
+        var path = sdController.Generate(SDConfig);
+        GalleryData.LoadNextPage(0);
     }
 
-    public StableDiffusionConfig _sdConfig = new();
     public StableDiffusionConfig SDConfig
     {
         get => _sdConfig;
