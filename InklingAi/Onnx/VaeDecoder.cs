@@ -27,7 +27,7 @@
             inferenceSession = OnnxUtils.GetCudaSession(modelPath); // ,@"F:\tmp\vae\sd_ink\clean\vae_decoder\model.onnx");
         }
 
-        unsafe public SKBitmap? DecodePath(string latentPath, Size size)
+        unsafe public SKBitmap? DecodePath(string latentPath, IntSize size)
         {
             SKBitmap? result = null;
             var tensorShape = new int[] { 1, 4, (int)Math.Floor(size.Height / 8.0), (int)Math.Floor(size.Width / 8.0) };

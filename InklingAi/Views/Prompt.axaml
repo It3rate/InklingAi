@@ -132,7 +132,10 @@
 		
 		<Grid Grid.Row="15" Height="70">
 			<Grid ColumnDefinitions="*" VerticalAlignment="Bottom">
-				<Image Grid.Column="0" Margin="8" Source="/Assets/generate.png"/>
+				<Button Grid.Column="0" Background="Transparent" BorderThickness="0" Margin="8" 
+						Command="{Binding OnGenerate}">
+					<Image Source="/Assets/generate.png"/>
+				</Button>
 			</Grid>
 		</Grid>
 

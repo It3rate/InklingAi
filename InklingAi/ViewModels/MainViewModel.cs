@@ -18,6 +18,7 @@ public partial class MainViewModel : ViewModelBase
 {
     public static string Title => "Inkling";
 
+    public StableDiffusionController sdController;
     public GalleryData GalleryData { get; } = new();
     public InfluenceData InfluenceData { get; } = new();
 
@@ -26,9 +27,15 @@ public partial class MainViewModel : ViewModelBase
         GalleryData.LoadNextPage();
         InfluenceData.LoadInputControls();
         ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
+        GenerateCommand = new RelayCommand(OnGenerate);
+        //sdController = new StableDiffusionController();
     }
 
+    public ICommand GenerateCommand { get; }
+    public void OnGenerate()
+    {
 
+    }
 
     public StableDiffusionConfig _sdConfig = new();
     public StableDiffusionConfig SDConfig
@@ -45,14 +52,9 @@ public partial class MainViewModel : ViewModelBase
     }
 
 
-    //public IntSize AspectSize
-    //{
-    //    get => SDConfig.AspectSize;
-    //    set
-    //    {
-    //        SetProperty(ref SDConfig._aspectSize, value);
-    //    }
-    //}
+
+
+
     public double AspectRatio => SDConfig.AspectSize.Width / SDConfig.AspectSize.Height;
 
     public ICommand ChangeAspectSizeCommand { get; }
