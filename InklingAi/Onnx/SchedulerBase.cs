@@ -27,6 +27,14 @@ public abstract class SchedulerBase
 
     protected int _numInferenceSteps;
 
+    // self.betas = torch.linspace(beta_start, beta_end, num_train_timesteps, dtype=torch.float32)
+    // self.alphas = 1.0 - self.betas
+    // self.alphas_cumprod = torch.cumprod(self.alphas, dim= 0)
+    // sigmas = np.array(((1 - self.alphas_cumprod) / self.alphas_cumprod) ** 0.5)
+    // sigmas = np.concatenate([sigmas[::- 1], [0.0]]).astype(np.float32)
+    // self.sigmas = torch.from_numpy(sigmas)
+
+
     public SchedulerBase()
     {
         var betaStart = 0.00085f;
@@ -37,9 +45,8 @@ public abstract class SchedulerBase
         _alphas = _betas.Select(beta => 1 - beta).ToList();
         _alphasCumulativeProducts = _alphas.Select((alpha, i) => _alphas.Take(i + 1).Aggregate((a, b) => a * b)).ToList();
         _sigmas = _alphasCumulativeProducts.Select(alpha_prod => ((float)Math.Sqrt((1 - alpha_prod) / alpha_prod))).Reverse().ToList();
-        InitNoiseSigma = 1.0f; //  _sigmas.Max(); // 
+        InitNoiseSigma = _sigmas.Max(); // 1.0f; //  
         StepRatio = 1f;
-
     }
 
     public virtual int[] SetTimesteps(int numInferenceSteps)

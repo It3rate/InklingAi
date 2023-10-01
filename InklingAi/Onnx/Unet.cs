@@ -17,17 +17,23 @@ public class Unet
     public InferenceSession inferenceSessionOutC;
     public int DeviceId = 0;
     SchedulerBase _scheduler;
+    string _folder;
 
     public Unet(SchedulerBase scheduler, string folder = @"F:\tmp\vae\sd_ink\")
     //public Unet(string modelPath = @"F:\tmp\vae\sd_ink\opt\unet\model.onnx")
     //public Unet(string modelPath = @"F:\tmp\vae\sd_ink\clean\unet\model.onnx")
     {
-        inferenceSessionIn = OnnxUtils.GetCudaSession(folder + @"unet_in\model.onnx");
-        inferenceSessionMid = OnnxUtils.GetCudaSession(folder + @"unet_mid\model.onnx");
-        inferenceSessionOutA = OnnxUtils.GetCudaSession(folder + @"unet_out_a\model.onnx");
-        inferenceSessionOutB = OnnxUtils.GetCudaSession(folder + @"unet_out_b\model.onnx");
-        inferenceSessionOutC = OnnxUtils.GetCudaSession(folder + @"unet_out_c\model.onnx");
         _scheduler = scheduler;
+        _folder = folder;
+        SetupModels();
+    }
+    public void SetupModels()
+    {
+        inferenceSessionIn = OnnxUtils.GetCudaSession(_folder + @"unet_in\model.onnx");
+        inferenceSessionMid = OnnxUtils.GetCudaSession(_folder + @"unet_mid\model.onnx");
+        inferenceSessionOutA = OnnxUtils.GetCudaSession(_folder + @"unet_out_a\model.onnx");
+        inferenceSessionOutB = OnnxUtils.GetCudaSession(_folder + @"unet_out_b\model.onnx");
+        inferenceSessionOutC = OnnxUtils.GetCudaSession(_folder + @"unet_out_c\model.onnx");
     }
     // noise_pred = noise_pred_uncond + self.guidance_scale * (noise_pred_text - noise_pred_uncond)
     private Tensor<Float16> PerformGuidance(Tensor<Float16> noisePredUncond, Tensor<Float16> noisePredText, float guidanceScale)

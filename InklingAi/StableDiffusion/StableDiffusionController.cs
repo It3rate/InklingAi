@@ -53,7 +53,7 @@
 
         private DenseTensor<Float16> GenerateLatents(StableDiffusionConfig config)
         {
-            var positiveTokens = _tokenizer.TokenizeText(config.Prompt);
+            var positiveTokens = _tokenizer.TokenizeText(config.Prompt + "," + config.StylePrompt);
             var positiveEmbed = _textEncoder.EncodeText(positiveTokens);
 
             var negativeTokens = _tokenizer.TokenizeText(config.NegativePrompt);
@@ -80,14 +80,15 @@
 
             List<NamedOnnxValue> input;
             SKBitmap? image = null;
+
             int t;
             for (t = 0; t < timesteps.Length; t++)
             {
                 latents = _unet.Step(latents, embeds, timesteps[t], config.GuidanceScale);
-                image = _vaeDecoder.Decode(latents);
-                //latents = IOUtils.LoadEncoding(IOUtils.SDWorkingFolder + "latent_6.bin", latents.Dimensions.ToArray());
                 if (OnUpdateStep != null)
                 {
+                    image = _vaeDecoder.Decode(latents);
+                    //latents = IOUtils.LoadEncoding(IOUtils.SDWorkingFolder + "latent_6.bin", latents.Dimensions.ToArray());
                     OnUpdateStep(t + 1, image);
                 }
                 //var path = IOUtils.IterationStepPath(100 + t);
@@ -99,7 +100,7 @@
 
         public DenseTensor<Float16> GenerateLatentSample(int height, int width, int seed, float initNoiseSigma)
         {
-            var random = new Random(seed);
+            OnnxUtils.random = new Random(seed);
             var batchSize = 1;
             var channels = 4;
             var latentHeight = height / 8;
@@ -109,15 +110,15 @@
             for (int i = 0; i < latentsArray.Length; i++)
             {
                 // Generate a random number from a normal distribution with mean 0 and variance 1
-                var u1 = random.NextDouble(); // Uniform(0,1) random number
-                var u2 = random.NextDouble(); // Uniform(0,1) random number
+                var u1 = OnnxUtils.random.NextDouble(); // Uniform(0,1) random number
+                var u2 = OnnxUtils.random.NextDouble(); // Uniform(0,1) random number
                 var radius = Math.Sqrt(-2.0 * Math.Log(u1)); // Radius of polar coordinates
                 var theta = 2.0 * Math.PI * u2; // Angle of polar coordinates
                 var standardNormalRand = radius * Math.Cos(theta); // Standard normal random number
                 // add noise to latents with * scheduler.init_noise_sigma
                 // generate randoms that are negative and positive
                 //latentsArray[i] = ((float)standardNormalRand * initNoiseSigma).ToFloat16();
-                latentsArray[i] = ((float)standardNormalRand).ToFloat16();
+                latentsArray[i] = ((float)standardNormalRand * initNoiseSigma).ToFloat16();
             }
 
             var latents = OnnxUtils.CreateTensor(latentsArray, new[] { batchSize, channels, latentHeight, latentWidth });

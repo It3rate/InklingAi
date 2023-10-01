@@ -29,7 +29,7 @@
 			<Label>Style</Label>
 		</Grid>
 		<Grid Grid.Row="3" >
-			<TextBox TextWrapping="Wrap">Victorian illustration, decorative border, style of Alphonse Mucha, Turner</TextBox>
+			<TextBox TextWrapping="Wrap" Text="{Binding SDConfig.StylePrompt}"/>
 		</Grid>
 		<Grid Grid.Row="4" Classes="title">
 			<Label>Unwanted Attributes</Label>

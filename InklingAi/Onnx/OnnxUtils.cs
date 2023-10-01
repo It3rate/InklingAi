@@ -10,6 +10,8 @@ using Microsoft.ML.OnnxRuntime.Tensors;
 
 public class OnnxUtils
 {
+    public static Random random = new Random();
+
     public static InferenceSession GetCudaSession(string modelPath, string? optPath = null)
     {
         var deviceId = 0;
@@ -172,7 +174,6 @@ public class OnnxUtils
 
     public static Tensor<float> GetRandomTensor(ReadOnlySpan<int> dimensions)
     {
-        var random = new Random();
         var latents = new DenseTensor<float>(dimensions);
         var latentsArray = latents.ToArray();
 

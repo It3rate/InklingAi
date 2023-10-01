@@ -11,8 +11,9 @@
 
     public class StableDiffusionConfig : ViewModelBase
     {
-        private string _prompt = "";
-        private string _negativePrompt = "";
+        private string _prompt = "Gunslinger, wild west";
+        private string _stylePrompt = "colorful, Victorian illustration, decorative border, style of Alphonse Mucha, Turner";
+        private string _negativePrompt = "lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature";
         private int _numInferenceSteps = 25;
         private float _guidanceScale = 7.5f;
         private int _seed = -1;
@@ -30,6 +31,8 @@
 
         [JsonProperty("promptName")]
         public string Prompt { get => _prompt; set => SetProperty(ref _prompt, value); }
+        [JsonProperty("style_prompt_name")]
+        public string StylePrompt { get => _stylePrompt; set => SetProperty(ref _stylePrompt, value); }
         [JsonProperty("negative_prompt")]
         public string NegativePrompt { get => _negativePrompt; set => SetProperty(ref _negativePrompt, value); }
         [JsonProperty("num_inference_steps")]
@@ -85,7 +88,7 @@
 
         [JsonConstructor]
         public StableDiffusionConfig(
-            string prompt = "positive", string negativePrompt = "negative", int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
+            string prompt = "", string stylePrompt = "", string negativePrompt = "", int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
             int seed = -1, int callbackSteps = 5, float imagePreservation = 1f,
             string initialImageName = "", string initialLatentsName = "",
             string generatedImageName = "", string maskImageName = "", int[]? maskBounds = null,
@@ -93,8 +96,9 @@
             string[]? activeInputs = null, string initialImageSource = "", ControlNetConfig[]? cnetConfigs = null,
             int[]? generatedRegionSize = null)
         {
-            Prompt = prompt;
-            NegativePrompt = negativePrompt;
+            Prompt = prompt != "" ? prompt : Prompt;
+            StylePrompt = stylePrompt != "" ? stylePrompt : StylePrompt;
+            NegativePrompt = negativePrompt != "" ? negativePrompt : NegativePrompt;
             NumInferenceSteps = steps;
             StartInferenceStep = startStep;
             GuidanceScale = guidanceScale;
@@ -125,6 +129,7 @@
         public void CopyPropertiesFrom(StableDiffusionConfig config)
         {
             Prompt = config.Prompt;
+            StylePrompt = config.StylePrompt;
             NegativePrompt = config.NegativePrompt;
             NumInferenceSteps = config.NumInferenceSteps;
             StartInferenceStep = config.StartInferenceStep;
@@ -149,6 +154,7 @@
             return new Dictionary<string, object>
             {
                 { "promptName", Prompt },
+                { "style_prompt", StylePrompt },
                 { "negative_prompt", NegativePrompt },
                 { "num_inference_steps", NumInferenceSteps },
                 { "start_inference_step", StartInferenceStep },
@@ -192,15 +198,17 @@
 
             string[] separators = { "\r\n", "\r", "\n" };
             string[] lines = description.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            string stylePromptTag = "Style promptName: ";
             string negPromptTag = "Negative promptName: ";
-            if (lines.Length == 3 && lines[1].StartsWith(negPromptTag))
+            if (lines.Length == 3 && lines[2].StartsWith(negPromptTag))
             {
                 var prompt = lines[0];
-                var negPrompt = lines[1].Substring(negPromptTag.Length);
+                var stylePrompt = lines[1].Substring(stylePromptTag.Length);
+                var negPrompt = lines[2].Substring(negPromptTag.Length);
                 result = new StableDiffusionConfig(prompt, negPrompt);
 
                 var parseIndex = 0;
-                var settings = lines[2].Split(",");
+                var settings = lines[3].Split(",");
                 count = 0;
                 foreach (var setting in settings)
                 {
@@ -224,6 +232,7 @@
         {
             var sb = new System.Text.StringBuilder();
             sb.Append(Prompt + "\n");
+            sb.Append("Style promptName: " + StylePrompt + "\n");
             sb.Append("Negative promptName: " + NegativePrompt + "\n");
 
             sb.Append("Steps: " + NumInferenceSteps + ", ");
@@ -255,6 +264,9 @@
                 {
                     case "parameters":
                         Prompt = value;
+                        break;
+                    case "Style promptName":
+                        StylePrompt = value;
                         break;
                     case "Negative promptName":
                         NegativePrompt = value;
