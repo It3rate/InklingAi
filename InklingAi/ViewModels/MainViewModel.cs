@@ -30,6 +30,11 @@ public partial class MainViewModel : ViewModelBase
         ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
         GenerateCommand = new RelayCommand(OnGenerate);
         sdController = new StableDiffusionController();
+        sdController.OnUpdateStep += OnGenerateUpdate;
+    }
+
+    private void OnGenerateUpdate(int currentIndex, SkiaSharp.SKBitmap? img)
+    {
     }
 
     public ICommand GenerateCommand { get; }

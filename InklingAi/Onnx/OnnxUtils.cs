@@ -132,28 +132,6 @@ public class OnnxUtils
         data = data.Concat(data).ToArray();
         return CreateTensor(data, dimensions);
     }
-    public static Tuple<Tensor<float>, Tensor<float>> SplitTensor(Tensor<float> tensorToSplit, int[] dimensions)
-    {
-        var tensor1 = new DenseTensor<float>(dimensions);
-        var tensor2 = new DenseTensor<float>(dimensions);
-
-        for (int i = 0; i < 1; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                for (int k = 0; k < 512 / 8; k++)
-                {
-                    for (int l = 0; l < 512 / 8; l++)
-                    {
-                        tensor1[i, j, k, l] = tensorToSplit[i, j, k, l];
-                        tensor2[i, j, k, l] = tensorToSplit[i, j + 4, k, l];
-                    }
-                }
-            }
-        }
-        return new Tuple<Tensor<float>, Tensor<float>>(tensor1, tensor2);
-
-    }
 
     public static DenseTensor<float> SumTensors(Tensor<float>[] tensorArray, int[] dimensions)
     {

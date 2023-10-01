@@ -11,6 +11,7 @@
     using InklingAi.StableDiffusion;
     using InklingAi.Utils;
     using SkiaSharp;
+    using InklingAi.ViewModels;
 
     public class StableDiffusionController
     {
@@ -70,13 +71,6 @@
                 embeds[1, i / 768, i % 768] = positiveEmbed[i];
             }
 
-            // THIS IS NOT EQUIVILENT
-            //var pos = OnnxUtils.CreateTensor(positiveEmbed, new[] { 1, 77, 768 });
-            //var neg = OnnxUtils.CreateTensor(negativeEmbed, new[] { 1, 77, 768 });
-            //var embeds2 = pos.AddTensors(neg);
-            //IOUtils.SaveEncoding(embeds, IOUtils.SDWorkingFolder + "_cs_text_encoding.bin");
-            //embeds = IOUtils.LoadEncoding(IOUtils.SDWorkingFolder + "_py_text_encoding.bin", embeds.Dimensions.ToArray());
-
             var timesteps = _scheduler.SetTimesteps(config.NumInferenceSteps);
             var seed = config.Seed;
 
@@ -98,9 +92,6 @@
                 //IOUtils.SaveEncoding(latents, path + ".bin");
                 //IOUtils.SaveLocalImage(image, path);
             }
-            //IOUtils.SaveEncoding(latents, @"C:\Users\Robin\InklingAI\SD\working\latent_0000.bin");
-            //var latentsSaved = IOUtils.LoadEncoding(@"C:\Users\Robin\InklingAI\SD\working\latent_25.bin", new int[] { 1, 4, 64, 64 });
-            //latents = IOUtils.LoadEncoding(@"C:\Users\Robin\InklingAI\SD\working\latent_0000.bin", new int[] { 1, 4, 64, 64 });
             return latents;
         }
 
@@ -115,15 +106,11 @@
 
             for (int i = 0; i < latentsArray.Length; i++)
             {
-                // Generate a random number from a normal distribution with mean 0 and variance 1
-                var u1 = OnnxUtils.random.NextDouble(); // Uniform(0,1) random number
-                var u2 = OnnxUtils.random.NextDouble(); // Uniform(0,1) random number
+                var u1 = OnnxUtils.random.NextDouble();
+                var u2 = OnnxUtils.random.NextDouble();
                 var radius = Math.Sqrt(-2.0 * Math.Log(u1)); // Radius of polar coordinates
                 var theta = 2.0 * Math.PI * u2; // Angle of polar coordinates
                 var standardNormalRand = radius * Math.Cos(theta); // Standard normal random number
-                // add noise to latents with * scheduler.init_noise_sigma
-                // generate randoms that are negative and positive
-                //latentsArray[i] = ((float)standardNormalRand * initNoiseSigma).ToFloat16();
                 latentsArray[i] = ((float)standardNormalRand * initNoiseSigma).ToFloat16();
             }
 

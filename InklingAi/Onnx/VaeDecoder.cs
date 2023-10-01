@@ -58,7 +58,6 @@
             var h = tensor.Dimensions[0];
             var w = tensor.Dimensions[1];
             var bytes = tensor.ToArray<byte>();
-            //bytes = ConvertBGRToRGBA(bytes, h, w);
             GCHandle bytesHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
             try
             {
@@ -72,40 +71,6 @@
             }
         }
 
-        private byte[] ConvertBGRToRGBA(byte[] original, int height, int width)
-        {
-            int length = original.Length;
-            if (length % 3 != 0)
-            {
-                throw new ArgumentException("Invalid 24-bit RGB data");
-            }
-
-            byte[] converted = new byte[(length / 3) * 4];
-            var inLoc = 0;
-            var chSize = width * height;
-            for (int h = 0; h < height; h++)
-            {
-                for (int w = 0; w < width; w++)
-                {
-                    var outLoc = w * height * 4 + h * 4;
-                    //var outLoc = h * width * 4 + w * 4;// h * width + w;
-                    converted[outLoc + 2] = original[inLoc + 0]; // R
-                    converted[outLoc + 1] = original[inLoc + 1]; // G
-                    converted[outLoc + 0] = original[inLoc + 2]; // B
-                    converted[outLoc + 3] = 255;
-                    inLoc += 3;
-                }
-            }
-            //for (int i = 0, j = 0; i < length; i += 3, j += 4)
-            //{
-            //    converted[j + 2] = original[i];     // R
-            //    converted[j + 1] = original[i + 1]; // G
-            //    converted[j + 0] = original[i + 2]; // B
-            //    converted[j + 3] = 255; // Ignored byte, can be any value
-            //}
-
-            return converted;
-        }
         public void Dispose()
         {
             inferenceSession?.Dispose();

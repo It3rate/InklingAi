@@ -469,14 +469,6 @@
             {
                 try
                 {
-                    //if (img is Bitmap bitmap)
-                    //{
-                    //    bitmap.Save(filename);
-                    //}
-                    //else
-                    //{
-                    //    // deal with svg etc if needed
-                    //}
                     using (var image = SKImage.FromBitmap(img))
                     using (var data = image.Encode())
                     {

@@ -27,21 +27,6 @@
     {
         #region AvaloniaProperties
 
-        //public static readonly DirectProperty<SingleImage, string> SourceProperty =
-        //AvaloniaProperty.RegisterDirect<SingleImage, string>(
-        //    nameof(Source),
-        //    o => o.Source,
-        //    (o, v) => o.Source = v);
-
-        //public string Source
-        //{
-        //    get => _imageDataList.Count > 0 ? _imageDataList[0].ProcessedPath : "";
-        //    set
-        //    {
-        //        var imgData = new ImageData(ImageKind.File, value);
-        //        SetValue(ImageDataItemProperty, imgData);
-        //    }
-        //}
         public static readonly StyledProperty<string> SourceProperty =
             AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
                 defaultBindingMode: BindingMode.TwoWay);
