@@ -18,6 +18,8 @@
     using Avalonia.Media.Imaging;
     using Avalonia.Platform.Storage;
     using SkiaSharp;
+    using InklingAi.Onnx;
+    using System.Runtime.InteropServices;
 
     //using Microsoft.ML.OnnxRuntime.Tensors;
     //using PAI2.Onnx;
@@ -532,30 +534,30 @@
             }
             return result;
         }
-        //unsafe public static DenseTensor<Float16> LoadEncoding(string filename, int[] dimensions)
-        //{
-        //    var data = File.ReadAllBytes(filename);
-        //    return OnnxUtils.CreateFloat16TensorFromBytes(data, dimensions);
-        //}
-        //unsafe public static void SaveEncoding(DenseTensor<Float16> tensor, string filename)
-        //{
-        //    Span<Float16> tensorSpan = tensor.Buffer.Span;
-        //    byte[] byteArray = MemoryMarshal.AsBytes(tensorSpan).ToArray();
+        unsafe public static DenseTensor<Float16> LoadEncoding(string filename, int[] dimensions)
+        {
+            var data = File.ReadAllBytes(filename);
+            return OnnxUtils.CreateFloat16TensorFromBytes(data, dimensions);
+        }
+        unsafe public static void SaveEncoding(DenseTensor<Float16> tensor, string filename)
+        {
+            Span<Float16> tensorSpan = tensor.Buffer.Span;
+            byte[] byteArray = MemoryMarshal.AsBytes(tensorSpan).ToArray();
 
-        //    // Write bytes to a file
-        //    File.WriteAllBytes(filename, byteArray);
+            // Write bytes to a file
+            File.WriteAllBytes(filename, byteArray);
 
-        //    //var data = tensor.ToArray();
-        //    //byte[] byteArray = new byte[data.Length * 2];
+            //var data = tensor.ToArray();
+            //byte[] byteArray = new byte[data.Length * 2];
 
-        //    //for (int i = 0; i < data.Length; i++)
-        //    //{
-        //    //    ushort val = (ushort)data[i].value;
-        //    //    byteArray[i * 2] = (byte)(val & 0xFF);
-        //    //    byteArray[i * 2 + 1] = (byte)((val >> 8) & 0xFF);
-        //    //}
-        //    //File.WriteAllBytes(filename, byteArray);
-        //}
+            //for (int i = 0; i < data.Length; i++)
+            //{
+            //    ushort val = (ushort)data[i].value;
+            //    byteArray[i * 2] = (byte)(val & 0xFF);
+            //    byteArray[i * 2 + 1] = (byte)((val >> 8) & 0xFF);
+            //}
+            //File.WriteAllBytes(filename, byteArray);
+        }
         //public static void SaveShape(DenseTensor<Float16> tensor, string filePath)
         //{
         //    var data = tensor.Dimensions.ToArray();

@@ -41,11 +41,8 @@ public class Unet
         var dims = noisePredUncond.Dimensions.ToArray();
         var flatUncond = noisePredUncond.ToFloatTensor().ToArray();
         var flatPred = noisePredText.ToFloatTensor().ToArray();
-
-        Float16[] combined = flatUncond.Zip(flatPred, (uncond, text) =>
-            (uncond + guidanceScale * (text - uncond)).ToFloat16()
-        ).ToArray();
-
+        var combinedFloats = flatUncond.Zip(flatPred, (uncondPred, textPred) => uncondPred + guidanceScale * (textPred - uncondPred));
+        Float16[] combined = combinedFloats.ToArray().ToFloat16Array();
         var result = new DenseTensor<Float16>(combined, dims);
 
         return result;
@@ -117,7 +114,7 @@ public class Unet
         outputTensor = (output[0].Value as DenseTensor<Float16>);
 
         // guidance
-        var splitTensors = outputTensor!.SplitTensor(latents.Dimensions.ToArray());
+        var splitTensors = outputTensor!.SplitTensorOnZeroDim();
         var noisePred = splitTensors.Item1;
         var noisePredText = splitTensors.Item2;
         noisePred = PerformGuidance(noisePred, noisePredText, guidanceScale);

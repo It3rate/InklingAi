@@ -27,7 +27,10 @@
         public StableDiffusionController(UpdateStepCallback? callback = null)
         {
             OnUpdateStep = callback;
-
+            CreateModels();
+        }
+        public void CreateModels()
+        {
             _tokenizer = new Tokenizer();
             _textEncoder = new TextEncoder();
             _scheduler = new EulerA();
@@ -53,6 +56,7 @@
 
         private DenseTensor<Float16> GenerateLatents(StableDiffusionConfig config)
         {
+            //return IOUtils.LoadEncoding(@"C:\Users\Robin\InklingAI\SD\working\latent_10.bin", new int[] { 1, 4, 80, 64 });
             var positiveTokens = _tokenizer.TokenizeText(config.Prompt + "," + config.StylePrompt);
             var positiveEmbed = _textEncoder.EncodeText(positiveTokens);
 
@@ -75,9 +79,8 @@
 
             var timesteps = _scheduler.SetTimesteps(config.NumInferenceSteps);
             var seed = config.Seed;
-            var latents = GenerateLatentSample(config.Height, config.Width, seed, _scheduler.InitNoiseSigma);
-            //IOUtils.SaveEncoding(latents, IOUtils.SDWorkingFolder + "latent_test.bin");
 
+            var latents = GenerateLatentSample(config.Height, config.Width, seed, _scheduler.InitNoiseSigma);
             List<NamedOnnxValue> input;
             SKBitmap? image = null;
 
@@ -87,14 +90,17 @@
                 latents = _unet.Step(latents, embeds, timesteps[t], config.GuidanceScale);
                 if (OnUpdateStep != null)
                 {
-                    image = _vaeDecoder.Decode(latents);
+                    //image = _vaeDecoder.Decode(latents);
                     //latents = IOUtils.LoadEncoding(IOUtils.SDWorkingFolder + "latent_6.bin", latents.Dimensions.ToArray());
-                    OnUpdateStep(t + 1, image);
+                    //OnUpdateStep(t + 1, image);
                 }
                 //var path = IOUtils.IterationStepPath(100 + t);
                 //IOUtils.SaveEncoding(latents, path + ".bin");
                 //IOUtils.SaveLocalImage(image, path);
             }
+            //IOUtils.SaveEncoding(latents, @"C:\Users\Robin\InklingAI\SD\working\latent_0000.bin");
+            //var latentsSaved = IOUtils.LoadEncoding(@"C:\Users\Robin\InklingAI\SD\working\latent_25.bin", new int[] { 1, 4, 64, 64 });
+            //latents = IOUtils.LoadEncoding(@"C:\Users\Robin\InklingAI\SD\working\latent_0000.bin", new int[] { 1, 4, 64, 64 });
             return latents;
         }
 

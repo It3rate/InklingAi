@@ -59,10 +59,8 @@ public class EulerA : SchedulerBase
         var sigma = Sigmas[stepIndex];
 
         // 1. compute predicted original sample (x_0) from sigma-scaled predicted noise
-        Tensor<float>? predOriginalSample = null;
-
         //  pred_original_sample = sample - sigma * model_output
-        predOriginalSample = OnnxUtils.SubtractTensors(sample, OnnxUtils.MultipleTensorByFloat(modelOutput, sigma));
+        var predOriginalSample = OnnxUtils.SubtractTensors(sample, OnnxUtils.MultipleTensorByFloat(modelOutput, sigma));
 
         float sigmaFrom = Sigmas[stepIndex];
         float sigmaTo = Sigmas.Length > stepIndex + 1 ? Sigmas[stepIndex + 1] : 0;

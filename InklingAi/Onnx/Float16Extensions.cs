@@ -26,8 +26,8 @@ public static class Float16Extensions
         var result = new Float16[len];
         for (int i = 0; i < len; i++)
         {
-            result[i] = (Float16)BitConverter.ToUInt16(value, i*2);
-
+            ushort bval = BitConverter.ToUInt16(value, i * 2);
+            result[i] = new Float16(bval);
         }
         return result;
     }
@@ -113,25 +113,25 @@ public static class Float16Extensions
         }
         return OnnxUtils.CreateTensor(result, dimensions);
     }
-    public static Tuple<Tensor<Float16>, Tensor<Float16>> SplitTensor(this Tensor<Float16> tensorToSplit, int[] dimensions)
+    public static Tuple<Tensor<Float16>, Tensor<Float16>> SplitTensorOnZeroDim(this Tensor<Float16> inputTensor)
     {
-        var tensor1 = new DenseTensor<Float16>(dimensions);
-        var tensor2 = new DenseTensor<Float16>(dimensions);
-
-        for (int i = 0; i < 1; i++)
+        if (inputTensor.Dimensions[0] % 2 != 0)
         {
-            for (int j = 0; j < 4; j++)
-            {
-                for (int k = 0; k < 512 / 8; k++)
-                {
-                    for (int l = 0; l < 512 / 8; l++)
-                    {
-                        tensor1[i, j, k, l] = tensorToSplit[i, j, k, l];
-                        tensor2[i, j, k, l] = tensorToSplit[i, j + 4, k, l];
-                    }
-                }
-            }
+            throw new ArgumentException("Expected even first dimension.");
         }
+        var dims = inputTensor.Dimensions.ToArray();
+        dims[0] /= 2;
+
+        var flattened = inputTensor.ToArray<Float16>();
+        var halfLength = flattened.Length / 2;
+
+        var firstHalf = new Float16[halfLength];
+        var secondHalf = new Float16[halfLength];
+        Array.Copy(flattened, 0, firstHalf, 0, halfLength);
+        Array.Copy(flattened, halfLength, secondHalf, 0, halfLength);
+        var tensor1 = new DenseTensor<Float16>(firstHalf, dims);
+        var tensor2 = new DenseTensor<Float16>(secondHalf, dims);
+
         return new Tuple<Tensor<Float16>, Tensor<Float16>>(tensor1, tensor2);
 
     }
