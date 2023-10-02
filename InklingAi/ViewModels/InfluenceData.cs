@@ -1,6 +1,7 @@
 ﻿namespace InklingAi.ViewModels
 {
-    using System;
+	using InklingAi.Utils;
+	using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -31,7 +32,7 @@
         public void LoadInputControls()
         {
             _inputItems.Clear();
-            string dirPath = @"C:\Users\Robin\InklingAI\SD\working\";
+            string dirPath = IOUtils.SDWorkingFolder;// @"C:\Users\Robin\InklingAI\SD\working\";
             _inputMap = ImageData.GenerateInputItems(dirPath);
             foreach (var val in _inputMap.Values)
             {

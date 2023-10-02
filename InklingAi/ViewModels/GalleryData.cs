@@ -1,7 +1,8 @@
 ﻿namespace InklingAi.ViewModels
 {
     using Avalonia;
-    using InklingAi.Views;
+	using InklingAi.Utils;
+	using InklingAi.Views;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -17,7 +18,7 @@
         private const int itemsPerPage = 31;
 
 
-        private string _mainImagePath = @"C:\Users\Robin\InklingAI\SD\working\main.png";
+        private string _mainImagePath = IOUtils.SDWorkingFolder + @"main.png";
         public string MainImagePath
         {
             get => _mainImagePath;
@@ -37,7 +38,7 @@
             {
                 currentPage = startIndex;
             }
-            string dirPath = @"C:\Users\Robin\InklingAI\SD\images\";
+            string dirPath = IOUtils.SDImageFolder;
             var allFiles = Directory.GetFiles(dirPath, "*.png")
                              .OrderByDescending(file => new FileInfo(file).LastWriteTime)
                              .ToArray();

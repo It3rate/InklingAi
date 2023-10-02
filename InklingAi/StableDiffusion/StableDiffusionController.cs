@@ -28,7 +28,7 @@
         public StableDiffusionController(UpdateStepCallback? callback = null)
         {
             OnUpdateStep = callback;
-            CreateModels();
+           // CreateModels();
         }
         public void CreateModels()
         {
