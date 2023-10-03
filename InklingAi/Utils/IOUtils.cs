@@ -62,6 +62,7 @@
 
         public static string SDDataFolder = DataFolder + SDData + _sep;
         public static string SDModelsFolder = SDDataFolder + "models" + _sep;
+        public static string SDOnnxFolder = SDDataFolder + "onnx" + _sep;
         public static string SDImageFolder = SDDataFolder + "images" + _sep;
         public static string SDWorkingFolder = SDDataFolder + "working" + _sep;
         public static string SDUploadsFolder = SDDataFolder + "uploads" + _sep;
