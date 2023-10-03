@@ -53,8 +53,11 @@
                     sessionOptions.EnableMemoryPattern = false;
                     sessionOptions.ExecutionMode = ExecutionMode.ORT_SEQUENTIAL;
                     sessionOptions.GraphOptimizationLevel = GraphOptimizationLevel.ORT_DISABLE_ALL;
-                    sessionOptions.AppendExecutionProvider_CUDA(0);
-                    var session = new InferenceSession(modelPath, sessionOptions);
+                    var opt = new OrtCUDAProviderOptions();
+                    var dict = new Dictionary<string, string>() { {"cudnn_conv_algo_search", "DEFAULT"} };
+                    opt.UpdateOptions(dict);
+                    sessionOptions.AppendExecutionProvider_CUDA(opt);
+                    var session = new InferenceSession(modelPath, sessionOptions);         
                     //var decoder = new VaeDecoder();
 
                     var inputNames = new List<string> { "latent_sample" }.AsReadOnly();

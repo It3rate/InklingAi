@@ -14,17 +14,22 @@ public class OnnxUtils
 
     public static InferenceSession GetCudaSession(string modelPath, string? optPath = null)
     {
-        var deviceId = 0;
         var sessionOptions = new SessionOptions();
-        sessionOptions.GraphOptimizationLevel = GraphOptimizationLevel.ORT_ENABLE_ALL;
-        sessionOptions.AppendExecutionProvider_CUDA(deviceId);
+        sessionOptions.GraphOptimizationLevel = GraphOptimizationLevel.ORT_DISABLE_ALL;
+        //sessionOptions.AppendExecutionProvider_CUDA(0);
+
+        var opt = new OrtCUDAProviderOptions();
+        var dict = new Dictionary<string, string>() { { "cudnn_conv_algo_search", "DEFAULT" } };
+        opt.UpdateOptions(dict);
+        sessionOptions.AppendExecutionProvider_CUDA(opt);
+
         sessionOptions.AppendExecutionProvider_CPU();
         //sessionOptions.EnableProfiling = true;
         sessionOptions.EnableMemoryPattern = true;
         sessionOptions.EnableCpuMemArena = true;
         sessionOptions.ExecutionMode = ExecutionMode.ORT_PARALLEL;
         sessionOptions.RegisterOrtExtensions();
-        if(optPath != null)
+        if (optPath != null)
         {
             sessionOptions.OptimizedModelFilePath = optPath;
         }
