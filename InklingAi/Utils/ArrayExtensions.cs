@@ -102,14 +102,14 @@
 
 
 
-    public static class FloatArrayArrayExtensions
+    public static class FloatPerArrayExtensions
     {
         public static float[] PerVectorAverages(this float[][] array) => array.Select(emb => emb.Average()).ToArray();
         public static float[] PerVectorSums(this float[][] array) => array.Select(emb => emb.Sum()).ToArray();
         public static float[] PerVectorMaxes(this float[][] array) => array.Select(emb => emb.Max()).ToArray();
         public static float[] PerVectorMins(this float[][] array) => array.Select(emb => emb.Min()).ToArray();
 
-        public static float[] PerColumnAverages(float[][] array) => TransposeIterator(array).Select(col => col.Average()).ToArray();
+        public static float[] PerColumnAverages(this float[][] array) => TransposeIterator(array).Select(col => col.Average()).ToArray();
         public static float[] PerColumnSums(this float[][] array) => TransposeIterator(array).Select(col => col.Sum()).ToArray();
         public static float[] PerColumnMaxes(this float[][] array) => TransposeIterator(array).Select(col => col.Max()).ToArray();
         public static float[] PerColumnMins(this float[][] array) => TransposeIterator(array).Select(col => col.Min()).ToArray();
