@@ -59,7 +59,7 @@
                 GuidanceScale = 7.5f,
                 Seed = 12345
             };
-            var path = "testConfig.json";
+            var path = "testConfigSD.json";
             config.WriteJson(path);
             var loadedConfig = StableDiffusionConfig.LoadFromJson(path);
             File.Delete(path);

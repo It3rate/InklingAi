@@ -7,6 +7,7 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using InklingAi.Utils;
+    using System.IO;
 
     public class ControlNetConfig : SideModuleConfig
     {
@@ -153,28 +154,29 @@
             return result;
         }
 
-        public Dictionary<string, object> ConfigDict()
+        public Dictionary<string, object>? GetConfigDictionary()
         {
-            return new Dictionary<string, object>
-            {
-                {"enabled", Enabled },
-                {"module", Module },
-                {"model", Model },
-                {"weight", Weight },
-                {"guidance_start", GuidanceStart },
-                {"guidance_end", GuidanceEnd },
-                {"extra_params", ExtraParamValues },
-                {"extra_param_names", ExtraParamNames },
-                {"input_path", InputPath },
-                {"image_path", ImagePath },
-                {"upload_path", UploadPath },
-            };
+            var jsonString = GetJson();
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+            return dictionary;
         }
         public string GetJson()
         {
-            var config = ConfigDict();
-            return JsonConvert.SerializeObject(config, Formatting.Indented);
-
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+        public void WriteJson(string path)
+        {
+            File.WriteAllText(path, GetJson());
+        }
+        public static ControlNetConfig? LoadFromJson(string path)
+        {
+            ControlNetConfig? result = null;
+            if (File.Exists(path))
+            {
+                var jsonString = File.ReadAllText(path);
+                result = JsonConvert.DeserializeObject<ControlNetConfig>(jsonString);
+            }
+            return result;
         }
 
         public static ControlNetConfig ParseExif(string description)
@@ -278,39 +280,6 @@
             }
             catch (Exception ex) { }
         }
-
-        //public override async Task<string> RunFilter(string source, string destination)
-        //{
-        //    var client = StableDiffusionClient.Instance;
-        //    var success = await client.RunControlNetFilter(this, source, destination);
-        //    return success;
-        //}
-        //public override async Task<string> RunFilter()
-        //{
-        //    var client = StableDiffusionClient.Instance;
-        //    return await client.RunControlNetFilters(new string[] { Module });
-        //}
-        //public void WriteJson(string path)
-        //{
-        //    File.WriteAllText(path, GetJson());
-        //}
-        //public static ControlNetConfig? LoadFromJson(string path)
-        //{
-        //    ControlNetConfig? result = null;
-        //    if (File.Exists(path))
-        //    {
-        //        var jsonString = File.ReadAllText(path);
-        //        result = JsonConvert.DeserializeObject<ControlNetConfig>(jsonString);
-        //    }
-        //    return result;
-        //}
-
-
-
-
-
-
-
 
     }
 }

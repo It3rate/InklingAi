@@ -153,7 +153,6 @@
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
             return dictionary;
         }
-
         public string GetJson()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
