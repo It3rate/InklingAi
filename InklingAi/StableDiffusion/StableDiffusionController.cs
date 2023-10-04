@@ -48,7 +48,7 @@
             //var path = IOUtils.IterationStepPath(config.NumInferenceSteps);
             //IOUtils.SaveLocalImage(image, path);
 
-            var path = config.ImageNameFromConfig();
+            var path = config.GenerateImageName();
             IOUtils.SaveLocalImage(image, path);
             //var path = IOUtils.IterationStepPath(999);
             //IOUtils.SaveLocalImage(image, path);

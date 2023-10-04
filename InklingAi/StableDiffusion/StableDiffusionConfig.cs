@@ -69,10 +69,14 @@
         public string InitialImageSource { get => _initialImageSource; set => SetProperty(ref _initialImageSource, value); }
 
 
+        [JsonIgnore]
         public IntSize _aspectSize = new IntSize(640, 512);
+        [JsonProperty("aspect_size")]
         public IntSize AspectSize { get => _aspectSize; set => SetProperty(ref _aspectSize, value); }
 
+        [JsonIgnore]
         private bool _seedUnlocked = true;
+        [JsonProperty("seed_unlocked")]
         public bool SeedUnlocked
         {
             get => _seedUnlocked;
@@ -125,63 +129,49 @@
         {
             CopyPropertiesFrom(config);
         }
-        public StableDiffusionConfig Clone() => new StableDiffusionConfig(this);
-        public void CopyPropertiesFrom(StableDiffusionConfig config)
+
+        public string GenerateImageName()
         {
-            Prompt = config.Prompt;
-            StylePrompt = config.StylePrompt;
-            NegativePrompt = config.NegativePrompt;
-            NumInferenceSteps = config.NumInferenceSteps;
-            StartInferenceStep = config.StartInferenceStep;
-            GuidanceScale = config.GuidanceScale;
-            Seed = config.Seed;
-            CallbackSteps = config.CallbackSteps;
-            ImagePreservation = config.ImagePreservation;
-            InitialImageName = config.InitialImageName;
-            InitialLatentsName = config.InitialLatentsName;
-            GeneratedImageName = config.GeneratedImageName;
-            MaskImageName = config.MaskImageName;
-            MaskBounds = (int[])config.MaskBounds.Clone();
-            Width = config.Width;
-            Height = config.Height;
-            ActiveInputs = config.ActiveInputs;
-            InitialImageSource = config.InitialImageSource;
-            GeneratedRegionSize = config.GeneratedRegionSize;
+            var promptName = Prompt;
+            promptName = promptName.Trim();
+            promptName = Regex.Replace(promptName, @"[^\w-]+", "_");
+            promptName = promptName.Substring(0, Math.Min(64, promptName.Length));
+            var filename = IOUtils.SDImageFolder + promptName + Seed.ToString() + ".png";
+            return filename;
+        }
+        public bool HasRegion => MaskBounds.Length == 4 && MaskBounds[2] > 0 && MaskBounds[3] > 0;
+        public System.Drawing.Size GeneratedSize()
+        {
+            return HasRegion && GeneratedRegionSize != null ?
+                new System.Drawing.Size(GeneratedRegionSize[2], GeneratedRegionSize[3]) :
+                new System.Drawing.Size(Width, Height);
         }
 
-        public Dictionary<string, object> ConfigDict()
+        public Dictionary<string, object>? GetConfigDictionary()
         {
-            return new Dictionary<string, object>
-            {
-                { "promptName", Prompt },
-                { "style_prompt", StylePrompt },
-                { "negative_prompt", NegativePrompt },
-                { "num_inference_steps", NumInferenceSteps },
-                { "start_inference_step", StartInferenceStep },
-                { "guidance_scale", GuidanceScale },
-                { "seed", Seed },
-                { "callback_steps", CallbackSteps },
-                { "image_preservation", ImagePreservation },
-                { "initial_image_name", InitialImageName },
-                { "initial_latents_name", InitialLatentsName },
-                { "generated_image_name", GeneratedImageName },
-                { "mask_image_name", MaskImageName },
-                { "mask_bounds", MaskBounds },
-                { "width", Width },
-                { "height", Height },
-                { "active_inputs", ActiveInputs },
-                { "initial_image_source", InitialImageSource },
-            };
+            var jsonString = GetJson();
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+            return dictionary;
         }
+
         public string GetJson()
         {
-            var config = ConfigDict();
-            return JsonConvert.SerializeObject(config, Formatting.Indented);
-
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
-
-
+        public void WriteJson(string path)
+        {
+            File.WriteAllText(path, GetJson());
+        }
+        public static StableDiffusionConfig? LoadFromJson(string path)
+        {
+            StableDiffusionConfig? result = null;
+            if (File.Exists(path))
+            {
+                var jsonString = File.ReadAllText(path);
+                result = JsonConvert.DeserializeObject<StableDiffusionConfig>(jsonString);
+            }
+            return result;
+        }
 
         public static StableDiffusionConfig? ParseExif(string description)
         {
@@ -200,12 +190,12 @@
             string[] lines = description.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             string stylePromptTag = "Style promptName: ";
             string negPromptTag = "Negative promptName: ";
-            if (lines.Length == 3 && lines[2].StartsWith(negPromptTag))
+            if (lines.Length == 4 && lines[2].StartsWith(negPromptTag))
             {
                 var prompt = lines[0];
                 var stylePrompt = lines[1].Substring(stylePromptTag.Length);
                 var negPrompt = lines[2].Substring(negPromptTag.Length);
-                result = new StableDiffusionConfig(prompt, negPrompt);
+                result = new StableDiffusionConfig(prompt, stylePrompt, negPrompt);
 
                 var parseIndex = 0;
                 var settings = lines[3].Split(",");
@@ -312,39 +302,11 @@
             }
         }
 
-        public bool HasRegion => MaskBounds.Length == 4 && MaskBounds[2] > 0 && MaskBounds[3] > 0;
-
-        public System.Drawing.Size GeneratedSize()
+        public StableDiffusionConfig Clone() => new StableDiffusionConfig(this);
+        public void CopyPropertiesFrom(StableDiffusionConfig config)
         {
-            return HasRegion && GeneratedRegionSize != null ? 
-                new System.Drawing.Size(GeneratedRegionSize[2], GeneratedRegionSize[3]) :
-                new System.Drawing.Size(Width, Height);
-        }
-
-
-        public void WriteJson(string path)
-        {
-            File.WriteAllText(path, GetJson());
-        }
-        public static StableDiffusionConfig? LoadFromJson(string path)
-        {
-            StableDiffusionConfig? result = null;
-            if (File.Exists(path))
-            {
-                var jsonString = File.ReadAllText(path);
-                result = JsonConvert.DeserializeObject<StableDiffusionConfig>(jsonString);
-            }
-            return result;
-        }
-
-        public string ImageNameFromConfig()
-        {
-            var promptName = Prompt;
-            promptName = promptName.Trim();
-            promptName = Regex.Replace(promptName, @"[^\w-]+", "_");
-            promptName = promptName.Substring(0, Math.Min(64, promptName.Length));
-            var filename = IOUtils.SDImageFolder + promptName + Seed.ToString() + ".png";
-            return filename;
+            var json = config.GetJson();
+            JsonConvert.PopulateObject(json, this);
         }
     }
 }
