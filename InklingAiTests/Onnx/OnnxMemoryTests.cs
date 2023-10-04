@@ -24,7 +24,7 @@
     {
         private const string ModelPath = "path_to_your_model.onnx";
 
-        [Fact(DisplayName = "TestRunOnnxModelWithGpu")]
+        //[Fact(DisplayName = "TestRunOnnxModelWithGpu")]
         public unsafe void TestRunOnnxModelWithGpu()
         {
             OrtValue? inTensor = null;

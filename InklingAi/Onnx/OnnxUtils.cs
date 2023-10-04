@@ -41,6 +41,7 @@ public class OnnxUtils
     {
         return new DenseTensor<T>(data, dimensions);
     }
+    public static Float16[] Float16Array(params float[] input) => input.ToFloat16Array();
     public static DenseTensor<Float16> CreateFloat16TensorFromBytes(byte[] data, int[] dimensions)
     {
         Float16[] f16Array = data.ToFloat16Array();
@@ -48,28 +49,28 @@ public class OnnxUtils
     }
 
 
-    public static void MultipleTensorByFloat(float[] data, float value)
+    public static void MultipleFloatArrayByFloat(float[] data, float value)
     {
         for (int i = 0; i < data.Length; i++)
         {
             data[i] *= value;
         }
     }
-    public static void DivideTensorByFloat(float[] data, float value)
+    public static void DivideFloatArrayByFloat(float[] data, float value)
     {
         for (int i = 0; i < data.Length; i++)
         {
             data[i] /= value;
         }
     }
-    public static void AddTensors(float[] sample, float[] toAdd)
+    public static void AddFloatArrays(float[] sample, float[] toAdd)
     {
         for (var i = 0; i < sample.Length; i++)
         {
             sample[i] += toAdd[i];
         }
     }
-    public static void SubtractTensors(float[] sample, float[] toSubtract)
+    public static void SubtractFloatArrays(float[] sample, float[] toSubtract)
     {
         for (var i = 0; i < sample.Length; i++)
         {
@@ -80,63 +81,57 @@ public class OnnxUtils
     public static DenseTensor<float> MultipleTensorByFloat(Tensor<float> data, float value)
     {
         var floats = data.ToArray();
-        MultipleTensorByFloat(floats, value);
+        MultipleFloatArrayByFloat(floats, value);
         return CreateTensor(floats, data.Dimensions.ToArray());
     }
     public static DenseTensor<float> DivideTensorByFloat(Tensor<float> data, float value)
     {
         var floats = data.ToArray();
-        DivideTensorByFloat(floats, value);
+        DivideFloatArrayByFloat(floats, value);
         return CreateTensor(floats, data.Dimensions.ToArray());
     }
     public static DenseTensor<float> AddTensors(Tensor<float> sample, Tensor<float> toAdd)
     {
         var sampleFloats = sample.ToArray();
         var toAddFloats = toAdd.ToArray();
-        AddTensors(sampleFloats, toAddFloats);
+        AddFloatArrays(sampleFloats, toAddFloats);
         return CreateTensor(sampleFloats, sample.Dimensions.ToArray());
     }
     public static DenseTensor<float> SubtractTensors(Tensor<float> sample, Tensor<float> toSubtract)
     {
         var sampleFloats = sample.ToArray();
         var toSubtractFloats = toSubtract.ToArray();
-        SubtractTensors(sampleFloats, toSubtractFloats);
+        SubtractFloatArrays(sampleFloats, toSubtractFloats);
         return CreateTensor(sampleFloats, sample.Dimensions.ToArray());
     }
 
     public static DenseTensor<Float16> MultipleTensorByFloat(Tensor<Float16> data, float value)
     {
         var floats = data.ToFloatTensor().ToArray();
-        MultipleTensorByFloat(floats, value);
+        MultipleFloatArrayByFloat(floats, value);
         return CreateTensor(floats, data.Dimensions.ToArray()).ToFloat16Tensor();
     }
     public static DenseTensor<Float16> DivideTensorByFloat(Tensor<Float16> data, float value)
     {
         var floats = data.ToFloatTensor().ToArray();
-        DivideTensorByFloat(floats, value);
+        DivideFloatArrayByFloat(floats, value);
         return CreateTensor(floats, data.Dimensions.ToArray()).ToFloat16Tensor();
     }
     public static DenseTensor<Float16> AddTensors(Tensor<Float16> data, Tensor<Float16> toAdd)
     {
         var floats = data.ToFloatTensor().ToArray();
-        var toAddFloats = data.ToFloatTensor().ToArray();
-        AddTensors(floats, toAddFloats);
+        var toAddFloats = toAdd.ToFloatTensor().ToArray();
+        AddFloatArrays(floats, toAddFloats);
         return CreateTensor(floats, data.Dimensions.ToArray()).ToFloat16Tensor();
     }
     public static DenseTensor<Float16> SubtractTensors(Tensor<Float16> data, Tensor<Float16> toSubtract)
     {
         var floats = data.ToFloatTensor().ToArray();
-        var toSubtractFloats = data.ToFloatTensor().ToArray();
-        SubtractTensors(floats, toSubtractFloats);
+        var toSubtractFloats = toSubtract.ToFloatTensor().ToArray();
+        SubtractFloatArrays(floats, toSubtractFloats);
         return CreateTensor(floats, data.Dimensions.ToArray()).ToFloat16Tensor();
     }
 
-
-    public static DenseTensor<float> Duplicate(float[] data, int[] dimensions)
-    {
-        data = data.Concat(data).ToArray();
-        return CreateTensor(data, dimensions);
-    }
 
     public static DenseTensor<float> SumTensors(Tensor<float>[] tensorArray, int[] dimensions)
     {
@@ -154,8 +149,7 @@ public class OnnxUtils
 
         return CreateTensor(sumArray, dimensions);
     }
-
-    public static Tensor<float> GetRandomTensor(ReadOnlySpan<int> dimensions)
+    public static Tensor<float> GetRandomTensor(int[] dimensions)
     {
         var latents = new DenseTensor<float>(dimensions);
         var latentsArray = latents.ToArray();

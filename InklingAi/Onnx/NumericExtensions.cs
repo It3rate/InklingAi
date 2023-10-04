@@ -10,16 +10,108 @@ using System.Threading.Tasks;
 
 public static class Float16Extensions
 {
-    public static Float16 ToFloat16(this Half value)
+
+    public static float ToFloat(this Float16 value)
     {
-        var bytes = BitConverter.ToUInt16(BitConverter.GetBytes(value), 0);
-        return new Float16(bytes);
+        return value.ToHalf().ToFloat();
+    }
+    public static float[] ToFloatArray(this Float16[] values)
+    {
+        float[] result = new float[values.Length];
+        for (int i = 0; i < values.Length; i++)
+        {
+            result[i] = values[i].ToFloat();
+        }
+        return result;
     }
     public static Half ToHalf(this Float16 float16)
     {
         return BitConverter.ToHalf(BitConverter.GetBytes(float16.value), 0);
     }
+    public static Half[] ToHalfArray(this Float16[] values)
+    {
+        Half[] result = new Half[values.Length];
+        for (int i = 0; i < values.Length; i++)
+        {
+            result[i] = values[i].ToHalf();
+        }
+        return result;
+    }
+    public static DenseTensor<float> ToFloatTensor(this Tensor<Float16> tensor)
+    {
+        var floats = tensor.ToArray().ToFloatArray();
+        return OnnxUtils.CreateTensor(floats, tensor.Dimensions.ToArray());
+    }
+}
 
+public static class FloatExtensions
+{
+    public static Float16 ToFloat16(this float value)
+    {
+        return value.ToHalf().ToFloat16();
+    }
+    public static Float16[] ToFloat16Array(this float[] values)
+    {
+        Float16[] result = new Float16[values.Length];
+        for (int i = 0; i < values.Length; i++)
+        {
+            result[i] = values[i].ToFloat16();
+        }
+        return result;
+    }
+    public static DenseTensor<Float16> ToFloat16Tensor(this Tensor<float> tensor)
+    {
+        var float16s = tensor.ToArray().ToFloat16Array();
+        return OnnxUtils.CreateTensor(float16s, tensor.Dimensions.ToArray());
+    }
+    public static Half ToHalf(this float value)
+    {
+        return (Half)value;
+    }
+    public static Half[] ToHalfArray(this float[] values)
+    {
+        Half[] result = new Half[values.Length];
+        for (int i = 0; i < values.Length; i++)
+        {
+            result[i] = values[i].ToHalf();
+        }
+        return result;
+    }
+}
+
+public static class HalfExtensions
+{
+    public static float ToFloat(this Half value)
+    {
+        return (float)value;
+    }
+    public static float[] ToFloatArray(this Half[] values)
+    {
+        float[] result = new float[values.Length];
+        for (int i = 0; i < values.Length; i++)
+        {
+            result[i] = values[i].ToFloat();
+        }
+        return result;
+    }
+    public static Float16 ToFloat16(this Half value)
+    {
+        var bytes = BitConverter.ToUInt16(BitConverter.GetBytes(value), 0);
+        return new Float16(bytes);
+    }
+    public static Float16[] ToFloat16Array(this Half[] values)
+    {
+        Float16[] result = new Float16[values.Length];
+        for (int i = 0; i < values.Length; i++)
+        {
+            result[i] = values[i].ToFloat16();
+        }
+        return result;
+    }
+}
+
+public static class ByteConversionExtensions
+{
     public static Float16[] ToFloat16Array(this byte[] value)
     {
         var len = (value.Length / 2);
@@ -31,62 +123,12 @@ public static class Float16Extensions
         }
         return result;
     }
-    public static Float16[] ToFloat16Array(this Half[] values)
-    {
-        Float16[] result = new Float16[values.Length];
-        for (int i = 0; i < values.Length; i++)
-        {
-            result[i] = values[i].ToFloat16();
-        }
-        return result;
-    }
-    public static Half[] ToHalfArray(this Float16[] values)
-    {
-        Half[] result = new Half[values.Length];
-        for (int i = 0; i < values.Length; i++)
-        {
-            result[i] = values[i].ToHalf();
-        }
-        return result;
-    }
+}
 
-    public static Float16 ToFloat16(this float value)
-    {
-        return value.ToHalf().ToFloat16();
-    }
-    public static float ToFloat(this Float16 value)
-    {
-        return value.ToHalf().ToFloat();
-    }
-    public static Float16[] ToFloat16Array(this float[] values)
-    {
-        Float16[] result = new Float16[values.Length];
-        for (int i = 0; i < values.Length; i++)
-        {
-            result[i] = values[i].ToFloat16();
-        }
-        return result;
-    }
-    public static float[] ToFloatArray(this Float16[] values)
-    {
-        float[] result = new float[values.Length];
-        for (int i = 0; i < values.Length; i++)
-        {
-            result[i] = values[i].ToFloat();
-        }
-        return result;
-    }
-    public static DenseTensor<float> ToFloatTensor(this Tensor<Float16> tensor)
-    {
-        var floats = tensor.ToArray().ToFloatArray();
-        return OnnxUtils.CreateTensor(floats, tensor.Dimensions.ToArray());
-    }
-    public static DenseTensor<Float16> ToFloat16Tensor(this Tensor<float> tensor)
-    {
-        var float16s = tensor.ToArray().ToFloat16Array();
-        return OnnxUtils.CreateTensor(float16s, tensor.Dimensions.ToArray());
-    }
 
+public static class TensorExtensions
+{
+    // tensor math
     public static DenseTensor<Float16> Duplicate(this DenseTensor<Float16> tensor)
     {
         var dimensions = tensor.Dimensions.ToArray();
@@ -95,15 +137,6 @@ public static class Float16Extensions
         dimensions[0] *= 2;
         return OnnxUtils.CreateTensor(data, dimensions);
     }
-    //public static DenseTensor<Float16> ConcatTensors(this DenseTensor<Float16> left, DenseTensor<Float16> right)
-    //{
-    //    var dimensions = left.Dimensions.ToArray();
-    //    var leftData = left.ToArray<Float16>();
-    //    var rightData = right.ToArray<Float16>();
-    //    var data = leftData.Concat(rightData).ToArray();
-    //    dimensions[0] *= 2;
-    //    return OnnxUtils.CreateTensor(data, dimensions);
-    //}
     public static DenseTensor<Float16> DivideTensorByFloat(float[] data, float value, int[] dimensions)
     {
         Float16[] result = new Float16[data.Length];
@@ -134,35 +167,5 @@ public static class Float16Extensions
 
         return new Tuple<Tensor<Float16>, Tensor<Float16>>(tensor1, tensor2);
 
-    }
-}
-
-public static class HalfExtensions
-{
-    public static Half ToHalf(this float value)
-    {
-        return (Half)value;
-    }
-    public static float ToFloat(this Half value)
-    {
-        return (float)value;
-    }
-    public static Half[] ToHalfArray(this float[] values)
-    {
-        Half[] result = new Half[values.Length];
-        for (int i = 0; i < values.Length; i++)
-        {
-            result[i] = values[i].ToHalf();
-        }
-        return result;
-    }
-    public static float[] ToFloatArray(this Half[] values)
-    {
-        float[] result = new float[values.Length];
-        for (int i = 0; i < values.Length; i++)
-        {
-            result[i] = values[i].ToFloat();
-        }
-        return result;
     }
 }

@@ -84,7 +84,7 @@ public class EulerA : SchedulerBase
         DenseTensor<float> prevSample = OnnxUtils.AddTensors(sample, OnnxUtils.MultipleTensorByFloat(derivative, dt));// sample + derivative * dt;
 
         //var noise = generator == null ? np.random.randn(modelOutput.shape) : np.random.RandomState(generator).randn(modelOutput.shape);
-        var noise = OnnxUtils.GetRandomTensor(prevSample.Dimensions);
+        var noise = OnnxUtils.GetRandomTensor(prevSample.Dimensions.ToArray());
         prevSample = OnnxUtils.AddTensors(prevSample, OnnxUtils.MultipleTensorByFloat(noise, sigmaUp));// prevSample + noise * sigmaUp;
 
         return prevSample.ToFloat16Tensor();
