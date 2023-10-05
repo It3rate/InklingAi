@@ -7,7 +7,7 @@ using Nums.Utils;
 
 namespace Nums.Primitives
 {
-	public class Workspace : IMathElement
+    public class Workspace : IMathElement
     {
 	    private static int _idCounter = 0;
 	    public MathElementKind Kind => MathElementKind.Transform;

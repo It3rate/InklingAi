@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Nums.Operations;
 using Nums.Utils;
 
 namespace Nums.Primitives
 {
-	public class Formula : IMathElement
+    public class Formula : IMathElement
     {
         public MathElementKind Kind => MathElementKind.Formula;
         public int Id { get; set; }

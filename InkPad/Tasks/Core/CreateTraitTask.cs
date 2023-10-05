@@ -3,6 +3,7 @@ using Nums.Primitives;
 
 namespace InkPad.Tasks.Core
 {
+    using InkPad.Agents;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -11,7 +12,7 @@ namespace InkPad.Tasks.Core
 
     public class CreateTraitTask : TaskBase, ICreateTask
     {
-        public Trait Trait;
+        public Trait? Trait;
         public string Name;
         public override bool IsValid => true;
         public CreateTraitTask(string name = "")
@@ -22,17 +23,17 @@ namespace InkPad.Tasks.Core
         {
             if (Trait == null)
             {
-                Trait = Trait.CreateIn(TaskAgent.Brain, Name);
+                Trait = Trait.CreateIn(Brain.ActiveBrain, Name);
             }
             else
             {
-                TaskAgent.Brain.AddTrait(Trait);
+                Brain.ActiveBrain.AddTrait(Trait);
             }
         }
 
         public override void UnRunTask()
         {
-            TaskAgent.Brain.RemoveTrait(Trait);
+            Brain.ActiveBrain.RemoveTrait(Trait);
         }
     }
 }

@@ -82,7 +82,6 @@ namespace InkPad.CommandEngine
 
         public void AddTask(ITask task)
         {
-	        task.TaskAgent = Agent;
 	        Tasks.Add(task);
         }
         public void AddTasks(params ITask[] tasks)

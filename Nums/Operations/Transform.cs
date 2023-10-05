@@ -1,7 +1,8 @@
 ﻿using Nums.CoreConcepts.Counter;
+using Nums.Primitives;
 using Nums.Utils;
 
-namespace Nums.Primitives
+namespace Nums.Operations
 {
     // **** All ops, history, sequences, equations should fit on traits as focals.
 
@@ -32,85 +33,85 @@ namespace Nums.Primitives
 
     public class Transform : ITransform
     {
-	    public MathElementKind Kind => MathElementKind.Transform;
+        public MathElementKind Kind => MathElementKind.Transform;
 
-	    public int Id { get; set; }
-	    public int CreationIndex => Id - (int)Kind - 1;
+        public int Id { get; set; }
+        public int CreationIndex => Id - (int)Kind - 1;
         public Brain Brain { get; }
 
         public TransformKind TransformKind { get; set; }
-	    public Selection Source { get; set; } // the object being transformed
-	    public Number Change { get; set; } // the amount to transform (can change per repeat)
+        public Selection Source { get; set; } // the object being transformed
+        public Number Change { get; set; } // the amount to transform (can change per repeat)
 
-	    public bool IsActive { get; private set; }
+        public bool IsActive { get; private set; }
         public UpCounter Counter { get; } = new UpCounter(); // counts the number of repeats 
-	    public Evaluation HaltCondition { get; set; } // the evaluation that decides if the transform can continue
+        public Evaluation HaltCondition { get; set; } // the evaluation that decides if the transform can continue
 
         public Transform(Selection source, Number change, TransformKind kind) // todo: add default numbers (0, 1, unot, -1 etc) in global domain.
         {
-	        Source = source;
-	        Change = change;
-	        TransformKind = kind;
-	        Brain = change.Brain;
-	        Id = Brain.NextTransformId();
+            Source = source;
+            Change = change;
+            TransformKind = kind;
+            Brain = change.Brain;
+            Id = Brain.NextTransformId();
         }
 
         public event TransformEventHandler StartTransformEvent;
-	    public event TransformEventHandler TickTransformEvent;
-	    public event TransformEventHandler EndTransformEvent;
+        public event TransformEventHandler TickTransformEvent;
+        public event TransformEventHandler EndTransformEvent;
 
-	    public void ApplyStart()
-	    {
-		    OnStartTransformEvent(this);
-		    IsActive = true;
-		    Counter.AddOne();
-	    }
-	    public void ApplyPartial(long tickOffset) { OnTickTransformEvent(this); }
-	    public void ApplyEnd()
-	    {
-		    OnEndTransformEvent(this);
-		    IsActive = false;
-	    }
+        public void ApplyStart()
+        {
+            OnStartTransformEvent(this);
+            IsActive = true;
+            Counter.AddOne();
+        }
+        public void ApplyPartial(long tickOffset) { OnTickTransformEvent(this); }
+        public void ApplyEnd()
+        {
+            OnEndTransformEvent(this);
+            IsActive = false;
+        }
 
-	    public bool Evaluate() => true;
-	    public bool IsComplete() => HaltCondition?.EvaluateFlags() ?? true;
+        public bool Evaluate() => true;
+        public bool IsComplete() => HaltCondition?.EvaluateFlags() ?? true;
 
-	    protected virtual void OnStartTransformEvent(ITransform e)
-	    {
-		    StartTransformEvent?.Invoke(this, e);
-	    }
+        protected virtual void OnStartTransformEvent(ITransform e)
+        {
+            StartTransformEvent?.Invoke(this, e);
+        }
 
-	    protected virtual void OnTickTransformEvent(ITransform e)
-	    {
-		    TickTransformEvent?.Invoke(this, e);
-	    }
+        protected virtual void OnTickTransformEvent(ITransform e)
+        {
+            TickTransformEvent?.Invoke(this, e);
+        }
 
-	    protected virtual void OnEndTransformEvent(ITransform e)
-	    {
-		    EndTransformEvent?.Invoke(this, e);
-	    }
+        protected virtual void OnEndTransformEvent(ITransform e)
+        {
+            EndTransformEvent?.Invoke(this, e);
+        }
     }
 
     public delegate void TransformEventHandler(object sender, ITransform e);
     public interface ITransform : IMathElement
     {
-	    Number Change { get; set; }
-	    event TransformEventHandler StartTransformEvent;
-	    event TransformEventHandler TickTransformEvent;
-	    event TransformEventHandler EndTransformEvent;
+        Number Change { get; set; }
+        event TransformEventHandler StartTransformEvent;
+        event TransformEventHandler TickTransformEvent;
+        event TransformEventHandler EndTransformEvent;
 
-	    void ApplyStart();
-	    void ApplyEnd();
-	    void ApplyPartial(long tickOffset);
-	    bool IsComplete();
+        void ApplyStart();
+        void ApplyEnd();
+        void ApplyPartial(long tickOffset);
+        bool IsComplete();
     }
 
     public enum TransformKind
     {
-	    None, // leave repeat in place
-	    AppendAll, // repeat are added together ('regular' multiplication)
-	    MultiplyAll, // repeat are multiplied together (exponents)
-	    Blend, // multiply as in area, blend from unot to unit
+        None, // leave repeat in place
+        AppendAll, // repeat are added together ('regular' multiplication)
+        MultiplyAll, // repeat are multiplied together (exponents)
+        Blend, // multiply as in area, blend from unot to unit
     }
 
     // todo: Evaluation of two segments are very much like the 16 bool operations, probably the same.
@@ -118,7 +119,7 @@ namespace Nums.Primitives
     {
         // can use overlap, equal, contain, not contain, minmax ranges, unit range, basis direction, number direction...
 
-	    None, // Never continue
+        None, // Never continue
         InTarget, // continue unless result escapes containment of EvaluationTarget
         NotInTarget,  // continue unless result enters containment of EvaluationTarget
         TargetIn,  // continue unless EvaluationTarget escapes containment of result

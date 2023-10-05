@@ -2,7 +2,7 @@
 
 namespace Nums.Primitives
 {
-	public class Network
+    public class Network
     {
 	    public MathElementKind Kind => MathElementKind.Network;
         public int Id { get; }

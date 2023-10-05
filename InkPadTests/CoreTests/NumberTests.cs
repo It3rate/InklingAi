@@ -2,6 +2,7 @@
 
 namespace NumbersTests
 {
+    using Nums.RefPrimitives;
     using Nums.Utils;
     using System;
     using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace NumbersTests
     using System.Text;
     using System.Threading.Tasks;
 
-    
+
     public class NumberTests : IDisposable
     {
 	    private Brain _brain;

@@ -4,12 +4,12 @@ using Nums.Utils;
 
 namespace Nums.Primitives
 {
-	/// <summary>
+    /// <summary>
     /// Traits are measurable properties on objects. They can be composed of multiple domains (like mph or dollars/day or lwh) but do not need to be.
     /// </summary>
     public class Trait : IMathElement
 	{
-		public Brain Brain { get; internal set; }
+		public Brain? Brain { get; internal set; }
         public MathElementKind Kind => MathElementKind.Trait;
         public int Id { get; internal set; }
         public int CreationIndex => Id - (int)Kind - 1;
@@ -46,13 +46,13 @@ namespace Nums.Primitives
 		    }
 	    }
 
-        public Domain DomainAt(int index)
+        public Domain? DomainAt(int index)
 	    {
 		    var id = index + (int)MathElementKind.Domain;
 		    DomainStore.TryGetValue(id, out var result);
 		    return result;
 	    }
-	    public IFocal FocalAt(int index)
+	    public IFocal? FocalAt(int index)
 	    {
 		    var id = index + (int)MathElementKind.Focal;
 		    FocalStore.TryGetValue(id, out var result);

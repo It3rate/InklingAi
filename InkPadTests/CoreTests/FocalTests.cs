@@ -1,10 +1,11 @@
 ﻿using System;
 using Nums.Primitives;
+using Nums.RefPrimitives;
 using Nums.Utils;
 
 namespace NumbersTests
 {
-    
+
     public class FocalTests : IDisposable
     {
 	    private Brain _brain;

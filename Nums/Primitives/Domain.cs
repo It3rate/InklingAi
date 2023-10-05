@@ -21,7 +21,6 @@ namespace Nums.Primitives
         public int Id { get; internal set; }
         public int CreationIndex => Id - (int)Kind - 1;
 
-	    //public Brain Brain => Trait.Brain;
 	    public Trait Trait { get; protected set; }
         public IFocal BasisFocal { get; protected set; }
         public IFocal MinMaxFocal { get; protected set; }
@@ -29,14 +28,10 @@ namespace Nums.Primitives
         public Number MinMaxNumber { get; protected set; }
 
         public readonly Dictionary<int, Number> NumberStore = new Dictionary<int, Number>();
-        public readonly Dictionary<int, NumberSet> NumberSetStore = new Dictionary<int, NumberSet>();
+        //public readonly Dictionary<int, NumberSet> NumberSetStore = new Dictionary<int, NumberSet>();
 
-        public bool BasisIsReciprocal { get; set; }// True when ticks are larger than the unit basis
+        public bool BasisIsReciprocal { get; set; } // True when ticks are larger than the unit basis
 
-        //public int BasisNumberId => BasisNumber.Id;
-        //public int BasisFocalId => BasisNumber.BasisFocal.Id;
-        //public int MinMaxFocalId => MinMaxNumber.FocalId;
-        //public int MinMaxNumberId => MinMaxNumber.Id;
 
         public NumRange MinMaxRange => BasisFocal.RangeAsBasis(MinMaxFocal);
         public double TickToBasisRatio => BasisIsReciprocal ? BasisFocal.NonZeroLength : 1.0 / BasisFocal.NonZeroLength;
@@ -93,23 +88,23 @@ namespace Nums.Primitives
         }
 
 
-        private int _numberSetCounter = 1 + (int)MathElementKind.NumberSet;
-        public int NextNumberSetId() => _numberSetCounter++ + Id;
-        public NumberSet AddNumberSet(NumberSet numberSet, bool addToStore = true)
-        {
-	        numberSet.Domain = this;
-	        numberSet.Id = numberSet.Id == 0 ? NextNumberSetId() : numberSet.Id;
-	        if (addToStore)
-	        {
-                NumberSetStore[numberSet.Id] = numberSet;
-	        }
-	        return numberSet;
-        }
-        public bool RemoveNumberSet(NumberSet numberSet)
-        {
-	        numberSet.Domain = null;
-	        return NumberSetStore.Remove(numberSet.Id);
-        }
+        //private int _numberSetCounter = 1 + (int)MathElementKind.NumberSet;
+        //public int NextNumberSetId() => _numberSetCounter++ + Id;
+        //public NumberSet AddNumberSet(NumberSet numberSet, bool addToStore = true)
+        //{
+	       // numberSet.Domain = this;
+	       // numberSet.Id = numberSet.Id == 0 ? NextNumberSetId() : numberSet.Id;
+	       // if (addToStore)
+	       // {
+        //        NumberSetStore[numberSet.Id] = numberSet;
+	       // }
+	       // return numberSet;
+        //}
+        //public bool RemoveNumberSet(NumberSet numberSet)
+        //{
+	       // numberSet.Domain = null;
+	       // return NumberSetStore.Remove(numberSet.Id);
+        //}
 
         public Number Zero() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.StartTickPosition);
         public Number One() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.EndTickPosition);

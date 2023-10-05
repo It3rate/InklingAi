@@ -1,4 +1,5 @@
 ﻿using Nums.Primitives;
+using Nums.RefPrimitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NumbersTests.CoreTests
 {
-    
+
     public class NumberSetTests : IDisposable
     {
         private Brain _brain;

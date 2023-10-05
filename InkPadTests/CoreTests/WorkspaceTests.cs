@@ -7,8 +7,8 @@ namespace NumbersTests
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Nums.RefPrimitives;
 
-    
     public class WorkspaceTests : IDisposable
     {
 	    private Brain _brain;

@@ -3,6 +3,7 @@ using Nums.Primitives;
 
 namespace NumbersTests
 {
+    using Nums.RefPrimitives;
     using Nums.Utils;
     using System;
     using System.Collections.Generic;
@@ -10,21 +11,21 @@ namespace NumbersTests
     using System.Text;
     using System.Threading.Tasks;
 
-    
-    public class DomainTests
+
+    public class DomainTests : IDisposable
     {
 	    private Brain _brain;
 	    private Trait _trait;
-        private FocalRef _unitFocal;
-        private FocalRef _maxMin;
+        private Focal _unitFocal;
+        private Focal _maxMin;
         private Domain _domain;
 
         public DomainTests()
         {
             _brain = Brain.ActiveBrain;
             _trait = Trait.CreateIn(_brain, "domain tests");
-            _unitFocal = FocalRef.CreateByValues(_trait, -4, 6);
-	        _maxMin = FocalRef.CreateByValues(_trait, -54, 46);
+            _unitFocal = Focal.CreateByValues(-4, 6);
+	        _maxMin = Focal.CreateByValues(-54, 46);
 	        _domain = new Domain(_trait, _unitFocal, _maxMin);
         }
 

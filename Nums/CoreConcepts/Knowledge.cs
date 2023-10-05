@@ -3,7 +3,7 @@ using Nums.Primitives;
 
 namespace Nums.CoreConcepts
 {
-	public class Knowledge
+    public class Knowledge
     {
         public static Knowledge Instance { get; private set; } // todo: integrate knowledge at the brain level.
 	    public Brain Brain { get; }

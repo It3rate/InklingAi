@@ -5,7 +5,7 @@ using Nums.Primitives;
 
 namespace Nums.Utils
 {
-	public interface INumAgent
+    public interface INumAgent
     {
 	    Brain Brain { get; }
 	    Knowledge Knowledge { get; }

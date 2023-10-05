@@ -39,7 +39,7 @@ public class Agent : IAgent
     public Pad InputPad => PadFor(PadKind.Input);
     public Pad PadFor(PadKind kind) => Pads[kind];
 
-    private readonly RendererBase _renderer;
+    private readonly RendererBase? _renderer;
     public RenderStatus RenderStatus { get; }
 
     public int ScrollLeft { get; set; }
@@ -54,7 +54,7 @@ public class Agent : IAgent
     public event EventHandler OnDisplayModeChange;
     public event EventHandler OnSelectionChange;
 
-    public Agent(RendererBase renderer)
+    public Agent(RendererBase? renderer)
     {
         Current = this;
         AddPad(PadKind.None); // for empty elements
@@ -63,8 +63,11 @@ public class Agent : IAgent
         Data = new UIData(this);
         _editCommands = new CommandStack(this);
 
-        _renderer = renderer;
-        _renderer.Data = Data;
+        if(renderer != null)
+        {
+            _renderer = renderer;
+            _renderer.Data = Data;
+        }
 
         var entityCmd = new CreateEntityCommand(InputPad);
         _editCommands.Do(entityCmd);

@@ -68,7 +68,7 @@
             }
             else
             {
-                throw new ArgumentException("Trait points must be IPoint.");
+                throw new ArgumentException("TaskTrait points must be IPoint.");
             }
         }
         protected override void SetEndKey(int key)
@@ -79,7 +79,7 @@
             }
             else
             {
-                throw new ArgumentException("Trait points must be IPoint.");
+                throw new ArgumentException("TaskTrait points must be IPoint.");
             }
         }
 

@@ -14,14 +14,15 @@ namespace InkPad.Commands.Core
 
     public class CreateDomainCommand : CommandBase
     {
-        public Domain Domain => DomainTask?.Domain;
+        public Domain Domain => DomainTask?.TaskDomain;
 
         // combine tasks that are in core for common commands that require multiple tasks
         private CreateFocalTask BasisTask;
         private CreateFocalTask MinMaxTask;
         private CreateDomainTask DomainTask;
 
-        public Trait Trait { get; }
+        public Trait TaskTrait { get; }
+        public Workspace TaskWorkspace { get; }
 
         public long BasisStart { get; }
         public long BasisEnd { get; }
@@ -31,17 +32,19 @@ namespace InkPad.Commands.Core
         public IFocal BasisFocal { get; private set; }
         public IFocal MinMaxFocal { get; private set; }
 
-        public CreateDomainCommand(Trait trait, long basisStart, long basisEnd, long minMaxStart, long minMaxEnd)
+        public CreateDomainCommand(Workspace workspace, Trait trait, long basisStart, long basisEnd, long minMaxStart, long minMaxEnd)
         {
-            Trait = trait;
+            TaskWorkspace = workspace;
+            TaskTrait = trait;
             BasisStart = basisStart;
             BasisEnd = basisEnd;
             MinMaxStart = minMaxStart;
             MinMaxEnd = minMaxEnd;
         }
-        public CreateDomainCommand(Trait trait, IFocal basisFocal, IFocal minMax)
+        public CreateDomainCommand(Workspace workspace, Trait trait, IFocal basisFocal, IFocal minMax)
         {
-            Trait = trait;
+            TaskWorkspace = workspace;
+            TaskTrait = trait;
             BasisFocal = basisFocal;
             MinMaxFocal = minMax;
         }
@@ -59,7 +62,7 @@ namespace InkPad.Commands.Core
                 MinMaxFocal = MinMaxTask.CreatedFocal;
             }
 
-            DomainTask = new CreateDomainTask(Trait, BasisFocal, MinMaxFocal);
+            DomainTask = new CreateDomainTask(TaskWorkspace, TaskTrait, BasisFocal, MinMaxFocal);
             AddTaskAndRun(DomainTask);
         }
 

@@ -11,7 +11,8 @@ namespace InkPad.Tasks.Core
 
     public class CreateDomainTask : TaskBase, ICreateTask
     {
-        public Domain Domain;
+        public Workspace TaskWorkspace;
+        public Domain TaskDomain;
 
         public Trait Trait { get; }
         public IFocal BasisFocal { get; }
@@ -19,29 +20,30 @@ namespace InkPad.Tasks.Core
 
         public override bool IsValid => true;
 
-        public CreateDomainTask(Trait trait, IFocal basisFocal, IFocal minMax)
+        public CreateDomainTask(Workspace workspace, Trait trait, IFocal basisFocal, IFocal minMax)
         {
+            TaskWorkspace = workspace;
             Trait = trait;
             BasisFocal = basisFocal;
             MinMax = minMax;
         }
         public override void RunTask()
         {
-            if (Domain == null)
+            if (TaskDomain == null)
             {
-                Domain = new Domain(Trait, BasisFocal, MinMax);
+                TaskDomain = new Domain(Trait, BasisFocal, MinMax);
             }
             else
             {
-                Trait.DomainStore.Add(Domain.Id, Domain);
+                Trait.DomainStore.Add(TaskDomain.Id, TaskDomain);
             }
-            TaskAgent.Workspace.AddDomains(false, Domain);
+            TaskWorkspace.AddDomains(false, TaskDomain);
         }
 
         public override void UnRunTask()
         {
-            TaskAgent.Workspace.RemoveDomains(false, Domain);
-            Trait.DomainStore.Remove(Domain.Id);
+            TaskWorkspace.RemoveDomains(false, TaskDomain);
+            Trait.DomainStore.Remove(TaskDomain.Id);
         }
     }
 }

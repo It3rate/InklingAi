@@ -4,7 +4,7 @@ using Nums.Utils;
 
 namespace Nums.Primitives
 {
-	public class Number : IMathElement
+    public class Number : IMathElement
 	{
 		public MathElementKind Kind => MathElementKind.Number;
 		public int Id { get; internal set; }

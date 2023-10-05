@@ -22,17 +22,17 @@ namespace InkPad.Tasks.Core
         {
             if (CreatedWorkspace == null)
             {
-                CreatedWorkspace = new Workspace(TaskAgent.Brain);
+                CreatedWorkspace = new Workspace(Brain.ActiveBrain);
             }
             else
             {
-                TaskAgent.Brain.Workspaces.Add(CreatedWorkspace);
+                Brain.ActiveBrain.Workspaces.Add(CreatedWorkspace);
             }
         }
 
         public override void UnRunTask()
         {
-            TaskAgent.Brain.Workspaces.Remove(CreatedWorkspace);
+            Brain.ActiveBrain.Workspaces.Remove(CreatedWorkspace);
         }
     }
 }

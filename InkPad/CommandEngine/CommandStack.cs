@@ -7,7 +7,7 @@ using Nums.Primitives;
 
 namespace InkPad.CommandEngine
 {
-	public interface ICommandStack
+    public interface ICommandStack
     {
 	    IAgent Agent { get; }
 	    Brain Brain { get; }

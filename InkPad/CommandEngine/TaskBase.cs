@@ -17,7 +17,6 @@ namespace InkPad.CommandEngine
         public int Id { get; }
 
         public ICommand Command { get; }
-        public IAgent TaskAgent { get; set; }
         public TaskTimer Timer { get; }
 
         public abstract bool IsValid { get; }

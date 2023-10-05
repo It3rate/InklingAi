@@ -19,7 +19,6 @@ public interface IAgent
     Pad PadFor(PadKind padKind);
 
     void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime);
-
     void Clear();
 
     //RenderStatus RenderStatus { get; }

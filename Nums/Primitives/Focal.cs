@@ -10,6 +10,8 @@ namespace Nums.Primitives
 
     public class Focal : FocalBase
     {
+        public static Focal Empty { get; } = new Focal(0, 0);
+
         public Focal(long startTickPosition, long endTickPosition)
         {
 	        StartTickPosition = startTickPosition;

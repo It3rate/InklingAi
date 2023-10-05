@@ -12,9 +12,9 @@ using InkPad.CommandEngine;
 
 public abstract class TaskBase : ITask
 {
-    public int Id => throw new NotImplementedException();
-    public IAgent TaskAgent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public TaskTimer Timer => throw new NotImplementedException();
+    public int Id { get; }
+    public IAgent TaskAgent { get; set; }
+    public TaskTimer Timer { get; }
 
 
     private static int TaskCounter = 1;
