@@ -7,10 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InklingAi", "InklingAi\Inkl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InklingAi.Desktop", "InklingAi.Desktop\InklingAi.Desktop.csproj", "{C0EEA5D0-FA49-4803-8949-C10CE46C5A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InklingAiTests", "InklingAiTests\InklingAiTests.csproj", "{BFEE87C4-7CC2-4C04-BC9C-4196F0113E27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InklingAiTests", "InklingAiTests\InklingAiTests.csproj", "{BFEE87C4-7CC2-4C04-BC9C-4196F0113E27}"
 	ProjectSection(ProjectDependencies) = postProject
 		{406D6070-E1B5-44BC-95F5-23E3EFCC5B9A} = {406D6070-E1B5-44BC-95F5-23E3EFCC5B9A}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkPad", "InkPad\InkPad.csproj", "{DE538224-5F73-4A8E-8B10-019594A014AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nums", "Nums\Nums.csproj", "{1E9DDE81-4F72-45F8-BCB4-FDD8208E325A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkPadTests", "InkPadTests\InkPadTests.csproj", "{C8AD0E09-EC3B-4E01-A7AF-4DEB7E408753}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +36,18 @@ Global
 		{BFEE87C4-7CC2-4C04-BC9C-4196F0113E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFEE87C4-7CC2-4C04-BC9C-4196F0113E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFEE87C4-7CC2-4C04-BC9C-4196F0113E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE538224-5F73-4A8E-8B10-019594A014AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE538224-5F73-4A8E-8B10-019594A014AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE538224-5F73-4A8E-8B10-019594A014AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE538224-5F73-4A8E-8B10-019594A014AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E9DDE81-4F72-45F8-BCB4-FDD8208E325A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E9DDE81-4F72-45F8-BCB4-FDD8208E325A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E9DDE81-4F72-45F8-BCB4-FDD8208E325A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E9DDE81-4F72-45F8-BCB4-FDD8208E325A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8AD0E09-EC3B-4E01-A7AF-4DEB7E408753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8AD0E09-EC3B-4E01-A7AF-4DEB7E408753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8AD0E09-EC3B-4E01-A7AF-4DEB7E408753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8AD0E09-EC3B-4E01-A7AF-4DEB7E408753}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
