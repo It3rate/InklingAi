@@ -4,6 +4,7 @@ using Nums.Primitives;
 
 namespace InkPad.CommandEngine
 {
+    using InkPad.Agents;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -13,7 +14,7 @@ namespace InkPad.CommandEngine
     public abstract class CommandBase : ICommand
     {
 	    public int Id { get; }
-	    public CommandAgent Agent { get; set; } // Agent is set by the command stack.
+	    public IAgent Agent { get; set; } // Agent is set by the command stack.
 
 	    public Brain Brain => Agent.Brain;
 	    public Workspace Workspace => Agent.Workspace;
@@ -81,7 +82,7 @@ namespace InkPad.CommandEngine
 
         public void AddTask(ITask task)
         {
-	        task.Agent = Agent;
+	        task.TaskAgent = Agent;
 	        Tasks.Add(task);
         }
         public void AddTasks(params ITask[] tasks)

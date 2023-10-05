@@ -1,9 +1,10 @@
 ﻿using InkPad.Commands;
-using InkPad.Motion;
 using Nums.Primitives;
 
 namespace InkPad.CommandEngine
 {
+    using InkPad.Agents;
+    using InkPad.Pads;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,11 +15,14 @@ namespace InkPad.CommandEngine
     {
 	    int Id { get; }
 	    ICommand Command { get; }
-	    CommandAgent Agent { get; set; }
+	    IAgent TaskAgent { get; set; }
         TaskTimer Timer { get; }
         bool IsValid { get; }
 	    void RunTask();
 	    void UnRunTask();
+        //Pad Pad { get; }
+        //PadKind PadKind { get; }
+
         //void OnAddedToCommand(ICommand command);
     }
 

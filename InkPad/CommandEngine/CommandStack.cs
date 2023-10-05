@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using InkPad.Agents;
 using InkPad.Commands;
 using Nums.CoreConcepts.Time;
 using Nums.Primitives;
@@ -8,7 +9,7 @@ namespace InkPad.CommandEngine
 {
 	public interface ICommandStack
     {
-	    CommandAgent Agent { get; }
+	    IAgent Agent { get; }
 	    Brain Brain { get; }
         Workspace Workspace { get; }
         bool CanUndo { get; }
@@ -32,7 +33,7 @@ namespace InkPad.CommandEngine
 
 	public class CommandStack : ICommandStack
     {
-	    public CommandAgent Agent { get; }
+	    public IAgent Agent { get; }
 	    public Brain Brain => Agent.Brain;
 	    public Workspace Workspace => Agent.Workspace;
 
@@ -53,7 +54,7 @@ namespace InkPad.CommandEngine
         public bool CanRedo => RedoSize > 0;
 		public int RedoSize => _stack.Count - _stackIndex;
 
-		public CommandStack(CommandAgent agent)
+		public CommandStack(IAgent agent)
 		{
 			Agent = agent;
 		}

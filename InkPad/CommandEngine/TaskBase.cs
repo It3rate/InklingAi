@@ -1,10 +1,10 @@
 ﻿using InkPad.Commands;
-using InkPad.Motion;
 using Nums.CoreConcepts.Time;
 using Nums.Primitives;
 
 namespace InkPad.CommandEngine
 {
+    using InkPad.Agents;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -17,7 +17,7 @@ namespace InkPad.CommandEngine
         public int Id { get; }
 
         public ICommand Command { get; }
-        public CommandAgent Agent { get; set; }
+        public IAgent TaskAgent { get; set; }
         public TaskTimer Timer { get; }
 
         public abstract bool IsValid { get; }
