@@ -1,32 +1,31 @@
-﻿namespace InklingAi.Commands.EditCommands
+﻿namespace InklingAi.Commands.EditCommands;
+
+using InklingAi.Commands.Tasks;
+using InklingAi.Elements;
+using InklingAi.Pads;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+public class RemoveElementCommand : EditCommand
 {
-    using InklingAi.Commands.Tasks;
-    using InklingAi.Elements;
-    using InklingAi.Pads;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    public RemoveElementTask RemoveElementTask { get; set; }
+    public IElement Element;
 
-    public class RemoveElementCommand : EditCommand
+    public RemoveElementCommand(Pad pad, IElement element) : base(pad)
     {
-        public RemoveElementTask RemoveElementTask { get; set; }
-        public IElement Element;
+        Element = element;
+    }
 
-        public RemoveElementCommand(Pad pad, IElement element) : base(pad)
+    public override void Execute()
+    {
+        base.Execute();
+        if (RemoveElementTask == null)
         {
-            Element = element;
+            RemoveElementTask = new RemoveElementTask(Pad.PadKind, Element);
         }
-
-        public override void Execute()
-        {
-            base.Execute();
-            if (RemoveElementTask == null)
-            {
-                RemoveElementTask = new RemoveElementTask(Pad.PadKind, Element);
-            }
-            AddTaskAndRun(RemoveElementTask);
-        }
+        AddTaskAndRun(RemoveElementTask);
     }
 }

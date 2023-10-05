@@ -1,47 +1,46 @@
-﻿namespace InklingAi.Commands.EditCommands
+﻿namespace InklingAi.Commands.EditCommands;
+
+using InklingAi.Commands.Tasks;
+using InklingAi.Elements;
+using InklingAi.Pads;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+public class CreateEntityCommand : EditCommand
 {
-    using InklingAi.Commands.Tasks;
-    using InklingAi.Elements;
-    using InklingAi.Pads;
-    using SkiaSharp;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    public CreateEntityTask EntityTask { get; private set; }
+    public Entity Entity => EntityTask.Entity;
+    public int EntityKey => EntityTask.EntityKey;
 
-    public class CreateEntityCommand : EditCommand
+    public CreateEntityCommand(Pad pad) : base(pad) { }
+
+    // maybe tasks need to be start/update/complete, where eg merge endpoints is on complete, and MoveElementTask is available for updates.
+    // this makes tasks continuous like animation or transform commands.
+
+    public override void Execute()
     {
-        public CreateEntityTask EntityTask { get; private set; }
-        public Entity Entity => EntityTask.Entity;
-        public int EntityKey => EntityTask.EntityKey;
-
-        public CreateEntityCommand(Pad pad) : base(pad) { }
-
-        // maybe tasks need to be start/update/complete, where eg merge endpoints is on complete, and MoveElementTask is available for updates.
-        // this makes tasks continuous like animation or transform commands.
-
-        public override void Execute()
+        base.Execute();
+        if (EntityTask == null)
         {
-            base.Execute();
-            if (EntityTask == null)
-            {
-                EntityTask = new CreateEntityTask(Pad.PadKind);
-            }
-            AddTaskAndRun(EntityTask);
+            EntityTask = new CreateEntityTask(Pad.PadKind);
         }
+        AddTaskAndRun(EntityTask);
+    }
 
-        public override void Unexecute()
-        {
-            base.Unexecute();
-        }
+    public override void Unexecute()
+    {
+        base.Unexecute();
+    }
 
-        public override void Update(SKPoint point)
-        {
-        }
+    public override void Update(SKPoint point)
+    {
+    }
 
-        public override void Completed()
-        {
-        }
+    public override void Completed()
+    {
     }
 }

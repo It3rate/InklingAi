@@ -3,6 +3,7 @@
     using DynamicData;
     using InklingAi.Constraints;
     using InklingAi.Elements;
+    using InklingAi.Renderer;
     using MathNet.Numerics.Statistics.Mcmc;
     using SkiaSharp;
     using System;
@@ -22,7 +23,7 @@
 
         private readonly Dictionary<int, IElement> _elements = new Dictionary<int, IElement>();
 
-        //public Dictionary<TraitKind, int> UnitMap = new Dictionary<TraitKind, int>();
+        public Dictionary<TraitKind, int> UnitMap = new Dictionary<TraitKind, int>();
         //public void SetUnit(Focal focal) => UnitMap[focal.TraitKind] = focal.Key;
         //public int UnitKeyFor(TraitKind traitKind) => UnitMap.ContainsKey(traitKind) ? UnitMap[traitKind] : ElementBase.EmptyKeyValue;
         //public Slug UnitFor(TraitKind traitKind) => UnitMap.ContainsKey(traitKind) ? FocalAt(UnitMap[traitKind]).AsUnitSlug : Slug.Unit;

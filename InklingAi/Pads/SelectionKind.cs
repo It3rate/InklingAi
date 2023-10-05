@@ -1,26 +1,19 @@
-﻿namespace InklingAi.Pads
+﻿namespace InklingAi.Pads;
+
+public enum SelectionKind
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    None,
+    BeginPoint,
+    BeginElement,
+    CurrentPoint,
+    CurrentElement,
+    SelectedPoint,
+    SelectedElement,
+    HighlightPoint,
+    HighlightElement,
+    ClipboardPoint,
+    ClipboardElement,
 
-    public enum SelectionKind
-    {
-        None,
-        BeginPoint,
-        BeginElement,
-        CurrentPoint,
-        CurrentElement,
-        SelectedPoint,
-        SelectedElement,
-        HighlightPoint,
-        HighlightElement,
-        ClipboardPoint,
-        ClipboardElement,
-
-        LastCommand,
-        ToolKind,
-    }
+    LastCommand,
+    ToolKind,
 }
