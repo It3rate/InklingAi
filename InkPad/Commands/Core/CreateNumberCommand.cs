@@ -29,7 +29,7 @@ namespace InkPad.Commands.Core
 
         public IFocal Focal { get; }
 
-        public NumRange NumRange { get; }
+        public Seg NumRange { get; }
 
         public long StartPosition { get; }
         public long EndPosition { get; }
@@ -45,7 +45,7 @@ namespace InkPad.Commands.Core
             Focal = focal;
             _isById = true;
         }
-        public CreateNumberCommand(Domain domain, NumRange range)
+        public CreateNumberCommand(Domain domain, Seg range)
         {
             Domain = domain;
             NumRange = range;

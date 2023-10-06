@@ -89,10 +89,10 @@ namespace NumbersTests
 	    [Fact]
 	    public void UnitChangeValueTests()
 	    {
-		    var n0 = _domain.CreateNumber(new NumRange(0, 20), true);
-		    var n1 = _domain.CreateNumber(new NumRange(20, 0), true);
-		    var n2 = _domain.CreateNumber(new NumRange(-30, 20), true);
-		    var n3 = _domain.CreateNumber(new NumRange(-20, -30), true);
+		    var n0 = _domain.CreateNumber(new Seg(0, 20), true);
+		    var n1 = _domain.CreateNumber(new Seg(20, 0), true);
+		    var n2 = _domain.CreateNumber(new Seg(-30, 20), true);
+		    var n3 = _domain.CreateNumber(new Seg(-20, -30), true);
 		    Assert.Equal(0, n0.StartValue);
 		    Assert.Equal(20, n0.EndValue);
 		    Assert.Equal(20, n1.StartValue);
@@ -163,13 +163,13 @@ namespace NumbersTests
 		    Assert.Equal(0.519900, n3.RangeInMinMax.End, MathUtils.Tolerance);
 
 		    n1.Subtract(n2);
-		    Assert.Equal(new NumRange(-3.2, 3), n1.Value);
+		    Assert.Equal(new Seg(-3.2, 3), n1.Value);
 		    n2.Add(n3);
-		    Assert.Equal(new NumRange(5, 4.5), n3.Value);
+		    Assert.Equal(new Seg(5, 4.5), n3.Value);
 		    n3.Multiply(n4);
-		    Assert.Equal(new NumRange(-45, 4.8), n3.Value);
+		    Assert.Equal(new Seg(-45, 4.8), n3.Value);
 		    n4.Divide(n5);
-		    Assert.Equal(new NumRange(-0.8, -0.1), n4.Value);
+		    Assert.Equal(new Seg(-0.8, -0.1), n4.Value);
 	    }
     }
 

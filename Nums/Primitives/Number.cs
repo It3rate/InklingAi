@@ -67,20 +67,20 @@ namespace Nums.Primitives
 		public double StartValue
 		{
 			get => Value.Start; //Domain.ValueFromStartTickPosition(StartTickPosition); // Value.Start is a little less efficient
-			set => Value = new NumRange(value, Value.End); //StartTicks = Domain.StartTickPositionFrom(value);
+			set => Value = new Seg(value, Value.End); //StartTicks = Domain.StartTickPositionFrom(value);
 
 		}
 		public double EndValue
 		{
 			get => Value.End; //Domain.ValueFromEndTickPosition(EndTickPosition); // Value.End is a little less efficient
-			set => Value = new NumRange(Value.Start, value); //EndTicks = Domain.EndTickPositionFrom(value);
+			set => Value = new Seg(Value.Start, value); //EndTicks = Domain.EndTickPositionFrom(value);
 		}
-		public NumRange Value 
+		public Seg Value 
 		{
 			get => Domain.GetValueOf(Focal); //Focal.RangeWithBasis(BasisFocal);
 			set => Domain.SetValueOf(Focal, value);
 		}
-		public NumRange ValueInRenderPerspective => new NumRange(-StartValue, EndValue);
+		public Seg ValueInRenderPerspective => new Seg(-StartValue, EndValue);
 
 		public Number SetWith(Number other)
 		{
@@ -100,12 +100,12 @@ namespace Nums.Primitives
 		public long WholeEndValue => (long) EndValue;
 		public long RemainderStartValue => Domain.BasisIsReciprocal ? 0 : Math.Abs(StartTicks % BasisFocal.NonZeroLength);
 		public long RemainderEndValue => Domain.BasisIsReciprocal ? 0 : Math.Abs(EndTicks % BasisFocal.NonZeroLength);
-		public NumRange RangeInMinMax => Focal.UnitTRangeIn(Domain.MinMaxFocal); //*
+		public Seg RangeInMinMax => Focal.UnitTRangeIn(Domain.MinMaxFocal); //*
 
-		public NumRange FloorRange => new NumRange(Math.Ceiling(StartValue), Math.Floor(EndValue));
-		public NumRange CeilingRange => new NumRange(Math.Floor(StartValue), Math.Ceiling(EndValue));
-		public NumRange RoundedRange => new NumRange(Math.Round(StartValue), Math.Round(EndValue));
-		public NumRange RemainderRange => Value - FloorRange;
+		public Seg FloorRange => new Seg(Math.Ceiling(StartValue), Math.Floor(EndValue));
+		public Seg CeilingRange => new Seg(Math.Floor(StartValue), Math.Ceiling(EndValue));
+		public Seg RoundedRange => new Seg(Math.Round(StartValue, MidpointRounding.AwayFromZero), Math.Round(EndValue, MidpointRounding.AwayFromZero));
+		public Seg RemainderRange => Value - FloorRange;
 
 		public void PlusTick() => EndTickPosition += 1;
 		public void MinusTick() => EndTickPosition -= 1;
@@ -187,7 +187,7 @@ namespace Nums.Primitives
 		        EndValue = (targetValue.End - 1.0) * t + 1.0;
 	        }
         }
-        public void InterpolateFromOne(NumRange range, double t)
+        public void InterpolateFromOne(Seg range, double t)
         {
 	        if (range != null)
 	        {

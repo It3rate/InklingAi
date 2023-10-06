@@ -25,11 +25,11 @@ namespace Nums.Primitives
 
         void FlipAroundStartPoint();
 
-        NumRange RangeAsBasis(IFocal nonBasis);
-        NumRange GetRangeWithBasis(IFocal basis, bool isReciprocal);
-        void SetWithRangeAndBasis(NumRange range, IFocal basis, bool isReciprocal);
+        Seg RangeAsBasis(IFocal nonBasis);
+        Seg GetRangeWithBasis(IFocal basis, bool isReciprocal);
+        void SetWithRangeAndBasis(Seg range, IFocal basis, bool isReciprocal);
 
-        NumRange UnitTRangeIn(IFocal basis);
+        Seg UnitTRangeIn(IFocal basis);
         IFocal Clone();
     }
 
@@ -92,20 +92,23 @@ namespace Nums.Primitives
         {
             EndTickPosition = StartTickPosition - LengthInTicks;
         }
-        public NumRange GetRangeWithBasis(IFocal basis, bool isReciprocal)
-        {
-            var len = (double)Math.Abs(basis.NonZeroLength);
-            //var basisDir = basis.Direction;
-            var start = (StartTickPosition - basis.StartTickPosition) / len;
-            var end = (EndTickPosition - basis.StartTickPosition) / len;
-            if (isReciprocal)
-            {
-                start = Math.Round(start) * len;
-                end = Math.Round(end) * len;
-            }
-            return basis.IsUnitPerspective ? new NumRange(-start, end) : new NumRange(end, -start);
+        public Seg GetRangeWithBasis(IFocal basis, bool isReciprocal)
+		{
+			var b = new Seg(-basis.StartTickPosition, basis.EndTickPosition);
+			var v = new Seg(-StartTickPosition, EndTickPosition);
+            return v / b;
+			//var len = (double)Math.Abs(basis.NonZeroLength);
+   //         //var basisDir = basis.Direction;
+   //         var start = (StartTickPosition - basis.StartTickPosition) / len;
+   //         var end = (EndTickPosition - basis.StartTickPosition) / len;
+   //         if (isReciprocal)
+   //         {
+   //             start = Math.Round(start, MidpointRounding.AwayFromZero) * len;
+   //             end = Math.Round(end, MidpointRounding.AwayFromZero) * len;
+   //         }
+   //         return basis.IsUnitPerspective ? new Seg(-start, end) : new Seg(end, -start);
         }
-        public void SetWithRangeAndBasis(NumRange range, IFocal basis, bool isReciprocal)
+        public void SetWithRangeAndBasis(Seg range, IFocal basis, bool isReciprocal)
         {
             double start;
             double end;
@@ -124,20 +127,20 @@ namespace Nums.Primitives
 
             if (isReciprocal)
             {
-                start = Math.Round(start) / Math.Abs(len);
-                end = Math.Round(end) / Math.Abs(len);
+                start = Math.Round(start, MidpointRounding.AwayFromZero) / Math.Abs(len);
+                end = Math.Round(end, MidpointRounding.AwayFromZero) / Math.Abs(len);
             }
 
-            StartTickPosition = (long)Math.Round(start);
-            EndTickPosition = (long)Math.Round(end);
+            StartTickPosition = (long)Math.Round(start, MidpointRounding.AwayFromZero);
+            EndTickPosition = (long)Math.Round(end, MidpointRounding.AwayFromZero);
         }
-        public NumRange RangeAsBasis(IFocal nonBasis) => nonBasis.GetRangeWithBasis(this, false);
-        public NumRange UnitTRangeIn(IFocal basis)
+        public Seg RangeAsBasis(IFocal nonBasis) => nonBasis.GetRangeWithBasis(this, false);
+        public Seg UnitTRangeIn(IFocal basis)
         {
             var len = (double)Math.Abs(basis.NonZeroLength);
             var start = (StartTickPosition - basis.StartTickPosition) / len;
             var end = (EndTickPosition - basis.StartTickPosition) / len;
-            return new NumRange(start, end);
+            return new Seg(start, end);
         }
         public long Min => StartTickPosition <= EndTickPosition ? StartTickPosition : EndTickPosition;
         public long Max => StartTickPosition >= EndTickPosition ? StartTickPosition : EndTickPosition;

@@ -30,52 +30,52 @@ namespace NumbersTests
 		    IFocal ftest = Focal.CreateByValues(0, 0);
 
 		    // focal [0,10]  fn [20, 30]
-            Assert.Equal(new NumRange(-2, 3), fn.GetRangeWithBasis(fb, false));
-            ftest.SetWithRangeAndBasis(new NumRange(-2, 3), fb, false);
+            Assert.Equal(new Seg(-2, 3), fn.GetRangeWithBasis(fb, false));
+            ftest.SetWithRangeAndBasis(new Seg(-2, 3), fb, false);
             Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
             Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
-            Assert.Equal(new NumRange(-20, 30), fn.GetRangeWithBasis(fb, true));
-            ftest.SetWithRangeAndBasis(new NumRange(-20, 30), fb, true);
+            Assert.Equal(new Seg(-20, 30), fn.GetRangeWithBasis(fb, true));
+            ftest.SetWithRangeAndBasis(new Seg(-20, 30), fb, true);
             Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
             Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
 
             fb.EndTickPosition = -10; // focal [0,-10]  fn [40, 30]
 
-            Assert.Equal(new NumRange(3, -2), fn.GetRangeWithBasis(fb, false));
-		    ftest.SetWithRangeAndBasis(new NumRange(3, -2), fb, false);
+            Assert.Equal(new Seg(3, -2), fn.GetRangeWithBasis(fb, false));
+		    ftest.SetWithRangeAndBasis(new Seg(3, -2), fb, false);
 		    Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
 		    Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
-		    Assert.Equal(new NumRange(30, -20), fn.GetRangeWithBasis(fb, true));
-		    ftest.SetWithRangeAndBasis(new NumRange(30, -20), fb, true);
+		    Assert.Equal(new Seg(30, -20), fn.GetRangeWithBasis(fb, true));
+		    ftest.SetWithRangeAndBasis(new Seg(30, -20), fb, true);
 		    Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
 		    Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
 
             fn.StartTickPosition = 40; // focal [0,-10],  fn [40, 30]
 
-            Assert.Equal(new NumRange(3, -4), fn.GetRangeWithBasis(fb, false));
-            ftest.SetWithRangeAndBasis(new NumRange(3, -4), fb, false);
+            Assert.Equal(new Seg(3, -4), fn.GetRangeWithBasis(fb, false));
+            ftest.SetWithRangeAndBasis(new Seg(3, -4), fb, false);
             Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
             Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
-            Assert.Equal(new NumRange(30, -40), fn.GetRangeWithBasis(fb, true));
-            ftest.SetWithRangeAndBasis(new NumRange(30, -40), fb, true);
+            Assert.Equal(new Seg(30, -40), fn.GetRangeWithBasis(fb, true));
+            ftest.SetWithRangeAndBasis(new Seg(30, -40), fb, true);
             Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
             Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
 
             fb.EndTickPosition = 10; // focal [0,10],  fn [40, 30]
 
-            Assert.Equal(new NumRange(-4, 3), fn.GetRangeWithBasis(fb, false));
-            ftest.SetWithRangeAndBasis(new NumRange(-4, 3), fb, false);
+            Assert.Equal(new Seg(-4, 3), fn.GetRangeWithBasis(fb, false));
+            ftest.SetWithRangeAndBasis(new Seg(-4, 3), fb, false);
             Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
             Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
-            Assert.Equal(new NumRange(-40, 30), fn.GetRangeWithBasis(fb, true));
-            ftest.SetWithRangeAndBasis(new NumRange(-40, 30), fb, true);
+            Assert.Equal(new Seg(-40, 30), fn.GetRangeWithBasis(fb, true));
+            ftest.SetWithRangeAndBasis(new Seg(-40, 30), fb, true);
             Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
             Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
         }
@@ -119,7 +119,7 @@ namespace NumbersTests
             Assert.Equal(f2.StartTickPosition, f.StartTickPosition);
             Assert.Equal(f.EndTickPosition, f2.EndTickPosition);
 
-            Assert.Equal(new NumRange(0, 1), f2.GetRangeWithBasis(f, false));
+            Assert.Equal(new Seg(0, 1), f2.GetRangeWithBasis(f, false));
 
             f2.StartTickPosition = 450;
             Assert.Equal(450, f2.StartTickPosition);
@@ -130,21 +130,21 @@ namespace NumbersTests
             Assert.Equal(200, f2.AbsLengthInTicks);
 
             // f:[150,250] f2[450,250]
-            Assert.Equal(new NumRange(-3, 1), f2.GetRangeWithBasis(f, false));
-            Assert.Equal(new NumRange(-3, 1), f.RangeAsBasis(f2));
-            Assert.Equal(new NumRange(-1, 1.5), f2.RangeAsBasis(f));
-            Assert.Equal(new NumRange(-1, 1.5), f.GetRangeWithBasis(f2, false));
+            Assert.Equal(new Seg(-3, 1), f2.GetRangeWithBasis(f, false));
+            Assert.Equal(new Seg(-3, 1), f.RangeAsBasis(f2));
+            Assert.Equal(new Seg(-1, 1.5), f2.RangeAsBasis(f));
+            Assert.Equal(new Seg(-1, 1.5), f.GetRangeWithBasis(f2, false));
             // f:[150,250] f2[500,250]
             f2.StartTickPosition = 500;
-            Assert.Equal(new NumRange(-3.5, 1), f2.GetRangeWithBasis(f, false));
-            Assert.Equal(new NumRange(-3.5, 1), f.RangeAsBasis(f2));
-            Assert.Equal(new NumRange(-1, 1.4), f2.RangeAsBasis(f));
-            Assert.Equal(new NumRange(-1, 1.4), f.GetRangeWithBasis(f2, false));
+            Assert.Equal(new Seg(-3.5, 1), f2.GetRangeWithBasis(f, false));
+            Assert.Equal(new Seg(-3.5, 1), f.RangeAsBasis(f2));
+            Assert.Equal(new Seg(-1, 1.4), f2.RangeAsBasis(f));
+            Assert.Equal(new Seg(-1, 1.4), f.GetRangeWithBasis(f2, false));
 
             // f:[150,250] f2[-150,250]
             f2.StartTickPosition = -150;
-            Assert.Equal(new NumRange(3, 1), f2.GetRangeWithBasis(f, false));
-            Assert.Equal(new NumRange(-0.75, 1), f.GetRangeWithBasis(f2, false));
+            Assert.Equal(new Seg(3, 1), f2.GetRangeWithBasis(f, false));
+            Assert.Equal(new Seg(-0.75, 1), f.GetRangeWithBasis(f2, false));
 
             // f:[150,250] f2[-150,-150]
             f2.EndTickPosition = -150;

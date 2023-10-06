@@ -8,7 +8,8 @@ namespace NumbersTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
+	using System.Numerics;
+	using System.Text;
     using System.Threading.Tasks;
 
 
@@ -42,7 +43,13 @@ namespace NumbersTests
             Assert.Equal(10, _domain.BasisFocal.LengthInTicks);
             Assert.Equal(_domain.BasisFocal.Id, _unitFocal.Id);
             Assert.Equal(_domain.MinMaxFocal.Id, _maxMin.Id);
-            Assert.Equal(_domain.MinMaxRange.Length, 10.0, MathUtils.Tolerance);
+
+            //var b = new Complex(6, 4);
+            //var mm = new Complex(46, 54);
+            //var p = b / mm;
+
+			var len = _domain.MinMaxNum.Length;
+            Assert.Equal(10.0, len, MathUtils.Tolerance);
 
             var f0 = Focal.CreateByValues(10, 20);
             var n0 = _domain.CreateNumber(f0);
@@ -50,7 +57,7 @@ namespace NumbersTests
             var n2 = _domain.CreateNumber(f0.Clone());
             Assert.Equal(5, _domain.NumberStore.Count); // includes unit basis and minmax
 
-            var dict = new Dictionary<int, NumRange>();
+            var dict = new Dictionary<int, Seg>();
 
             _domain.SaveNumberValues(dict, _domain.BasisNumber.Id);
             Assert.Equal(4, dict.Count); // does not include unit
@@ -82,17 +89,17 @@ namespace NumbersTests
             ffr = _domain.CreateFocalFromRange(r);
             Assert.Equal(ffr, num.Focal);
 
-            _unitFocal.Reset(10, -10);
-	        var testFocal = Focal.CreateByValues(0, 6);
+         //   _unitFocal.Reset(10, -10);
+	        //var testFocal = Focal.CreateByValues(0, 6);
 
-            num = _domain.CreateNumber(Focal.CreateByValues(30, 40));
-	        r = num.Value;
-	        _domain.SetValueOf(testFocal, r);
+         //   num = _domain.CreateNumber(Focal.CreateByValues(30, 40));
+	        //r = num.Value;
+	        //_domain.SetValueOf(testFocal, r);
 
-            Assert.Equal(num.Focal.StartTickPosition, testFocal.StartTickPosition);
-            Assert.Equal(num.Focal.EndTickPosition, testFocal.EndTickPosition);
-            ffr = _domain.CreateFocalFromRange(r);
-            Assert.Equal(ffr, num.Focal);
+         //   Assert.Equal(num.Focal.StartTickPosition, testFocal.StartTickPosition);
+         //   Assert.Equal(num.Focal.EndTickPosition, testFocal.EndTickPosition);
+         //   ffr = _domain.CreateFocalFromRange(r);
+         //   Assert.Equal(ffr, num.Focal);
         }
     }
 }

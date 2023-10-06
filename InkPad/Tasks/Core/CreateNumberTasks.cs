@@ -48,11 +48,11 @@ namespace InkPad.Tasks.Core
         public Domain Domain { get; }
         public Number Number { get; private set; }
 
-        public NumRange NumRange { get; }
+        public Seg NumRange { get; }
 
         public override bool IsValid => true;
 
-        public CreateNumberByRangeTask(Domain domain, NumRange range) : base()
+        public CreateNumberByRangeTask(Domain domain, Seg range) : base()
         {
             Domain = domain;
             NumRange = range;

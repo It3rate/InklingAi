@@ -33,7 +33,7 @@ namespace Nums.Primitives
         public bool BasisIsReciprocal { get; set; } // True when ticks are larger than the unit basis
 
 
-        public NumRange MinMaxRange => BasisFocal.RangeAsBasis(MinMaxFocal);
+        public Seg MinMaxNum => MinMaxFocal.GetRangeWithBasis(BasisFocal, false);
         public double TickToBasisRatio => BasisIsReciprocal ? BasisFocal.NonZeroLength : 1.0 / BasisFocal.NonZeroLength;
 
         public bool IsUnitPerspective => BasisFocal.IsUnitPerspective;
@@ -60,7 +60,7 @@ namespace Nums.Primitives
         {
 	        return AddNumber(new Number(focal), addToStore);
         }
-        public Number CreateNumber(NumRange value, bool addToStore = true)
+        public Number CreateNumber(Seg value, bool addToStore = true)
         {
 	        var focal = CreateFocalFromRange(value);
 	        return AddNumber(new Number(focal), addToStore);
@@ -109,24 +109,24 @@ namespace Nums.Primitives
         public Number Zero() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.StartTickPosition);
         public Number One() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.EndTickPosition);
 
-        public NumRange GetValueOf(IFocal focal) => focal.GetRangeWithBasis(BasisFocal, BasisIsReciprocal);
-        public void SetValueOf(IFocal focal, NumRange range) => focal.SetWithRangeAndBasis(range, BasisFocal, BasisIsReciprocal);
-        public NumRange GetValueOf(Number num) => GetValueOf(num.Focal);
-        public void SetValueOf(Number num, NumRange range) => SetValueOf(num.Focal,range);
+        public Seg GetValueOf(IFocal focal) => focal.GetRangeWithBasis(BasisFocal, BasisIsReciprocal);
+        public void SetValueOf(IFocal focal, Seg range) => focal.SetWithRangeAndBasis(range, BasisFocal, BasisIsReciprocal);
+        public Seg GetValueOf(Number num) => GetValueOf(num.Focal);
+        public void SetValueOf(Number num, Seg range) => SetValueOf(num.Focal,range);
 
-        public NumRange ClampToInnerBasis(NumRange range) => range.ClampInner();
-        public NumRange ClampToInnerTick(NumRange range) => (range / TickToBasisRatio).ClampInner() * TickToBasisRatio;
-        public NumRange RoundToNearestBasis(NumRange range) => range.Round();
-        public NumRange RoundToNearestTick(NumRange range) => (range / TickToBasisRatio).Round() * TickToBasisRatio;
+        public Seg ClampToInnerBasis(Seg range) => range.ClampInner();
+        public Seg ClampToInnerTick(Seg range) => (range / TickToBasisRatio).ClampInner() * TickToBasisRatio;
+        public Seg RoundToNearestBasis(Seg range) => range.Round();
+        public Seg RoundToNearestTick(Seg range) => (range / TickToBasisRatio).Round() * TickToBasisRatio;
 
-        public long RoundToNearestTick(long value) => (long)(Math.Round(value / TickToBasisRatio) * TickToBasisRatio);
+        public long RoundToNearestTick(long value) => (long)(Math.Round(value / TickToBasisRatio, MidpointRounding.AwayFromZero) * TickToBasisRatio);
         public void RoundToNearestTick(IFocal focal)
         {
 	        focal.StartTickPosition = RoundToNearestTick(focal.StartTickPosition);
 	        focal.EndTickPosition = RoundToNearestTick(focal.EndTickPosition);
         }
 
-        public IFocal CreateFocalFromRange(NumRange range)
+        public IFocal CreateFocalFromRange(Seg range)
         {
 	        var result = Focal.CreateByValues(0, 1);
 	        result.SetWithRangeAndBasis(range, BasisFocal, BasisIsReciprocal);
@@ -148,7 +148,7 @@ namespace Nums.Primitives
 		        yield return number;
 	        }
         }
-        public void SaveNumberValues(Dictionary<int, NumRange> dict, params int[] ignoreIds)
+        public void SaveNumberValues(Dictionary<int, Seg> dict, params int[] ignoreIds)
         {
             dict.Clear();
 	        foreach (var num in Numbers())
@@ -159,7 +159,7 @@ namespace Nums.Primitives
                 }
 	        }
         }
-        public void RestoreNumberValues(Dictionary<int, NumRange> values, params int[] ignoreIds)
+        public void RestoreNumberValues(Dictionary<int, Seg> values, params int[] ignoreIds)
         {
 	        foreach (var kvp in values)
 	        {
