@@ -44,7 +44,7 @@ namespace NumbersTests
             Assert.Equal(_domain.MinMaxFocal.Id, _maxMin.Id);
             Assert.Equal(_domain.MinMaxRange.Length, 10.0, MathUtils.Tolerance);
 
-            var f0 = FocalRef.CreateByValues(_trait, 10, 20);
+            var f0 = Focal.CreateByValues(10, 20);
             var n0 = _domain.CreateNumber(f0);
             var n1 = _domain.CreateNumber(f0.Clone());
             var n2 = _domain.CreateNumber(f0.Clone());
@@ -72,20 +72,20 @@ namespace NumbersTests
         {
             _unitFocal.Reset(0, 10);
 
-	        var num = _domain.CreateNumber(FocalRef.CreateByValues(_trait, 30, 40));
+	        var num = _domain.CreateNumber(Focal.CreateByValues(30, 40));
 	        var r = num.Value;
 	        var ffr = _domain.CreateFocalFromRange(r);
             Assert.Equal(ffr, num.Focal);
 
-            num = _domain.CreateNumber(FocalRef.CreateByValues(_trait, -30, 1));
+            num = _domain.CreateNumber(Focal.CreateByValues( -30, 1));
             r = num.Value;
             ffr = _domain.CreateFocalFromRange(r);
             Assert.Equal(ffr, num.Focal);
 
             _unitFocal.Reset(10, -10);
-	        var testFocal = FocalRef.CreateByValues(_trait, 0, 6);
+	        var testFocal = Focal.CreateByValues(0, 6);
 
-            num = _domain.CreateNumber(FocalRef.CreateByValues(_trait, 30, 40));
+            num = _domain.CreateNumber(Focal.CreateByValues(30, 40));
 	        r = num.Value;
 	        _domain.SetValueOf(testFocal, r);
 

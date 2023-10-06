@@ -13,16 +13,16 @@ namespace NumbersTests.CoreTests
     {
         private Brain _brain;
         private Trait _trait;
-        private FocalRef _unitFocal;
-        private FocalRef _maxMin;
+        private Focal _unitFocal;
+        private Focal _maxMin;
         private Domain _domain;
 
         public NumberSetTests()
         {
             _brain = Brain.ActiveBrain;
             _trait = Trait.CreateIn(_brain, "number tests");
-            _unitFocal = FocalRef.CreateByValues(_trait, 0, 10);
-            _maxMin = FocalRef.CreateByValues(_trait, -1000, 1000);
+            _unitFocal = Focal.CreateByValues( 0, 10);
+            _maxMin = Focal.CreateByValues(-1000, 1000);
             _domain = new Domain(_trait, _unitFocal, _maxMin);
         }
 

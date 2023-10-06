@@ -12,9 +12,9 @@ namespace InkPad.Tasks.Core
 
     public class CreateFocalTask : TaskBase, ICreateTask
     {
-        public IFocal CreatedFocal;
+        public IFocal? CreatedFocal;
 
-        private Trait Trait { get; }
+        private Trait? Trait { get; }
         public long StartPosition { get; }
         public long EndPosition { get; }
 
@@ -41,7 +41,7 @@ namespace InkPad.Tasks.Core
                 }
                 else
                 {
-                    CreatedFocal = FocalRef.CreateByValues(Trait, StartPosition, EndPosition);
+                    CreatedFocal = Focal.CreateByValues(StartPosition, EndPosition);
                 }
             }
 
@@ -50,7 +50,10 @@ namespace InkPad.Tasks.Core
 
         public override void UnRunTask()
         {
-            Trait?.FocalStore.Remove(CreatedFocal.Id);
+            if (CreatedFocal != null)
+            {
+                Trait?.FocalStore.Remove(CreatedFocal.Id);
+            }
         }
     }
 }

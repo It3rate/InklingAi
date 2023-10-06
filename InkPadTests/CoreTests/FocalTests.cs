@@ -25,9 +25,9 @@ namespace NumbersTests
         [Fact]
 	    public void BasisSignTests()
 	    {
-		    IFocal fb = FocalRef.CreateByValues(_trait, 0, 10);
-		    IFocal fn = FocalRef.CreateByValues(_trait, 20, 30);
-		    IFocal ftest = FocalRef.CreateByValues(_trait, 0, 0);
+		    IFocal fb = Focal.CreateByValues( 0, 10);
+		    IFocal fn = Focal.CreateByValues(20, 30);
+		    IFocal ftest = Focal.CreateByValues(0, 0);
 
 		    // focal [0,10]  fn [20, 30]
             Assert.Equal(new NumRange(-2, 3), fn.GetRangeWithBasis(fb, false));
@@ -82,8 +82,8 @@ namespace NumbersTests
 	    [Fact]
 	    public void ReciprocalTests()
 	    {
-		    IFocal f0 = FocalRef.CreateByValues(_trait, 0, 10);
-		    IFocal f1 = FocalRef.CreateByValues(_trait, 132, 287);
+		    IFocal f0 = Focal.CreateByValues(0, 10);
+		    IFocal f1 = Focal.CreateByValues(132, 287);
 		    Assert.Equal(-13.2, f1.GetRangeWithBasis(f0, false).Start);
 		    Assert.Equal(28.7, f1.GetRangeWithBasis(f0, false).End);
 		    Assert.Equal(-130, f1.GetRangeWithBasis(f0, true).Start);
@@ -93,9 +93,9 @@ namespace NumbersTests
         [Fact]
 	    public void RangeToUnitTests()
 	    {
-		    IFocal fb = FocalRef.CreateByValues(_trait, 0, 10);
-		    IFocal fn = FocalRef.CreateByValues(_trait, 20, 30);
-		    IFocal testFocal = FocalRef.CreateByValues(_trait, 0, 0);
+		    IFocal fb = Focal.CreateByValues(0, 10);
+		    IFocal fn = Focal.CreateByValues(20, 30);
+		    IFocal testFocal = Focal.CreateByValues(0, 0);
 		    var range = fn.GetRangeWithBasis(fb, false);
             testFocal.SetWithRangeAndBasis(range, fb, false);
             Assert.Equal(testFocal.StartTickPosition, fn.StartTickPosition);
