@@ -16,7 +16,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
             IFocal p = new Focal(10, 20);
             IFocal q = new Focal(30, 40);
             IFocal[] result = FocalBase.Nand(p, q);
-            Assert.Equal(1, result.Length);
+            Assert.Single(result);
             Assert.Equal(Focal.MinMaxFocal, result[0]);
         }
 
@@ -77,7 +77,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
             IFocal p = new Focal(20, 30);
             IFocal q = new Focal(10, 15);
             IFocal[] result = FocalBase.Nand(p, q);
-            Assert.Equal(1, result.Length);
+            Assert.Single(result);
             Assert.Equal(Focal.MinMaxFocal, result[0]);
         }
     }

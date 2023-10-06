@@ -13,8 +13,8 @@ namespace Nums.Primitives
         public MathElementKind Kind => MathElementKind.Trait;
         public int Id { get; internal set; }
         public int CreationIndex => Id - (int)Kind - 1;
-        
-        public virtual string Name { get; }
+
+        public virtual string Name { get; } = "";
 
         public readonly Dictionary<int, long> PositionStore = new Dictionary<int, long>(4096);
         public readonly Dictionary<int, IFocal> FocalStore = new Dictionary<int, IFocal>();

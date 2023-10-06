@@ -11,7 +11,6 @@ namespace Nums.Primitives
     /// <summary>
     /// Represents a boolean type evaluation of two or more numbers.
     /// This type of number can have more than one segment, but segments can never overlap.
-    /// All Numbers are probably NumberSets, with Unit being selected and Unot being unselected - may adjust.
     /// </summary>
     public class NumberSet : IMathElement
     {
