@@ -58,8 +58,8 @@ namespace NumbersTests
 		    Assert.Equal(1, n3.StartValue);
 		    Assert.Equal(-1.5, n3.EndValue);
 		    _unitFocal.EndTickPosition = -20;
-		    Assert.Equal(1, n0.StartValue);
-		    Assert.Equal(0, n0.EndValue);
+		    Assert.Equal(0, n0.StartValue);
+		    Assert.Equal(-0.5f, n0.EndValue);
 		    Assert.Equal(0, n1.StartValue);
 		    Assert.Equal(-1, n1.EndValue);
 		    Assert.Equal(1, n2.StartValue);

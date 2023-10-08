@@ -94,19 +94,19 @@ namespace Nums.Primitives
         }
         public Seg GetRangeWithBasis(IFocal basis, bool isReciprocal)
 		{
-			var b = new Seg(-basis.StartTickPosition, basis.EndTickPosition);
-			var v = new Seg(-StartTickPosition, EndTickPosition);
-            return v / b;
-			//var len = (double)Math.Abs(basis.NonZeroLength);
-   //         //var basisDir = basis.Direction;
-   //         var start = (StartTickPosition - basis.StartTickPosition) / len;
-   //         var end = (EndTickPosition - basis.StartTickPosition) / len;
-   //         if (isReciprocal)
-   //         {
-   //             start = Math.Round(start, MidpointRounding.AwayFromZero) * len;
-   //             end = Math.Round(end, MidpointRounding.AwayFromZero) * len;
-   //         }
-   //         return basis.IsUnitPerspective ? new Seg(-start, end) : new Seg(end, -start);
+			//var b = new Seg(-basis.StartTickPosition, basis.EndTickPosition);
+			//var v = new Seg(-StartTickPosition, EndTickPosition);
+   //         return v / b;
+            var len = (double)Math.Abs(basis.NonZeroLength);
+            //var basisDir = basis.Direction;
+            var start = (StartTickPosition - basis.StartTickPosition) / len;
+            var end = (EndTickPosition - basis.StartTickPosition) / len;
+            if (isReciprocal)
+            {
+                start = Math.Round(start, MidpointRounding.AwayFromZero) * len;
+                end = Math.Round(end, MidpointRounding.AwayFromZero) * len;
+            }
+            return basis.IsUnitPerspective ? new Seg(-start, end) : new Seg(end, -start);
         }
         public void SetWithRangeAndBasis(Seg range, IFocal basis, bool isReciprocal)
         {
