@@ -4,9 +4,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Nums.Utils;
 
-public struct Seg
+public struct Seg : IEquatable<Seg>
 {
-    public static readonly Seg Empty = new Seg(0.0, 1.0, true);
+    public static readonly Seg Empty = new Seg(new Complex(double.NaN, double.NaN));
     public static readonly Seg Zero = new Seg(0.0, 0.0);
     public static readonly Seg Unit = new Seg(0.0, 1.0);
     public static readonly Seg Unot = new Seg(1.0, 0.0);
@@ -16,49 +16,42 @@ public struct Seg
     public static readonly double Tolerance = 0.000000001;
 
     private Complex mComplex; // a complex segment is always stored in unit space, start to end is -Imaginary to +Real.
-	public double Start { get => -mComplex.Imaginary; set => mComplex = new Complex(mComplex.Real, -value); }
+	public double Start { get => mComplex.Imaginary; set => mComplex = new Complex(mComplex.Real, value); }
 	public double End { get => mComplex.Real; set => mComplex = new Complex(value, mComplex.Imaginary); }
 	public double iStart { get => -mComplex.Real; set => mComplex = new Complex(-value, mComplex.Imaginary); }
-	public double iEnd { get => mComplex.Imaginary; set => mComplex = new Complex(mComplex.Real, value); }
-	private readonly bool _hasValue;
+	public double iEnd { get => -mComplex.Imaginary; set => mComplex = new Complex(mComplex.Real, -value); }
 
 	public float StartF => (float)Start;
 	public float EndF => (float)End;
 	public float iStartF => (float)iStart;
 	public float iEndF => (float)iEnd;
 
-    public Complex Complex 
-    {
-        get => mComplex;
-        set => mComplex = value;
-    }
+	public Complex Complex
+	{
+		get => mComplex;
+		set => mComplex = value;
+	}
+	public Complex iComplex
+	{
+		get => new Complex(iEnd, iStart);
+		set => mComplex = new Complex(-value.Real, -value.Imaginary);
+	}
 	public Seg(int start, int end)
     {
-        _hasValue = true;
-        mComplex = new Complex(end, -start); // real, imag
+        mComplex = new Complex(end, start); // real, imag
     }
     public Seg(double start, double end)
     {
-        _hasValue = true;
-		mComplex = new Complex(end, -start); // real, imag
+		mComplex = new Complex(end, start); // real, imag
     }
-    private Seg(double start, double end, bool isEmpty) // empty ctor
-    {
-        _hasValue = !isEmpty;
-		mComplex = new Complex(end, -start); // real, imag
-	}
 	public Seg(Seg value)
 	{
-		_hasValue = true;
-		mComplex = new Complex(value.End, -value.Start); // real, imag
+		mComplex = new Complex(value.End, value.Start); // real, imag
 	}
 	public Seg(Complex value)
 	{
-		_hasValue = true;
         mComplex = value;
 	}
-
-	public bool IsEmpty => _hasValue;
 
     public Seg Clone() => new Seg(Start, End);
 
@@ -67,9 +60,8 @@ public struct Seg
     public float MinF => (float)Min;
     public float MaxF => (float)Max;
     public double Length => Seg.AbsLength(this);
+    public double DirectedLength => Seg.DirLength(this);
     public double Magnitude => mComplex.Magnitude;// Math.Sqrt(End * End + Start * Start);
-    public double DirectedLength() => Seg.DirectedLength(this);
-    public double AbsLength() => Seg.AbsLength(this);
     public Seg Conjugate() => Seg.Conjugate(this);
     public Seg Reciprocal() => Seg.Reciprocal(this);
     public Seg Normalize() => Seg.Normalize(this);
@@ -133,7 +125,7 @@ public struct Seg
     //    return new Seg((-real1 + imaginary1 * num1) / (imaginary2 + real2 * num1), (imaginary1 + real1 * num1) / (imaginary2 + real2 * num1));
     //}
 
-    public static double DirectedLength(Seg value) => value.End - value.Start;
+    public static double DirLength(Seg value) => value.End - value.Start;
     public static double AbsLength(Seg value) => Math.Abs(value.End - value.Start);
 
     public static Seg Conjugate(Seg a) => new Seg(Complex.Conjugate(a.mComplex));// new Seg(a.End, -a.Start);

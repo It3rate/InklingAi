@@ -19,6 +19,71 @@ public class SegTests : IDisposable
 	}
 
 	[Fact]
+	public void UnotTests()
+	{
+		var seg = new Seg(-5, 7);
+		Assert.Equal(-5, seg.Start, 3);
+		Assert.Equal(7, seg.End, 3);
+		Assert.Equal(-7, seg.iStart, 3);
+		Assert.Equal(5, seg.iEnd, 3);
+		Assert.Equal(-5, seg.Complex.Imaginary, 3);
+		Assert.Equal(7, seg.Complex.Real, 3);
+		var icplx = seg.iComplex;
+		Assert.Equal(-7, icplx.Imaginary, 3);
+		Assert.Equal(5, icplx.Real, 3);
+		seg = new Seg(icplx);
+		Assert.Equal(-7, seg.Start, 3);
+		Assert.Equal(5, seg.End, 3);
+		Assert.Equal(-5, seg.iStart, 3);
+		Assert.Equal(7, seg.iEnd, 3);
+	}
+	[Fact]
+	public void LengthTests()
+	{
+		var seg = new Seg(-5, 5);
+		Assert.Equal(10, seg.Length, 3);
+		Assert.Equal(10, seg.DirectedLength, 3);
+		Assert.Equal(Math.Sqrt(50), seg.Magnitude, 3);
+		seg = new Seg(5, -5);
+		Assert.Equal(10, seg.Length, 3);
+		Assert.Equal(-10, seg.DirectedLength, 3);
+		Assert.Equal(Math.Sqrt(50), seg.Magnitude, 3);
+		seg = new Seg(5, 5);
+		Assert.Equal(0, seg.Length, 3);
+		Assert.Equal(0, seg.DirectedLength, 3);
+		Assert.Equal(Math.Sqrt(50), seg.Magnitude, 3);
+		seg = new Seg(0, 15);
+		Assert.Equal(15, seg.Length, 3);
+		Assert.Equal(15, seg.DirectedLength, 3);
+		Assert.Equal(Math.Sqrt(225), seg.Magnitude, 3);
+		seg = new Seg(15, 0);
+		Assert.Equal(15, seg.Length, 3);
+		Assert.Equal(-15, seg.DirectedLength, 3);
+		Assert.Equal(Math.Sqrt(225), seg.Magnitude, 3);
+	}
+	[Fact]
+	public void MulDivTests()
+	{
+		var left = new Seg(0, 5);
+		var right = new Seg(10, 20);
+		var mul = left * right;
+		Assert.Equal(50, mul.Start, 3);
+		Assert.Equal(100, mul.End, 3);
+		var div = mul / left;
+		Assert.Equal(right.Start, div.Start, 3);
+		Assert.Equal(right.End, div.End, 3);
+		var div2 = right / left;
+		Assert.Equal(2, div2.Start, 3);
+		Assert.Equal(4, div2.End, 3);
+		var sq = right * right;
+		Assert.Equal(400, sq.Start, 3);
+		Assert.Equal(300, sq.End, 3);
+		var fr = left / right;
+		Assert.Equal(-.1, fr.Start, 3);
+		Assert.Equal(.2, fr.End, 3);
+	}
+
+	[Fact]
 	public void Seg_Addition_ReturnsExpectedResult()
 	{
 		var seg1 = new Seg(1.0, 2.0);
@@ -290,8 +355,8 @@ public class SegTests : IDisposable
 	public void Conjugate_ReturnsExpectedResult()
 	{
 		var result = new Seg(1, 2).Conjugate();
-		Assert.Equal(2, result.Start);
-		Assert.Equal(-1, result.End);
+		Assert.Equal(2, result.End);
+		Assert.Equal(-1, result.Start);
 	}
 
 	[Fact]
