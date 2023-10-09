@@ -27,8 +27,8 @@ namespace Nums.Primitives
 		public int FocalId => Focal.Id;
 
 		public long ZeroTick => BasisFocal.StartTickPosition;
-		public long BasisTicks => BasisFocal.LengthInTicks;
-		public long AbsBasisTicks => BasisFocal.AbsLengthInTicks;
+		public long BasisTicks => BasisFocal.DirectedLength;
+		public long AbsBasisTicks => BasisFocal.Length;
 
 		public bool IsBasis => Domain.BasisNumber.Id == Id;
 		public bool IsMinMax => Domain.MinMaxNumber.Id == Id;

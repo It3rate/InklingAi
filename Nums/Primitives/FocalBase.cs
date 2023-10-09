@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Nums.Utils;
 
@@ -10,24 +11,22 @@ namespace Nums.Primitives
     {
         long StartTickPosition { get; set; }
         long EndTickPosition { get; set; }
-        long LengthInTicks { get; }
-        long AbsLengthInTicks { get; }
+        long DirectedLength { get; }
+        long Length { get; }
         long NonZeroLength { get; }
         int Direction { get; }
         bool IsUnitPerspective { get; }
         bool IsUnotPerspective { get; }
         long Min { get; }
         long Max { get; }
+        Seg Seg { get; }
 
-        FocalPositions FocalPositions { get; set; }
         void Reset(long start, long end);
         void Reset(IFocal focal);
 
-        void FlipAroundStartPoint();
-
-        Seg RangeAsBasis(IFocal nonBasis);
-        Seg GetRangeWithBasis(IFocal basis, bool isReciprocal);
-        void SetWithRangeAndBasis(Seg range, IFocal basis, bool isReciprocal);
+        void ReverseDirection();
+        Seg GetSegBasis(IFocal basis);
+        void SetSegBasis(Seg seg, IFocal basis);
 
         Seg UnitTRangeIn(IFocal basis);
         IFocal Clone();
@@ -40,26 +39,17 @@ namespace Nums.Primitives
         private static int _focalCounter = 1 + (int)MathElementKind.Focal;
         public int CreationIndex => Id - (int)Kind - 1;
 
-        //private static int focalCounter = 1 + (int)MathElementKind.Focal;
-        //public int StartId { get; set; } // ref to start point position
-        //public int EndId { get; set; } // ref to end point position
-
-        // can be dealt with by expanding resolution (mult all) or range (add)
-        //bool startPrecisionUnderflow; 
-        //bool endPrecisionUnderflow;
-        //bool startRangeOverflow;
-        //bool endRangeOverflow;
-
         public virtual long StartTickPosition { get; set; }
         public virtual long EndTickPosition { get; set; }
+        public Seg Seg => new Seg(StartTickPosition, EndTickPosition);
 
         public int Direction => StartTickPosition <= EndTickPosition ? 1 : -1;
         public bool IsUnitPerspective => StartTickPosition <= EndTickPosition;
         public bool IsUnotPerspective => StartTickPosition > EndTickPosition;
 
-        public long LengthInTicks => EndTickPosition - StartTickPosition;
-        public long AbsLengthInTicks => Math.Abs(LengthInTicks);
-        public long NonZeroLength => LengthInTicks == 0 ? 1 : LengthInTicks;
+        public long DirectedLength => EndTickPosition - StartTickPosition;
+        public long Length => Math.Abs(DirectedLength);
+        public long NonZeroLength => DirectedLength == 0 ? 1 : DirectedLength;
 
         // Focal values are always added as unit perspective positions, because
         // there is no unit defined that allows the start point to be interpreted as a unot perspective.
@@ -78,64 +68,73 @@ namespace Nums.Primitives
             Reset(focal.StartTickPosition, focal.EndTickPosition);
         }
 
-        public FocalPositions FocalPositions
+        public Seg GetSegBasis(IFocal basis)
         {
-            get => new FocalPositions(this);
-            set
-            {
-                StartTickPosition = value.StartTickPosition;
-                EndTickPosition = value.EndTickPosition;
-            }
+            var div = Seg / basis.Seg;
+            return basis.IsUnitPerspective ? div : new Seg(div.End, div.Start);
         }
+        public void SetSegBasis(Seg seg, IFocal basis)
+        {
+            var mult = seg * basis.Seg;
+			var start = basis.IsUnitPerspective ? mult.Start : mult.End;
+			var end = basis.IsUnitPerspective ? mult.End : mult.Start;
+			Reset((long)Math.Round(start, MidpointRounding.AwayFromZero),
+                  (long)Math.Round(end, MidpointRounding.AwayFromZero));
+        }
+        //public Seg GetSegAsBasis(IFocal nonBasis) => nonBasis.Seg / Seg;
+        //public void SetAsBasis(Seg seg, IFocal nonBasis)
+        //{
+        //	var mult = nonBasis.Seg * seg;
+        //	Reset((long)Math.Round(mult.Start, MidpointRounding.AwayFromZero),
+        //		  (long)Math.Round(mult.End, MidpointRounding.AwayFromZero));
+        //}
+        ////var b = new Seg(-basis.StartTickPosition, basis.EndTickPosition);
+        ////var v = new Seg(-StartTickPosition, EndTickPosition);
+        ////         return v / b;
+        //         var len = (double)Math.Abs(basis.NonZeroLength);
+        //         //var basisDir = basis.Direction;
+        //         var start = (StartTickPosition - basis.StartTickPosition) / len;
+        //         var end = (EndTickPosition - basis.StartTickPosition) / len;
+        //         if (isReciprocal)
+        //         {
+        //             start = Math.Round(start, MidpointRounding.AwayFromZero) * len;
+        //             end = Math.Round(end, MidpointRounding.AwayFromZero) * len;
+        //         }
+        //         return basis.IsUnitPerspective ? new Seg(-start, end) : new Seg(end, -start);
+        //     }
+        //public void SetSegWithBasis(Seg range, IFocal basis, bool isReciprocal)
+        //      {
+        //          double start;
+        //          double end;
+        //          var len = (double)basis.NonZeroLength;
+        //          var zeroTick = basis.StartTickPosition;
+        //          if (basis.IsUnitPerspective)
+        //          {
+        //              start = zeroTick - range.Start * len;
+        //              end = zeroTick + range.End * len;
+        //          }
+        //          else
+        //          {
+        //              start = zeroTick + range.End * len;
+        //              end = zeroTick - range.Start * len;
+        //          }
 
-        public void FlipAroundStartPoint()
-        {
-            EndTickPosition = StartTickPosition - LengthInTicks;
-        }
-        public Seg GetRangeWithBasis(IFocal basis, bool isReciprocal)
+        //          if (isReciprocal)
+        //          {
+        //              start = Math.Round(start, MidpointRounding.AwayFromZero) / Math.Abs(len);
+        //              end = Math.Round(end, MidpointRounding.AwayFromZero) / Math.Abs(len);
+        //          }
+
+        //          StartTickPosition = (long)Math.Round(start, MidpointRounding.AwayFromZero);
+        //          EndTickPosition = (long)Math.Round(end, MidpointRounding.AwayFromZero);
+        //      }
+        public void ReverseDirection()
 		{
-			//var b = new Seg(-basis.StartTickPosition, basis.EndTickPosition);
-			//var v = new Seg(-StartTickPosition, EndTickPosition);
-   //         return v / b;
-            var len = (double)Math.Abs(basis.NonZeroLength);
-            //var basisDir = basis.Direction;
-            var start = (StartTickPosition - basis.StartTickPosition) / len;
-            var end = (EndTickPosition - basis.StartTickPosition) / len;
-            if (isReciprocal)
-            {
-                start = Math.Round(start, MidpointRounding.AwayFromZero) * len;
-                end = Math.Round(end, MidpointRounding.AwayFromZero) * len;
-            }
-            return basis.IsUnitPerspective ? new Seg(-start, end) : new Seg(end, -start);
-        }
-        public void SetWithRangeAndBasis(Seg range, IFocal basis, bool isReciprocal)
-        {
-            double start;
-            double end;
-            var len = (double)basis.NonZeroLength;
-            var zeroTick = basis.StartTickPosition;
-            if (basis.IsUnitPerspective)
-            {
-                start = zeroTick - range.Start * len;
-                end = zeroTick + range.End * len;
-            }
-            else
-            {
-                start = zeroTick + range.End * len;
-                end = zeroTick - range.Start * len;
-            }
-
-            if (isReciprocal)
-            {
-                start = Math.Round(start, MidpointRounding.AwayFromZero) / Math.Abs(len);
-                end = Math.Round(end, MidpointRounding.AwayFromZero) / Math.Abs(len);
-            }
-
-            StartTickPosition = (long)Math.Round(start, MidpointRounding.AwayFromZero);
-            EndTickPosition = (long)Math.Round(end, MidpointRounding.AwayFromZero);
-        }
-        public Seg RangeAsBasis(IFocal nonBasis) => nonBasis.GetRangeWithBasis(this, false);
-        public Seg UnitTRangeIn(IFocal basis)
+			var temp = EndTickPosition;
+			EndTickPosition = StartTickPosition;
+			StartTickPosition = temp;
+		}
+		public Seg UnitTRangeIn(IFocal basis)
         {
             var len = (double)Math.Abs(basis.NonZeroLength);
             var start = (StartTickPosition - basis.StartTickPosition) / len;
@@ -208,7 +207,7 @@ namespace Nums.Primitives
         public static IFocal[] And(IFocal p, IFocal q)
         {
 	        var overlap = Overlap(p, q);
-	        return (overlap.LengthInTicks == 0) ? new IFocal[0] : new IFocal[] {overlap};
+	        return (overlap.DirectedLength == 0) ? new IFocal[0] : new IFocal[] {overlap};
         }
         public static IFocal[] B_Inhibits_A(IFocal p, IFocal q)
         {
@@ -264,7 +263,7 @@ namespace Nums.Primitives
         public static IFocal[] Or(IFocal p, IFocal q)
         {
 	        var overlap = Overlap(p, q);
-	        return (overlap.LengthInTicks == 0) ? new IFocal[] {p, q} : new IFocal[] {Extent(p, q)};
+	        return (overlap.DirectedLength == 0) ? new IFocal[] {p, q} : new IFocal[] {Extent(p, q)};
         }
         public static IFocal[] Nor(IFocal p, IFocal q)
         {
@@ -361,7 +360,7 @@ namespace Nums.Primitives
         {
             IFocal[] result;
             var overlap = Overlap(p, q);
-            if(overlap.LengthInTicks == 0)
+            if(overlap.DirectedLength == 0)
             {
                 result = new IFocal[] { Focal.MinMaxFocal.Clone() };
             }
@@ -452,19 +451,5 @@ namespace Nums.Primitives
         }
 
         public override string ToString() => $"[{StartTickPosition}->{EndTickPosition}]";
-    }
-
-    public class FocalPositions
-    {
-        public long StartTickPosition { get; set; }
-        public long EndTickPosition { get; set; }
-
-        public FocalPositions(IFocal focal)
-        {
-            StartTickPosition = focal.StartTickPosition;
-            EndTickPosition = focal.EndTickPosition;
-        }
-
-        public long Length => EndTickPosition - StartTickPosition;
     }
 }

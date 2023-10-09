@@ -2,7 +2,6 @@
 
 namespace NumbersTests
 {
-    using Nums.RefPrimitives;
     using Nums.Utils;
     using System;
     using System.Collections.Generic;
@@ -15,16 +14,16 @@ namespace NumbersTests
     {
 	    private Brain _brain;
 	    private Trait _trait;
-        private FocalRef _unitFocal;
-	    private FocalRef _maxMin;
+        private Focal _unitFocal;
+	    private Focal _maxMin;
 	    private Domain _domain;
 
 	    public NumberTests()
         {
             _brain = Brain.ActiveBrain;
             _trait = Trait.CreateIn(_brain, "number tests");
-            _unitFocal = FocalRef.CreateByValues(_trait, 0, 10);
-		    _maxMin = FocalRef.CreateByValues(_trait, -1000, 1010);
+			_unitFocal = new Focal(0, 10);
+			_maxMin = new Focal(-1000, 1010);
 		    _domain = new Domain(_trait, _unitFocal, _maxMin);
 	    }
 
@@ -116,17 +115,17 @@ namespace NumbersTests
         [Fact]
 	    public void CoreNumberTests()
 	    {
-		    var f0 = FocalRef.CreateByValues(_trait, 0, 20);
+		    var f0 = new Focal(0, 20);
 		    var n0 = _domain.CreateNumber(f0);
-		    var f1 = FocalRef.CreateByValues(_trait, 0, 30);
+		    var f1 = new Focal(0, 30);
 		    var n1 = _domain.CreateNumber(f1);
-		    var f2 = FocalRef.CreateByValues(_trait, -32, 0);
+		    var f2 = new Focal(-32, 0);
 		    var n2 = _domain.CreateNumber(f2);
-		    var f3 = FocalRef.CreateByValues(_trait, -50, 45);
+		    var f3 = new Focal(-50, 45);
 		    var n3 = _domain.CreateNumber(f3);
-		    var f4 = FocalRef.CreateByValues(_trait, 50, -45);
+		    var f4 = new Focal(50, -45);
 		    var n4 = _domain.CreateNumber(f4);
-		    var f5 = FocalRef.CreateByValues(_trait, 53, 69);
+		    var f5 = new Focal(53, 69);
 		    var n5 = _domain.CreateNumber(f5);
 
 		    Assert.Equal(MathElementKind.Number, n0.Kind);
@@ -135,12 +134,12 @@ namespace NumbersTests
 		    n0b.Add(n3);
 		    Assert.NotEqual(n0, n0b);
 
-		    Assert.Equal(_unitFocal.AbsLengthInTicks, n0.AbsBasisTicks);
+		    Assert.Equal(_unitFocal.Length, n0.AbsBasisTicks);
 		    Assert.Equal(1, n0.Direction);
 		    Assert.Equal(-1, n4.Direction);
 		    Assert.Equal(n1.DomainId, n0.Domain.Id);
 		    Assert.Equal(n0.StartValue, n1.StartValue, MathUtils.Tolerance);
-		    Assert.Equal(n1.EndValue, n1.Focal.LengthInTicks / (double) n1.BasisTicks);
+		    Assert.Equal(n1.EndValue, n1.Focal.DirectedLength / (double) n1.BasisTicks);
 		    Assert.Equal(0, n3.RemainderStartValue, MathUtils.Tolerance);
 		    Assert.Equal(5, n3.RemainderEndValue, MathUtils.Tolerance);
 		    Assert.Equal(2, n2.RemainderStartValue, MathUtils.Tolerance);

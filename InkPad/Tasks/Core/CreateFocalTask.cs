@@ -8,7 +8,6 @@ namespace InkPad.Tasks.Core
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Nums.RefPrimitives;
 
     public class CreateFocalTask : TaskBase, ICreateTask
     {
