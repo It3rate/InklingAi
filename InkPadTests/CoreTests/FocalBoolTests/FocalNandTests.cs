@@ -15,7 +15,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(10, 20);
             IFocal q = new Focal(30, 40);
-            IFocal[] result = FocalBase.Nand(p, q);
+            IFocal[] result = Focal.Nand(p, q);
             Assert.Single(result);
             Assert.Equal(Focal.MinMaxFocal, result[0]);
         }
@@ -25,7 +25,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(10, 20);
             IFocal q = new Focal(15, 25);
-            IFocal[] result = FocalBase.Nand(p, q);
+            IFocal[] result = Focal.Nand(p, q);
             Assert.Equal(2, result.Length);
             Assert.Contains( new Focal(long.MinValue, 15), result);
             Assert.Contains( new Focal(20, long.MaxValue), result);
@@ -35,7 +35,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(15, 25);
             IFocal q = new Focal(10, 20);
-            IFocal[] result = FocalBase.Nand(p, q);
+            IFocal[] result = Focal.Nand(p, q);
             Assert.Equal(2, result.Length);
             Assert.Contains(new Focal(long.MinValue, 15), result);
             Assert.Contains(new Focal(20, long.MaxValue), result);
@@ -45,7 +45,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(25, 15);
             IFocal q = new Focal(10, 20);
-            IFocal[] result = FocalBase.Nand(p, q);
+            IFocal[] result = Focal.Nand(p, q);
             Assert.Equal(2, result.Length);
             Assert.Contains(new Focal(long.MinValue, 15), result);
             Assert.Contains(new Focal(20, long.MaxValue), result);
@@ -55,7 +55,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(25, 15);
             IFocal q = new Focal(20, 10);
-            IFocal[] result = FocalBase.Nand(p, q);
+            IFocal[] result = Focal.Nand(p, q);
             Assert.Equal(2, result.Length);
             Assert.Contains(new Focal(long.MinValue, 15), result);
             Assert.Contains(new Focal(20, long.MaxValue), result);
@@ -65,7 +65,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(15, 25);
             IFocal q = new Focal(20, 10);
-            IFocal[] result = FocalBase.Nand(p, q);
+            IFocal[] result = Focal.Nand(p, q);
             Assert.Equal(2, result.Length);
             Assert.Contains(new Focal(long.MinValue, 15), result);
             Assert.Contains(new Focal(20, long.MaxValue), result);
@@ -76,7 +76,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(20, 30);
             IFocal q = new Focal(10, 15);
-            IFocal[] result = FocalBase.Nand(p, q);
+            IFocal[] result = Focal.Nand(p, q);
             Assert.Single(result);
             Assert.Equal(Focal.MinMaxFocal, result[0]);
         }

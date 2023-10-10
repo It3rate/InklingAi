@@ -12,6 +12,6 @@ public class Fps60TimeDomain : Domain
 {
 	    public Fps60TimeDomain(Knowledge knowledge) : base(
 		    knowledge.TimeTrait, 
-		    Focal.CreateZeroFocal(60), // 60 ticks per second
-		    Focal.CreateZeroFocal(long.MaxValue)) { } // no negative values
+		    new Focal(0, 60), // 60 ticks per second
+		    new Focal(0, long.MaxValue)) { } // no negative values
 }

@@ -7,6 +7,6 @@ namespace Nums.CoreConcepts.Time
 	    private MillisecondTimeDomain(Trait trait, IFocal basis, IFocal minMax) : base(trait, basis, minMax)
 	    {
         }
-	    public static MillisecondTimeDomain MinMax { get; } = new MillisecondTimeDomain(new TimeTrait(), Focal.CreateZeroFocal(1000), Focal.MinMaxFocal);
+	    public static MillisecondTimeDomain MinMax { get; } = new MillisecondTimeDomain(new TimeTrait(), new Focal(0, 1000), Focal.MinMaxFocal);
     }
 }

@@ -6,21 +6,21 @@ using System;
 
 public class WorkspaceTests : IDisposable
 {
-	    private Brain _brain;
-	    private Workspace _workspace;
-	    private Trait _trait;
+	private Brain _brain;
+	private Workspace _workspace;
+	private Trait _trait;
     private Focal _unitFocal;
-	    private Focal _maxMin;
-	    private Domain _domain;
+	private Focal _maxMin;
+	private Domain _domain;
 
-	    public WorkspaceTests()
+	public WorkspaceTests()
     {
         _brain = Brain.ActiveBrain;
         _workspace = new Workspace(_brain);
 
 		    _trait = Trait.CreateIn(_brain, "workspace tests");
-        _unitFocal = Focal.CreateByValues(-4, 6);
-		    _maxMin = Focal.CreateByValues(-54, 46);
+        _unitFocal = new Focal(-4, 6);
+		    _maxMin = new Focal(-54, 46);
 		    _domain = new Domain(_trait, _unitFocal, _maxMin);
     }
 
@@ -35,7 +35,7 @@ public class WorkspaceTests : IDisposable
         _workspace.AddDomains(true, _domain);
         Assert.Equal(_workspace.ActiveElementCount, 3); // domain, unit and range
 
-        var f5 = Focal.CreateByValues(20, 90);
+        var f5 = new Focal(20, 90);
         var n5 = _domain.CreateNumber(f5);
         _workspace.AddElements(n5);
         Assert.Equal(4, _workspace.ActiveElementCount);

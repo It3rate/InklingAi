@@ -16,12 +16,12 @@ namespace Nums.CoreConcepts.Time
 	    
 	    public static MillisecondNumber Create(long startTime, long duration, bool addToStore = false)
         {
-	        var focal = Primitives.Focal.CreateByValues(-startTime, startTime + duration);
+	        var focal = new Focal(-startTime, startTime + duration);
 	        var result = new MillisecondNumber(focal);
 	        Knowledge.Instance.MillisecondTimeDomain.AddNumber(result, addToStore);
 	        return result;
         }
 
-        public static MillisecondNumber Zero(bool addToStore = false) => new MillisecondNumber(Primitives.Focal.CreateZeroFocal(0));
+        public static MillisecondNumber Zero(bool addToStore = false) => new MillisecondNumber(new Focal(0,0));
     }
 }

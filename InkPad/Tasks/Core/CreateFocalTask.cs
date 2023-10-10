@@ -36,11 +36,11 @@ namespace InkPad.Tasks.Core
             {
                 if (Trait == null)
                 {
-                    CreatedFocal = Focal.CreateByValues(StartPosition, EndPosition);
+                    CreatedFocal = new Focal(StartPosition, EndPosition);
                 }
                 else
                 {
-                    CreatedFocal = Focal.CreateByValues(StartPosition, EndPosition);
+                    CreatedFocal = new Focal(StartPosition, EndPosition);
                 }
             }
 

@@ -123,7 +123,7 @@ namespace NumbersTests
 		    var n2 = _domain.CreateNumber(f2);
 		    var f3 = new Focal(-50, 45);
 		    var n3 = _domain.CreateNumber(f3);
-		    var f4 = new Focal(50, -45);
+		    var f4 = new Focal	(50, -45);
 		    var n4 = _domain.CreateNumber(f4);
 		    var f5 = new Focal(53, 69);
 		    var n5 = _domain.CreateNumber(f5);

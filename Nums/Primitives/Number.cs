@@ -252,53 +252,53 @@ namespace Nums.Primitives
         // convert values to first param's domain's context
         // result in first params's domain
 
-		public NumberSet Never(Number q) => new NumberSet(Domain, FocalBase.Never(Focal, q.Focal));
-		public void Never(Number q, NumberSet result) => result.Reset(FocalBase.Never(Focal, q.Focal));
+		public NumberSet Never(Number q) => new NumberSet(Domain, Primitives.Focal.Never(Focal, q.Focal));
+		public void Never(Number q, NumberSet result) => result.Reset(Primitives.Focal.Never(Focal, q.Focal));
 
-		public NumberSet And(Number q) => new NumberSet(Domain, FocalBase.And(Focal, q.Focal));
-		public void And(Number q, NumberSet result) => result.Reset(FocalBase.And(Focal, q.Focal));
+		public NumberSet And(Number q) => new NumberSet(Domain, Primitives.Focal.And(Focal, q.Focal));
+		public void And(Number q, NumberSet result) => result.Reset(Primitives.Focal.And(Focal, q.Focal));
 
-		public NumberSet B_Inhibits_A(Number q) => new NumberSet(Domain, FocalBase.B_Inhibits_A(Focal, q.Focal));
-		public void B_Inhibits_A(Number q, NumberSet result) => result.Reset(FocalBase.B_Inhibits_A(Focal, q.Focal));
+		public NumberSet B_Inhibits_A(Number q) => new NumberSet(Domain, Primitives.Focal.B_Inhibits_A(Focal, q.Focal));
+		public void B_Inhibits_A(Number q, NumberSet result) => result.Reset(Primitives.Focal.B_Inhibits_A(Focal, q.Focal));
 
-		public NumberSet Transfer_A(Number q) => new NumberSet(Domain, FocalBase.Transfer_A(Focal, q.Focal));
-		public void Transfer_A(Number q, NumberSet result) => result.Reset(FocalBase.Transfer_A(Focal, q.Focal));
+		public NumberSet Transfer_A(Number q) => new NumberSet(Domain, Primitives.Focal.Transfer_A(Focal, q.Focal));
+		public void Transfer_A(Number q, NumberSet result) => result.Reset(Primitives.Focal.Transfer_A(Focal, q.Focal));
 
-		public NumberSet A_Inhibits_B(Number q) => new NumberSet(Domain, FocalBase.A_Inhibits_B(Focal, q.Focal));
-		public void A_Inhibits_B(Number q, NumberSet result) => result.Reset(FocalBase.A_Inhibits_B(Focal, q.Focal));
+		public NumberSet A_Inhibits_B(Number q) => new NumberSet(Domain, Primitives.Focal.A_Inhibits_B(Focal, q.Focal));
+		public void A_Inhibits_B(Number q, NumberSet result) => result.Reset(Primitives.Focal.A_Inhibits_B(Focal, q.Focal));
 
-		public NumberSet Transfer_B(Number q) => new NumberSet(Domain, FocalBase.Transfer_B(Focal, q.Focal));
-		public void Transfer_B(Number q, NumberSet result) => result.Reset(FocalBase.Transfer_B(Focal, q.Focal));
+		public NumberSet Transfer_B(Number q) => new NumberSet(Domain, Primitives.Focal.Transfer_B(Focal, q.Focal));
+		public void Transfer_B(Number q, NumberSet result) => result.Reset(Primitives.Focal.Transfer_B(Focal, q.Focal));
 
-		public NumberSet Xor(Number q) => new NumberSet(Domain, FocalBase.Xor(Focal, q.Focal));
-		public void Xor(Number q, NumberSet result) => result.Reset(FocalBase.Xor(Focal, q.Focal));
+		public NumberSet Xor(Number q) => new NumberSet(Domain, Primitives.Focal.Xor(Focal, q.Focal));
+		public void Xor(Number q, NumberSet result) => result.Reset(Primitives.Focal.Xor(Focal, q.Focal));
 
-		public NumberSet Or(Number q) => new NumberSet(Domain, FocalBase.Or(Focal, q.Focal));
-		public void Or(Number q, NumberSet result) => result.Reset(FocalBase.Or(Focal, q.Focal));
+		public NumberSet Or(Number q) => new NumberSet(Domain, Primitives.Focal.Or(Focal, q.Focal));
+		public void Or(Number q, NumberSet result) => result.Reset(Primitives.Focal.Or(Focal, q.Focal));
 
-		public NumberSet Nor(Number q) => new NumberSet(Domain, FocalBase.Nor(Focal, q.Focal));
-		public void Nor(Number q, NumberSet result) => result.Reset(FocalBase.Nor(Focal, q.Focal));
+		public NumberSet Nor(Number q) => new NumberSet(Domain, Primitives.Focal.Nor(Focal, q.Focal));
+		public void Nor(Number q, NumberSet result) => result.Reset(Primitives.Focal.Nor(Focal, q.Focal));
 
-		public NumberSet Xnor(Number q) => new NumberSet(Domain, FocalBase.Xnor(Focal, q.Focal));
-		public void Xnor(Number q, NumberSet result) => result.Reset(FocalBase.Xnor(Focal, q.Focal));
+		public NumberSet Xnor(Number q) => new NumberSet(Domain, Primitives.Focal.Xnor(Focal, q.Focal));
+		public void Xnor(Number q, NumberSet result) => result.Reset(Primitives.Focal.Xnor(Focal, q.Focal));
 
-		public NumberSet Not_B(Number q) => new NumberSet(Domain, FocalBase.Not_B(Focal, q.Focal));
-		public void Not_B(Number q, NumberSet result) => result.Reset(FocalBase.Not_B(Focal, q.Focal));
+		public NumberSet Not_B(Number q) => new NumberSet(Domain, Primitives.Focal.Not_B(Focal, q.Focal));
+		public void Not_B(Number q, NumberSet result) => result.Reset(Primitives.Focal.Not_B(Focal, q.Focal));
 
-		public NumberSet B_Implies_A(Number q) => new NumberSet(Domain, FocalBase.B_Implies_A(Focal, q.Focal));
-		public void B_Implies_A(Number q, NumberSet result) => result.Reset(FocalBase.B_Implies_A(Focal, q.Focal));
+		public NumberSet B_Implies_A(Number q) => new NumberSet(Domain, Primitives.Focal.B_Implies_A(Focal, q.Focal));
+		public void B_Implies_A(Number q, NumberSet result) => result.Reset(Primitives.Focal.B_Implies_A(Focal, q.Focal));
 
-		public NumberSet Not_A(Number q) => new NumberSet(Domain, FocalBase.Not_A(Focal, q.Focal));
-		public void Not_A(Number q, NumberSet result) => result.Reset(FocalBase.Not_A(Focal, q.Focal));
+		public NumberSet Not_A(Number q) => new NumberSet(Domain, Primitives.Focal.Not_A(Focal, q.Focal));
+		public void Not_A(Number q, NumberSet result) => result.Reset(Primitives.Focal.Not_A(Focal, q.Focal));
 
-		public NumberSet A_Implies_B(Number q) => new NumberSet(Domain, FocalBase.A_Implies_B(Focal, q.Focal));
-		public void A_Implies_B(Number q, NumberSet result) => result.Reset(FocalBase.A_Implies_B(Focal, q.Focal));
+		public NumberSet A_Implies_B(Number q) => new NumberSet(Domain, Primitives.Focal.A_Implies_B(Focal, q.Focal));
+		public void A_Implies_B(Number q, NumberSet result) => result.Reset(Primitives.Focal.A_Implies_B(Focal, q.Focal));
 
-		public NumberSet Nand(Number q) => new NumberSet(Domain, FocalBase.Nand(Focal, q.Focal));
-		public void Nand(Number q, NumberSet result) => result.Reset(FocalBase.Nand(Focal, q.Focal));
+		public NumberSet Nand(Number q) => new NumberSet(Domain, Primitives.Focal.Nand(Focal, q.Focal));
+		public void Nand(Number q, NumberSet result) => result.Reset(Primitives.Focal.Nand(Focal, q.Focal));
 
-		public NumberSet Always(Number q) => new NumberSet(Domain, FocalBase.Always(Focal, q.Focal));
-		public void Always(Number q, NumberSet result) => result.Reset(FocalBase.Always(Focal, q.Focal));
+		public NumberSet Always(Number q) => new NumberSet(Domain, Primitives.Focal.Always(Focal, q.Focal));
+		public void Always(Number q, NumberSet result) => result.Reset(Primitives.Focal.Always(Focal, q.Focal));
 
 
         public Number Clone()

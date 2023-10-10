@@ -16,7 +16,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(10, 20);
             IFocal q = new Focal(30, 40);
-            IFocal[] result = FocalBase.Or(p, q);
+            IFocal[] result = Focal.Or(p, q);
             Assert.Equal(2, result.Length);
             Assert.Equal(p, result[0]);
             Assert.Equal(q, result[1]);
@@ -27,7 +27,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(10, 20);
             IFocal q = new Focal(15, 25);
-            IFocal[] result = FocalBase.Or(p, q);
+            IFocal[] result = Focal.Or(p, q);
             Assert.Equal(1, result.Length);
             Assert.Contains(new Focal(10, 25), result);
         }
@@ -36,7 +36,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(15, 25);
             IFocal q = new Focal(10, 20);
-            IFocal[] result = FocalBase.Or(p, q);
+            IFocal[] result = Focal.Or(p, q);
             Assert.Equal(1, result.Length);
             Assert.Contains(new Focal(10, 25), result);
         }
@@ -45,7 +45,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(25, 15);
             IFocal q = new Focal(10, 20);
-            IFocal[] result = FocalBase.Or(p, q);
+            IFocal[] result = Focal.Or(p, q);
             Assert.Equal(1, result.Length);
             Assert.Contains(new Focal(10, 25), result);
         }
@@ -54,7 +54,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(25, 15);
             IFocal q = new Focal(20, 10);
-            IFocal[] result = FocalBase.Or(p, q);
+            IFocal[] result = Focal.Or(p, q);
             Assert.Equal(1, result.Length);
             Assert.Contains(new Focal(10, 25), result);
         }
@@ -63,7 +63,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
         {
             IFocal p = new Focal(15, 25);
             IFocal q = new Focal(20, 10);
-            IFocal[] result = FocalBase.Or(p, q);
+            IFocal[] result = Focal.Or(p, q);
             Assert.Equal(1, result.Length);
             Assert.Contains(new Focal(10, 25), result);
         }

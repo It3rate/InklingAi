@@ -33,7 +33,7 @@ namespace Nums.Primitives
         public bool BasisIsReciprocal { get; set; } // True when ticks are larger than the unit basis
 
 
-        public Seg MinMaxNum => MinMaxFocal.GetSegBasis(BasisFocal);
+        public Seg MinMaxNum => MinMaxFocal.GetSegWithBasis(BasisFocal);
         public double TickToBasisRatio => BasisIsReciprocal ? BasisFocal.NonZeroLength : 1.0 / BasisFocal.NonZeroLength;
 
         public bool IsUnitPerspective => BasisFocal.IsUnitPerspective;
@@ -68,7 +68,7 @@ namespace Nums.Primitives
 
         public Number CreateNumber(long start, long end, bool addToStore = true)
         {
-	        var focal = Focal.CreateByValues(start, end);
+	        var focal = new Focal(start, end);
 	        return AddNumber(new Number(focal), addToStore);
         }
         public Number AddNumber(Number number, bool addToStore = true)
@@ -109,8 +109,8 @@ namespace Nums.Primitives
         public Number Zero() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.StartTickPosition);
         public Number One() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.EndTickPosition);
 
-        public Seg GetValueOf(IFocal focal) => focal.GetSegBasis(BasisFocal);
-        public void SetValueOf(IFocal focal, Seg range) => focal.SetSegBasis(range, BasisFocal);
+        public Seg GetValueOf(IFocal focal) => focal.GetSegWithBasis(BasisFocal);
+        public void SetValueOf(IFocal focal, Seg range) => focal.SetTicksWithSegBasis(range, BasisFocal);
         public Seg GetValueOf(Number num) => GetValueOf(num.Focal);
         public void SetValueOf(Number num, Seg range) => SetValueOf(num.Focal,range);
 
@@ -128,8 +128,8 @@ namespace Nums.Primitives
 
         public IFocal CreateFocalFromRange(Seg range)
         {
-	        var result = Focal.CreateByValues(0, 1);
-	        result.SetSegBasis(range, BasisFocal);
+	        var result = new Focal(0, 1);
+	        result.SetTicksWithSegBasis(range, BasisFocal);
 	        return result;
         }
 

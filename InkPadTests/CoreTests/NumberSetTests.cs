@@ -15,8 +15,8 @@ public class NumberSetTests : IDisposable
     {
         _brain = Brain.ActiveBrain;
         _trait = Trait.CreateIn(_brain, "number tests");
-        _unitFocal = Focal.CreateByValues( 0, 10);
-        _maxMin = Focal.CreateByValues(-1000, 1000);
+        _unitFocal = new Focal( 0, 10);
+        _maxMin = new Focal(-1000, 1000);
         _domain = new Domain(_trait, _unitFocal, _maxMin);
     }
 

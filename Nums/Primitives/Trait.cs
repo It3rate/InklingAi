@@ -36,7 +36,7 @@ namespace Nums.Primitives
 	    }
 	    public Domain AddDomain(long basisTicks)
 	    {
-		    return AddDomain(Focal.CreateZeroFocal(basisTicks), Focal.MinMaxFocal);
+		    return AddDomain(new Focal(0, basisTicks), Focal.MinMaxFocal);
 	    }
         public IEnumerable<Domain> Domains()
 	    {

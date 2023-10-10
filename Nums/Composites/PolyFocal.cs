@@ -7,10 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class PolyFocal : FocalBase
+public class PolyFocal : Focal
 {
-    public static Focal Empty { get; } = new Focal(0, 0);
-
     public override long StartTickPosition
     {
         get => _positions[0];

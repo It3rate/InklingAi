@@ -7,8 +7,8 @@ using Nums.Utils;
 
 public class DomainTests : IDisposable
 {
-	    private Brain _brain;
-	    private Trait _trait;
+	private Brain _brain;
+	private Trait _trait;
     private Focal _unitFocal;
     private Focal _maxMin;
     private Domain _domain;
@@ -17,8 +17,8 @@ public class DomainTests : IDisposable
     {
         _brain = Brain.ActiveBrain;
         _trait = Trait.CreateIn(_brain, "domain tests");
-        _unitFocal = Focal.CreateByValues(-4, 6);
-	        _maxMin = Focal.CreateByValues(-54, 46);
+        _unitFocal = new Focal(-4, 6);
+	        _maxMin = new Focal(-54, 46);
 	        _domain = new Domain(_trait, _unitFocal, _maxMin);
     }
 
@@ -43,7 +43,7 @@ public class DomainTests : IDisposable
 			var len = _domain.MinMaxNum.Length;
         Assert.Equal(10.0, len, MathUtils.Tolerance);
 
-        var f0 = Focal.CreateByValues(10, 20);
+        var f0 = new Focal(10, 20);
         var n0 = _domain.CreateNumber(f0);
         var n1 = _domain.CreateNumber(f0.Clone());
         var n2 = _domain.CreateNumber(f0.Clone());
@@ -69,14 +69,14 @@ public class DomainTests : IDisposable
 	    [Fact]
 	    public void DomainValueTests()
     {
-        _unitFocal.Reset(0, 10);
+            _unitFocal = new Focal(0, 10);
 
-	        var num = _domain.CreateNumber(Focal.CreateByValues(30, 40));
+	        var num = _domain.CreateNumber(new Focal(30, 40));
 	        var r = num.Value;
 	        var ffr = _domain.CreateFocalFromRange(r);
         Assert.Equal(ffr, num.Focal);
 
-        num = _domain.CreateNumber(Focal.CreateByValues( -30, 1));
+        num = _domain.CreateNumber(new Focal( -30, 1));
         r = num.Value;
         ffr = _domain.CreateFocalFromRange(r);
         Assert.Equal(ffr, num.Focal);
