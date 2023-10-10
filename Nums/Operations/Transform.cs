@@ -52,7 +52,6 @@ namespace Nums.Operations
             Source = source;
             Change = change;
             TransformKind = kind;
-            Brain = change.Brain;
             Id = Brain.NextTransformId();
         }
 
@@ -90,7 +89,16 @@ namespace Nums.Operations
         {
             EndTransformEvent?.Invoke(this, e);
         }
+
+        public override bool Equals(object? obj) => obj is Transform other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Transform && Equals(other);
+        public bool Equals(Transform? value) => Id.Equals(value?.Id);
+        public override int GetHashCode() => Id.GetHashCode();
     }
+
+
+
+
 
     public delegate void TransformEventHandler(object sender, ITransform e);
     public interface ITransform : IMathElement

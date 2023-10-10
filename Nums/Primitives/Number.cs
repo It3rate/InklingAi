@@ -7,38 +7,20 @@ namespace Nums.Primitives
     public class Number : IMathElement
 	{
 		public MathElementKind Kind => MathElementKind.Number;
-		public int Id { get; internal set; }
-		public int CreationIndex => Id - (int) Kind - 1;
-
-		public Brain Brain => Trait?.Brain;
-		public virtual Trait Trait => Domain?.Trait;
-        public virtual Domain Domain { get; set; }
-        public int DomainId
-		{
-			get => Domain.Id;
-			set => Domain = Domain.Trait.DomainStore[value];
-		}
-
-		// number to the power of x, where x is also a focal. Eventually this is equations, lazy solve them.
-
-        public virtual IFocal BasisFocal => Domain?.BasisFocal;
+        public Domain Domain { get; set; }
 		public IFocal Focal { get; set; }
 
-		public int FocalId => Focal.Id;
+		public Trait Trait => Domain.Trait;
+        public IFocal BasisFocal => Domain.BasisFocal;
 
 		public long ZeroTick => BasisFocal.StartTickPosition;
-		public long BasisTicks => BasisFocal.DirectedLength;
-		public long AbsBasisTicks => BasisFocal.Length;
-
-		public bool IsBasis => Domain.BasisNumber.Id == Id;
-		public bool IsMinMax => Domain.MinMaxNumber.Id == Id;
-		public bool IsDomainNumber => IsBasis || IsMinMax;
         public bool IsUnitPerspective => Domain.IsUnitPerspective;
 		public bool IsUnotPerspective => Domain.IsUnotPerspective;
 		public int Direction => StartTickPosition <= EndTickPosition ? 1 : -1;
 
-		protected internal Number(IFocal focal)
+		protected internal Number(Domain domain, IFocal focal)
 		{
+            Domain = domain;
 			Focal = focal;
 		}
 
@@ -98,8 +80,8 @@ namespace Nums.Primitives
 
 		public long WholeStartValue => (long) StartValue;
 		public long WholeEndValue => (long) EndValue;
-		public long RemainderStartValue => Domain.BasisIsReciprocal ? 0 : Math.Abs(StartTicks % BasisFocal.NonZeroLength);
-		public long RemainderEndValue => Domain.BasisIsReciprocal ? 0 : Math.Abs(EndTicks % BasisFocal.NonZeroLength);
+		public long RemainderStartValue => Domain.IsApproximate ? 0 : Math.Abs(StartTicks % BasisFocal.NonZeroLength);
+		public long RemainderEndValue => Domain.IsApproximate ? 0 : Math.Abs(EndTicks % BasisFocal.NonZeroLength);
 		public Seg RangeInMinMax => Focal.UnitTRangeIn(Domain.MinMaxFocal); //*
 
 		public Seg FloorRange => new Seg(Math.Ceiling(StartValue), Math.Floor(EndValue));
@@ -301,38 +283,24 @@ namespace Nums.Primitives
 		public void Always(Number q, NumberSet result) => result.Reset(Primitives.Focal.Always(Focal, q.Focal));
 
 
-        public Number Clone()
-        {
-	        var result = new Number(Focal.Clone());
-	        Domain.AddNumber(result);
-	        return result;
-        }
+        public Number Clone() => new Number(Domain, Focal.Clone());
 
         public override string ToString()
 		{
 			var v = Value;
 			return $"[{-v.Start:0.00}->{v.End:0.00}]";
 		}
-		public override bool Equals(object obj)
-		{
-			return obj is Number other && Equals(other);
-		}
-		public bool Equals(Number value)
-		{
-			return StartTickPosition.Equals(value.StartTickPosition) && 
-			       EndTickPosition.Equals(value.EndTickPosition) &&
-			       Focal.StartTickPosition.Equals(value.StartTickPosition) &&
-			       Focal.EndTickPosition.Equals(value.EndTickPosition);
-		}
 
-		public override int GetHashCode()
+        public override bool Equals(object? obj) => obj is Number other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Number && Equals(other);
+        public bool Equals(Number? value) => Domain.Equals(value?.Domain) && Focal.Equals(value?.Focal);
+
+        public override int GetHashCode()
 		{
 			unchecked
 			{
-                var hashCode = StartTickPosition.GetHashCode();
-                hashCode = (hashCode * 397) ^ EndTickPosition.GetHashCode();
-                hashCode = (hashCode * 17) ^ Focal.StartTickPosition.GetHashCode();
-                hashCode = (hashCode * 13) ^ Focal.EndTickPosition.GetHashCode();
+                var hashCode = Domain.GetHashCode();
+                hashCode = (hashCode * 397) ^ Focal.GetHashCode();
                 return hashCode;
 			}
 		}

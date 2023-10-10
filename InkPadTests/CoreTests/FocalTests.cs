@@ -92,9 +92,8 @@ namespace NumbersTests
             Assert.Equal(100, f.DirectedLength);
             Assert.Equal(1, f.Direction);
             Assert.Equal(100, f.NonZeroLength);
-            Assert.Equal(100, f.Length);
+            Assert.Equal(100ul, f.Length);
             var f2 = f.Clone();
-            Assert.NotEqual(f.Id, f2.Id);
             Assert.Equal(f2.StartTickPosition, f.StartTickPosition);
             Assert.Equal(f.EndTickPosition, f2.EndTickPosition);
 
@@ -106,7 +105,7 @@ namespace NumbersTests
             Assert.Equal(-200, f2.DirectedLength);
             Assert.Equal(-1, f2.Direction);
             Assert.Equal(-200, f2.NonZeroLength);
-            Assert.Equal(200, f2.Length);
+            Assert.Equal(200ul, f2.Length);
 
             // f:[150,250] f2[450,250]
             Assert.Equal(new Seg(3, 1), f2.GetSegWithBasis(f));
@@ -124,7 +123,7 @@ namespace NumbersTests
             f2.EndTickPosition = -150;
             Assert.Equal(0, f2.DirectedLength);
             Assert.Equal(1, f2.NonZeroLength);
-            Assert.Equal(0, f2.Length);
+            Assert.Equal(0ul, f2.Length);
 
         }
     }

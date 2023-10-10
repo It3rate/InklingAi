@@ -4,7 +4,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Nums.Utils;
 
-public struct Seg : IEquatable<Seg>
+public struct Seg : IEquatable<Seg?>
 {
     public static readonly Seg Empty = new Seg(new Complex(double.NaN, double.NaN));
     public static readonly Seg Zero = new Seg(0.0, 0.0);
@@ -195,24 +195,10 @@ public static Seg NormalizeTo(Seg from, Seg to) => from.Normalize() * to;
 
     public static bool operator ==(Seg left, Seg right) => left.mComplex == right.mComplex;// left.End == right.End && left.Start == right.Start;
     public static bool operator !=(Seg left, Seg right) => left.mComplex != right.mComplex; // left.End != right.End || left.Start != right.Start;
-    public override bool Equals(object? obj) => mComplex.Equals(obj);
-    //{
-    //    return obj is Seg other && Equals(other);
-    //}
-    public bool Equals(Seg value) => mComplex.Equals(value.mComplex);
-    //{
-    //    return Start.Equals(value.Start) && End.Equals(value.End);
-    //}
 
+    public override bool Equals(object? obj) => mComplex.Equals(obj);
+    public bool Equals(Seg? value) => mComplex.Equals(value?.mComplex);
     public override int GetHashCode() => mComplex.GetHashCode();
-    //{
-    //    unchecked
-    //    {
-    //        var hashCode = Start.GetHashCode();
-    //        hashCode = (hashCode * 397) ^ End.GetHashCode();
-    //        return hashCode;
-    //    }
-    //}
 
     public override string ToString() => $"[{Start:0.00}->{End:0.00}]";
 }

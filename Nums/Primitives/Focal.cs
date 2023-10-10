@@ -11,7 +11,7 @@ namespace Nums.Primitives
         long StartTickPosition { get; set; }
         long EndTickPosition { get; set; }
         long DirectedLength { get; }
-        long Length { get; }
+        ulong Length { get; } // min size 1
         long NonZeroLength { get; }
         int Direction { get; }
         bool IsUnitPerspective { get; }
@@ -30,13 +30,17 @@ namespace Nums.Primitives
         IFocal Clone();
     }
 
+    /// <summary>
+    /// Focals are a measure of ticks. When used with a basis focal they can represent ratios in the unit or unot directions.
+    /// The basis focal sets the zero point and length of the unit. Alone a focal is just a span of ticks.
+    /// Boolean or tip/tail operations can happen on a raw focal, but stretching only makes sense with a zero point.
+    /// The physical zero point on a raw focal isn't relevant (the tick measure could be long or ulong with no change in relevance).
+    /// The values only have signifcance when used relative to a basis. A basis pointing 'left' is a unot basis (a negative unit).
+    /// This is a virtual class as there will potentially be polylines of Focals if it makes sense.
+    /// </summary>
     public class Focal : IFocal
     {
         public MathElementKind Kind => MathElementKind.Focal;
-        public int Id { get; }
-        private static int _focalCounter = 1 + (int)MathElementKind.Focal;
-        public int CreationIndex => Id - (int)Kind - 1;
-
         public virtual long StartTickPosition { get; set; }
         public virtual long EndTickPosition { get; set; }
 
@@ -45,17 +49,14 @@ namespace Nums.Primitives
 		// Focals are pre-number, positions, not value interpretations.
 		protected Focal()
 		{
-			Id = _focalCounter++;
 		}
 		public Focal(long startTickPosition, long endTickPosition)
 		{
-			Id = _focalCounter++;
 			StartTickPosition = startTickPosition;
 			EndTickPosition = endTickPosition;
 		}
 		protected Focal(Seg seg, IFocal basis)
 		{
-			Id = _focalCounter++;
             SetTicksWithSegBasis(seg, basis);
 		}
 
@@ -94,7 +95,7 @@ namespace Nums.Primitives
         }
 
 		public virtual Seg Seg => new Seg(StartTickPosition, EndTickPosition);
-		public virtual long Length => Math.Abs(DirectedLength);
+		public virtual ulong Length => (ulong)Math.Abs(EndTickPosition - StartTickPosition);
 		public virtual long DirectedLength => EndTickPosition - StartTickPosition;
 		public virtual long NonZeroLength => DirectedLength == 0 ? 1 : DirectedLength;
         public virtual long Min => StartTickPosition <= EndTickPosition ? StartTickPosition : EndTickPosition;
@@ -394,18 +395,9 @@ namespace Nums.Primitives
         public long LessThanOrEqual(long a, long b) { return a | ~b; } // b implies a
 
 
-
-
-
-        // May need to override these in the base classes? Probably shouldn't care it a focal is a ref or value.
-        public override bool Equals(object obj)
-        {
-            return obj is IFocal other && Equals(other);
-        }
-        public bool Equals(IFocal value)
-        {
-            return StartTickPosition.Equals(value.StartTickPosition) && EndTickPosition.Equals(value.EndTickPosition);
-        }
+        public override bool Equals(object? obj) => obj is Focal other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Focal && Equals(other);
+        public bool Equals(Focal? value) => StartTickPosition.Equals(value?.StartTickPosition) && EndTickPosition.Equals(value?.EndTickPosition);
         public override int GetHashCode()
         {
             unchecked
@@ -417,5 +409,6 @@ namespace Nums.Primitives
         }
 
         public override string ToString() => $"[{StartTickPosition}->{EndTickPosition}]";
+
     }
 }

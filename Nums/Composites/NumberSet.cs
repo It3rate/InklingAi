@@ -18,14 +18,8 @@ namespace Nums.Primitives
 	    public int Id { get; internal set; }
 	    public int CreationIndex => Id - (int)Kind - 1;
 
-        public Brain Brain => Trait?.Brain;
-	    public virtual Trait Trait => Domain?.Trait;
 	    public virtual Domain Domain { get; set; }
-	    public int DomainId
-	    {
-		    get => Domain.Id;
-		    set => Domain = Domain.Trait.DomainStore[value];
-	    }
+
         private List<IFocal> Focals { get; } = new List<IFocal>(); // todo: Focals should have no overlap and always be sorted
 
         public NumberSet(Domain domain, params IFocal[] focals)
@@ -79,12 +73,12 @@ namespace Nums.Primitives
             Focals.Clear();
             Focals.AddRange(focals);
         }
-        public Number this[int index] => index < Focals.Count ? Domain.CreateNumber(Focals[index], false) : null;
+        public Number? this[int index] => index < Focals.Count ? Domain.CreateNumber(Focals[index]) : null;
         public IEnumerable<Number> Numbers()
         {
 	        foreach (var focal in Focals)
 	        {
-		        yield return Domain.CreateNumber(focal, false);
+		        yield return Domain.CreateNumber(focal);
 	        }
         }
 
@@ -98,6 +92,10 @@ namespace Nums.Primitives
             return result;
         }
 
+        public override bool Equals(object? obj) => obj is NumberSet other && Equals(other);
+        public bool Equals(IMathElement? other) => other is NumberSet && Equals(other);
+        public bool Equals(NumberSet? value) => Id.Equals(value?.Id);
+        public override int GetHashCode() => Id.GetHashCode();
 
     }
 }

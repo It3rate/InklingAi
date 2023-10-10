@@ -23,5 +23,10 @@ namespace Nums.Primitives
 
         public Number Relatedness { get; set; } // angle of relation between source and Repeat, like the dot product. Determines 'perpendicularness' of axis. Can be non linear.
 
+
+        public override bool Equals(object? obj) => obj is Relation other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Relation && Equals(other);
+        public bool Equals(Relation? value) => Id.Equals(value?.Id);
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

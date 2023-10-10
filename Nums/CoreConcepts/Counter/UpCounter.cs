@@ -10,13 +10,7 @@ namespace Nums.CoreConcepts.Counter
 
     public class UpCounter : Number
     {
-	    public override Domain Domain
-	    {
-		    get => CounterDomain.UpDomain;
-		    set { }
-	    }
-
-	    public UpCounter() : base(new Focal(0, 0))
+	    public UpCounter() : base(CounterDomain.UpDomain, new Focal(0, 0))
 	    {
 	    }
 

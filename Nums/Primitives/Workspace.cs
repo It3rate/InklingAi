@@ -16,8 +16,7 @@ namespace Nums.Primitives
 
         public Brain Brain { get; }
 
-        private HashSet<int> ActiveIds { get; } = new HashSet<int>();
-        public int ActiveElementCount => ActiveIds.Count;
+        private List<IMathElement> Elements { get; } = new();
 
         public bool IsActive { get; set; } = true;
 
@@ -38,36 +37,21 @@ namespace Nums.Primitives
 	        //}
         }
 
-        public bool IsElementActive(int id) => ActiveIds.Contains(id);
-        public bool IsElementActive(IMathElement element) => ActiveIds.Contains(element.Id);
+        public int ElementCount => Elements.Count;
+        public bool IsElementActive(IMathElement element) => Elements.Contains(element);
 
         public void AddElements(params IMathElement[] elements)
         {
 	        foreach (var element in elements)
 	        {
-		        ActiveIds.Add(element.Id);
+		        Elements.Add(element);
 	        }
         }
         public void RemoveElements(params IMathElement[] elements)
         {
 	        foreach (var element in elements)
 	        {
-		        ActiveIds.Remove(element.Id);
-	        }
-        }
-        public void AddElementsById(params int[] elementIds)
-        {
-	        foreach (var id in elementIds)
-	        {
-
-		        ActiveIds.Add(id);
-	        }
-        }
-        public void RemoveElementsById(params int[] elementIds)
-        {
-	        foreach (var id in elementIds)
-	        {
-		        ActiveIds.Remove(id);
+		        Elements.Remove(element);
 	        }
         }
 
@@ -75,7 +59,7 @@ namespace Nums.Primitives
         {
 	        foreach (var trait in traits)
 	        {
-		        AddElementsById(trait.Id);
+		        AddElements(trait);
 		        if (includeChildren)
 		        {
 			        AddDomains(includeChildren,trait.DomainStore.Values.ToArray());
@@ -86,7 +70,7 @@ namespace Nums.Primitives
         {
 	        foreach (var trait in traits)
 	        {
-		        RemoveElementsById(trait.Id);
+		        RemoveElements(trait);
 		        if (includeChildren)
 		        {
 			        RemoveDomains(includeChildren, trait.DomainStore.Values.ToArray());
@@ -100,42 +84,39 @@ namespace Nums.Primitives
 	        foreach (var domain in domains)
 	        {
 		        lastDomain = domain;
-		        AddElementsById(domain.Id);
-		        if (includeChildren)
-		        {
-			        AddElementsById(domain.NumberIds());
-		        }
+		        AddElements(domain);
 	        }
         }
         public void RemoveDomains(bool includeChildren, params Domain[] domains)
         {
 	        foreach (var domain in domains)
 	        {
-		        RemoveElementsById(domain.Id);
-		        if (includeChildren)
-		        {
-			        RemoveElementsById(domain.NumberIds());
-		        }
+		        RemoveElements(domain);
 	        }
         }
 
         public IEnumerable<Domain> ActiveSiblingDomains(Domain domain)
         {
 	        var ds = domain.Trait.DomainStore;
-	        var domainIds = ds.Keys.Where(key => ActiveIds.Contains(key));
-	        foreach (var id in domainIds)
+	        var domains = ds.Values.Where(key => Elements.Contains(key));
+	        foreach (var d in domains)
 	        {
-		        if (id != domain.Id)
+		        if (d != domain)
 		        {
-			        yield return ds[id];
+			        yield return d;
 		        }
 	        }
         }
 
         public void ClearAll()
         {
-            ActiveIds.Clear();
+            Elements.Clear();
         }
+
+        public override bool Equals(object? obj) => obj is Domain other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Domain && Equals(other);
+        public bool Equals(Domain? value) => Id.Equals(value?.Id);
+        public override int GetHashCode() => Id.GetHashCode();
 
     }
 }

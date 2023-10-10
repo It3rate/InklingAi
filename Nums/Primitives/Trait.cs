@@ -1,43 +1,41 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Nums.Utils;
 
 namespace Nums.Primitives
 {
     /// <summary>
-    /// Traits are measurable properties on objects. They can be composed of multiple domains (like mph or dollars/day or lwh) but do not need to be.
+    /// Traits are measurable properties on objects. They are conceptual measurable categories (like distance, time, temperature) 
+    /// without containing units or measurements.
+    /// They can be composed of multiple traits (like mph or dollars/day or lwh) but do not need to be. 
+    /// Terminal traits are traits that can't be broken into subtraits.
     /// </summary>
     public class Trait : IMathElement
 	{
-		public Brain? Brain { get; internal set; }
         public MathElementKind Kind => MathElementKind.Trait;
-        public int Id { get; internal set; }
-        public int CreationIndex => Id - (int)Kind - 1;
 
-        public virtual string Name { get; } = "";
+        public string Name { get; } = "";
 
-        public readonly Dictionary<int, long> PositionStore = new Dictionary<int, long>(4096);
-        public readonly Dictionary<int, IFocal> FocalStore = new Dictionary<int, IFocal>();
-        public readonly Dictionary<int, Domain> DomainStore = new Dictionary<int, Domain>();
+        public readonly Dictionary<string, Domain> DomainStore = new Dictionary<string, Domain>();
 
-        protected internal Trait()
-        {
-        }
-        private Trait(string name)
+        public Trait(string name)
         {
 	        Name = name;
         }
 
         public static Trait CreateIn(Brain brain, string name) => brain.AddTrait(new Trait(name));
 
-	    public Domain AddDomain(IFocal basis, IFocal minMax)
+
+	    public Domain AddDomain(string name, IFocal basis, IFocal minMax)
 	    {
-		    return new Domain(this, basis, minMax);
+		    return new Domain(this, name, basis, minMax);
 	    }
-	    public Domain AddDomain(long basisTicks)
+	    public Domain AddDomain(string name, long basisTicks)
 	    {
-		    return AddDomain(new Focal(0, basisTicks), Focal.MinMaxFocal);
+		    return AddDomain(name, new Focal(0, basisTicks), Focal.MinMaxFocal);
 	    }
+
         public IEnumerable<Domain> Domains()
 	    {
 		    foreach (var domain in DomainStore.Values)
@@ -46,17 +44,15 @@ namespace Nums.Primitives
 		    }
 	    }
 
-        public Domain? DomainAt(int index)
+        public Domain? DomainByName(string name)
 	    {
-		    var id = index + (int)MathElementKind.Domain;
-		    DomainStore.TryGetValue(id, out var result);
+		    DomainStore.TryGetValue(name, out var result);
 		    return result;
-	    }
-	    public IFocal? FocalAt(int index)
-	    {
-		    var id = index + (int)MathElementKind.Focal;
-		    FocalStore.TryGetValue(id, out var result);
-		    return result;
-	    }
-	}
+        }
+
+        public override bool Equals(object? obj) => obj is Trait other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Trait && Equals(other);
+        public bool Equals(Trait? value) => Name.Equals(value?.Name);
+        public override int GetHashCode() => Name.GetHashCode();
+    }
 }

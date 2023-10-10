@@ -1,15 +1,13 @@
 ﻿namespace Nums.Utils
 {
-	public interface IMathElement
+    public interface IMathElement : IEquatable<IMathElement>
     {
 	    MathElementKind Kind { get; }
-	    int Id { get; }
-	    int CreationIndex { get; }
     }
 
     public enum MathElementKind
     {
-	    None = 0,
+	    Brain      = 0x00000000,
         Network    = 0x01000000,
         Workspace  = 0x02000000,
         Formula    = 0x03000000,

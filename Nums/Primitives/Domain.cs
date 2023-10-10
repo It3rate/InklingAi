@@ -14,6 +14,7 @@ namespace Nums.Primitives
     // E.g. changing the domain 'tolerance' could change neat writing into messy.
 
     // Min size is tick size. BasisFocal is start/end point (only one focal allowed for a unit). MinMaxFocal is bounds in ticks. todo: add conversion methods etc.
+
     public class Domain : IMathElement
     {
 	    public  MathElementKind Kind => MathElementKind.Domain;
@@ -21,90 +22,45 @@ namespace Nums.Primitives
         public int Id { get; internal set; }
         public int CreationIndex => Id - (int)Kind - 1;
 
-	    public Trait Trait { get; protected set; }
+        public string Name { get; } = "";
+        public Trait Trait { get; protected set; }
         public IFocal BasisFocal { get; protected set; }
         public IFocal MinMaxFocal { get; protected set; }
-        public Number BasisNumber { get; protected set; }
-        public Number MinMaxNumber { get; protected set; }
-
-        public readonly Dictionary<int, Number> NumberStore = new Dictionary<int, Number>();
-        //public readonly Dictionary<int, NumberSet> NumberSetStore = new Dictionary<int, NumberSet>();
-
-        public bool BasisIsReciprocal { get; set; } // True when ticks are larger than the unit basis
-
+        public ulong TickSize { get; protected set; } = 1L; // min of 1, tick sizes larger than units are estimates to the nearest ticksize
 
         public Seg MinMaxNum => MinMaxFocal.GetSegWithBasis(BasisFocal);
-        public double TickToBasisRatio => BasisIsReciprocal ? BasisFocal.NonZeroLength : 1.0 / BasisFocal.NonZeroLength;
+        public bool IsApproximate => BasisFocal.Length < TickSize;
+        public double TickToBasisRatio => TickSize / BasisFocal.Length;
 
         public bool IsUnitPerspective => BasisFocal.IsUnitPerspective;
         public bool IsUnotPerspective => BasisFocal.IsUnotPerspective;
 
-        public Domain(Trait trait, IFocal basisFocal, IFocal minMaxFocal = default)
+        public Domain(Trait trait, string name, IFocal basisFocal, IFocal? minMaxFocal = default)
         {
-	        Id = domainCounter++;
+            Id = domainCounter++;
+            Name = name;
 	        Trait = trait;
+
 	        BasisFocal = basisFocal;
-	        MinMaxFocal = minMaxFocal;
-            BasisNumber = CreateNumber(basisFocal);
-            MinMaxNumber = minMaxFocal == default ? CreateNumber(Focal.MinMaxFocal) : CreateNumber(minMaxFocal);
-            Trait.DomainStore.Add(Id, this);
+	        MinMaxFocal = minMaxFocal ?? Focal.MinMaxFocal.Clone();
+            Trait.DomainStore.Add(Name, this);
         }
 
-        public int[] NumberIds() => NumberStore.Values.Select(num => num.Id).ToArray();
-        public Number GetNumber(int numberId)
+        public Number CreateNumber(IFocal focal)
         {
-	        NumberStore.TryGetValue(numberId, out var result);
-	        return result;
+	        return new Number(this, focal);
         }
-        public Number CreateNumber(IFocal focal, bool addToStore = true)
-        {
-	        return AddNumber(new Number(focal), addToStore);
-        }
-        public Number CreateNumber(Seg value, bool addToStore = true)
+        public Number CreateNumber(Seg value)
         {
 	        var focal = CreateFocalFromRange(value);
-	        return AddNumber(new Number(focal), addToStore);
+	        return new Number(this, focal);
         }
 
-        public Number CreateNumber(long start, long end, bool addToStore = true)
+        public Number CreateNumber(long start, long end)
         {
 	        var focal = new Focal(start, end);
-	        return AddNumber(new Number(focal), addToStore);
+	        return new Number(this, focal);
         }
-        public Number AddNumber(Number number, bool addToStore = true)
-        {
-	        number.Domain = this;
-	        number.Id = number.Id == 0 ? NextNumberId() : number.Id;
-	        if (addToStore)
-	        {
-		        NumberStore[number.Id] = number;
-	        }
-	        return number;
-        }
-        public bool RemoveNumber(Number number)
-        {
-	        number.Domain = null;
-	        return NumberStore.Remove(number.Id);
-        }
-
-
-        //private int _numberSetCounter = 1 + (int)MathElementKind.NumberSet;
-        //public int NextNumberSetId() => _numberSetCounter++ + Id;
-        //public NumberSet AddNumberSet(NumberSet numberSet, bool addToStore = true)
-        //{
-	       // numberSet.Domain = this;
-	       // numberSet.Id = numberSet.Id == 0 ? NextNumberSetId() : numberSet.Id;
-	       // if (addToStore)
-	       // {
-        //        NumberSetStore[numberSet.Id] = numberSet;
-	       // }
-	       // return numberSet;
-        //}
-        //public bool RemoveNumberSet(NumberSet numberSet)
-        //{
-	       // numberSet.Domain = null;
-	       // return NumberSetStore.Remove(numberSet.Id);
-        //}
 
         public Number Zero() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.StartTickPosition);
         public Number One() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.EndTickPosition);
@@ -133,41 +89,18 @@ namespace Nums.Primitives
 	        return result;
         }
 
-        public void ClearAll()
-        {
-	        NumberStore.Clear();
-        }
+        public override bool Equals(object? obj) => obj is Domain other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Domain && Equals(other);
+        public bool Equals(Domain? value) => Id.Equals(value?.Id);
+        public override int GetHashCode() => Id.GetHashCode();
 
-        private int _numberCounter = 1 + (int)MathElementKind.Number;
-        public int NextNumberId() => _numberCounter++ + Id;
+        //public bool Equals(Domain? value) =>
+        //    Name.Equals(value?.Name) && 
+        //    Trait.Equals(value?.Trait) && 
+        //    BasisFocal.Equals(value?.BasisFocal) && 
+        //    MinMaxFocal.Equals(value?.MinMaxFocal) &&
+        //    TickSize.Equals(value?.TickSize);
 
-        public IEnumerable<Number> Numbers()
-        {
-	        foreach (var number in NumberStore.Values)
-	        {
-		        yield return number;
-	        }
-        }
-        public void SaveNumberValues(Dictionary<int, Seg> dict, params int[] ignoreIds)
-        {
-            dict.Clear();
-	        foreach (var num in Numbers())
-	        {
-		        if (!ignoreIds.Contains(num.Id))
-		        {
-			        dict.Add(num.Id, num.Value);
-                }
-	        }
-        }
-        public void RestoreNumberValues(Dictionary<int, Seg> values, params int[] ignoreIds)
-        {
-	        foreach (var kvp in values)
-	        {
-		        if (!ignoreIds.Contains(kvp.Key))
-		        {
-			        NumberStore[kvp.Key].Value = kvp.Value;
-                }
-	        }
-        }
+
     }
 }
