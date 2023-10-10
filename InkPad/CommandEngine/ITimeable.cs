@@ -20,7 +20,7 @@ namespace InkPad.CommandEngine
 
         double StartTime { get; set; }
 
-        MillisecondNumber DelayDuration { get; }
+        MillisecondNumber TimeSpan { get; }
         double DelayValue { get; }
         double DurationValue { get; }
 

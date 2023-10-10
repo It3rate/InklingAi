@@ -2,8 +2,9 @@
 
 namespace Nums.CoreConcepts.Time
 {
-	public class TimeTrait : Trait
+    public class TimeTrait : Trait
     {
-        public TimeTrait() : base("Time") { }
+        public static TimeTrait Instance {get;} = new TimeTrait();
+        private TimeTrait() : base("Time") { }
     }
 }

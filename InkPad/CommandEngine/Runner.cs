@@ -60,8 +60,8 @@ namespace InkPad.CommandEngine
             {
                 _isBusy = true;
                 _currentTime = e.SignalTime - (StartTime + _delayTime);
-                CurrentMS.EndTicks = (long)_currentTime.TotalMilliseconds;
-                DeltaMS.EndTicks = (long)(CurrentMS.EndTicks - _lastTime.TotalMilliseconds);
+                CurrentMS.EndTick = (long)_currentTime.TotalMilliseconds;
+                DeltaMS.EndTick = (long)(CurrentMS.EndTick - _lastTime.TotalMilliseconds);
 
                 Agent.Update(CurrentMS, DeltaMS);
                 //_display.Invalidate();
@@ -106,7 +106,7 @@ namespace InkPad.CommandEngine
 
             _currentTime = DateTime.Now - StartTime;
             _lastTime = _currentTime;
-            CurrentMS.EndTicks = (long)_currentTime.TotalMilliseconds;
+            CurrentMS.EndTick = (long)_currentTime.TotalMilliseconds;
 
             _sysTimer = new Timer();
             _sysTimer.Elapsed += Tick;

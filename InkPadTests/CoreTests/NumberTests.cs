@@ -40,54 +40,54 @@ namespace NumbersTests
 		    var n2 = _domain.CreateNumber(-30, 20);
 		    var n3 = _domain.CreateNumber(-20, -30);
             Assert.True(_unitFocal.IsUnitPerspective);
-            Assert.Equal(0, n0.StartValue); // [0, 10]
-		    Assert.Equal(2, n0.EndValue);
-		    Assert.Equal(2, n1.StartValue);
-		    Assert.Equal(0, n1.EndValue);
-		    Assert.Equal(-3, n2.StartValue);
-		    Assert.Equal(2, n2.EndValue);
-		    Assert.Equal(-2, n3.StartValue);
-		    Assert.Equal(-3, n3.EndValue);
+            Assert.Equal(0, n0.Value.Start); // [0, 10]
+		    Assert.Equal(2, n0.Value.End);
+		    Assert.Equal(2, n1.Value.Start);
+		    Assert.Equal(0, n1.Value.End);
+		    Assert.Equal(-3, n2.Value.Start);
+		    Assert.Equal(2, n2.Value.End);
+		    Assert.Equal(-2, n3.Value.Start);
+		    Assert.Equal(-3, n3.Value.End);
 		    _unitFocal.EndTickPosition = 20; // [0, 20]
             Assert.True(_unitFocal.IsUnitPerspective);
-            Assert.Equal(0, n0.StartValue);
-		    Assert.Equal(1, n0.EndValue);
-		    Assert.Equal(1, n1.StartValue);
-		    Assert.Equal(0, n1.EndValue);
-		    Assert.Equal(-1.5, n2.StartValue);
-		    Assert.Equal(1, n2.EndValue);
-		    Assert.Equal(-1, n3.StartValue);
-		    Assert.Equal(-1.5, n3.EndValue);
+            Assert.Equal(0, n0.Value.Start);
+		    Assert.Equal(1, n0.Value.End);
+		    Assert.Equal(1, n1.Value.Start);
+		    Assert.Equal(0, n1.Value.End);
+		    Assert.Equal(-1.5, n2.Value.Start);
+		    Assert.Equal(1, n2.Value.End);
+		    Assert.Equal(-1, n3.Value.Start);
+		    Assert.Equal(-1.5, n3.Value.End);
 		    _unitFocal.EndTickPosition = -20; // [0, -20]
             Assert.True(_unitFocal.IsUnotPerspective);
-            Assert.Equal(-1, n0.StartValue);
-		    Assert.Equal(0, n0.EndValue);
-		    Assert.Equal(0, n1.StartValue);
-		    Assert.Equal(-1, n1.EndValue);
-		    Assert.Equal(-1, n2.StartValue);
-		    Assert.Equal(1.5, n2.EndValue);
-		    Assert.Equal(1.5, n3.StartValue);
-		    Assert.Equal(1, n3.EndValue);
+            Assert.Equal(-1, n0.Value.Start);
+		    Assert.Equal(0, n0.Value.End);
+		    Assert.Equal(0, n1.Value.Start);
+		    Assert.Equal(-1, n1.Value.End);
+		    Assert.Equal(-1, n2.Value.Start);
+		    Assert.Equal(1.5, n2.Value.End);
+		    Assert.Equal(1.5, n3.Value.Start);
+		    Assert.Equal(1, n3.Value.End);
 		    _unitFocal.StartTickPosition = -10;  // [-10, -20]
             Assert.True(_unitFocal.IsUnotPerspective);
-            Assert.Equal(-3, n0.StartValue);
-		    Assert.Equal(-1, n0.EndValue);
-		    Assert.Equal(-1, n1.StartValue);
-		    Assert.Equal(-3, n1.EndValue);
-		    Assert.Equal(-3, n2.StartValue);
-		    Assert.Equal(2, n2.EndValue);
-		    Assert.Equal(2, n3.StartValue);
-		    Assert.Equal(1, n3.EndValue);
+            Assert.Equal(-3, n0.Value.Start);
+		    Assert.Equal(-1, n0.Value.End);
+		    Assert.Equal(-1, n1.Value.Start);
+		    Assert.Equal(-3, n1.Value.End);
+		    Assert.Equal(-3, n2.Value.Start);
+		    Assert.Equal(2, n2.Value.End);
+		    Assert.Equal(2, n3.Value.Start);
+		    Assert.Equal(1, n3.Value.End);
 		    _unitFocal.StartTickPosition = 2000; // unot perspective
             _unitFocal.EndTickPosition = -2000; // forces things to about the middle
-            Assert.Equal(0.495, n0.StartValue);
-            Assert.Equal(0.5, n0.EndValue, 3);
-            Assert.Equal(0.5, n1.StartValue, 3);
-            Assert.Equal(0.495, n1.EndValue, 3);
-            Assert.Equal(0.495, n2.StartValue, 3);
-            Assert.Equal(0.5075, n2.EndValue, 3);
-            Assert.Equal(0.5075, n3.StartValue, 3);
-            Assert.Equal(0.505, n3.EndValue, 3);
+            Assert.Equal(0.495, n0.Value.Start);
+            Assert.Equal(0.5, n0.Value.End, 3);
+            Assert.Equal(0.5, n1.Value.Start, 3);
+            Assert.Equal(0.495, n1.Value.End, 3);
+            Assert.Equal(0.495, n2.Value.Start, 3);
+            Assert.Equal(0.5075, n2.Value.End, 3);
+            Assert.Equal(0.5075, n3.Value.Start, 3);
+            Assert.Equal(0.505, n3.Value.End, 3);
         }
 	    [Fact]
 	    public void UnitChangeValueTests()
@@ -96,26 +96,25 @@ namespace NumbersTests
 		    var n1 = _domain.CreateNumber(new Seg(20, 0)); // [200, 0]
 		    var n2 = _domain.CreateNumber(new Seg(-30, 20)); // [-300, 200]
 		    var n3 = _domain.CreateNumber(new Seg(-20, -30)); // [-200, -300]
-		    Assert.Equal(0, n0.StartValue);
-		    Assert.Equal(20, n0.EndValue);
-		    Assert.Equal(20, n1.StartValue);
-		    Assert.Equal(0, n1.EndValue);
-		    Assert.Equal(-30, n2.StartValue);
-		    Assert.Equal(20, n2.EndValue);
-		    Assert.Equal(-20, n3.StartValue); 
-		    Assert.Equal(-30, n3.EndValue);
+		    Assert.Equal(0, n0.Value.Start);
+		    Assert.Equal(20, n0.Value.End);
+		    Assert.Equal(20, n1.Value.Start);
+		    Assert.Equal(0, n1.Value.End);
+		    Assert.Equal(-30, n2.Value.Start);
+		    Assert.Equal(20, n2.Value.End);
+		    Assert.Equal(-20, n3.Value.Start); 
+		    Assert.Equal(-30, n3.Value.End);
 		    _unitFocal.StartTickPosition = 100; // unot perspective
 		    _unitFocal.EndTickPosition = 0; 
-		    Assert.Equal(-1, n0.StartValue);
-		    Assert.Equal(1, n0.EndValue);
-		    Assert.Equal(1, n1.StartValue);
-		    Assert.Equal(-1, n1.EndValue);
-		    Assert.Equal(-1, n2.StartValue);
-		    Assert.Equal(4, n2.EndValue);
-		    Assert.Equal(4, n3.StartValue);
-		    Assert.Equal(3, n3.EndValue);
+		    Assert.Equal(-1, n0.Value.Start);
+		    Assert.Equal(1, n0.Value.End);
+		    Assert.Equal(1, n1.Value.Start);
+		    Assert.Equal(-1, n1.Value.End);
+		    Assert.Equal(-1, n2.Value.Start);
+		    Assert.Equal(4, n2.Value.End);
+		    Assert.Equal(4, n3.Value.Start);
+		    Assert.Equal(3, n3.Value.End);
         }
-
         [Fact]
 	    public void CoreNumberTests()
 	    {
@@ -127,7 +126,7 @@ namespace NumbersTests
 		    var n2 = _domain.CreateNumber(f2);
 		    var f3 = new Focal(-50, 45);
 		    var n3 = _domain.CreateNumber(f3);
-		    var f4 = new Focal	(50, -45);
+		    var f4 = new Focal(50, -45);
 		    var n4 = _domain.CreateNumber(f4);
 		    var f5 = new Focal(53, 69);
 		    var n5 = _domain.CreateNumber(f5);
@@ -142,12 +141,8 @@ namespace NumbersTests
 		    Assert.Equal(1, n0.Direction);
 		    Assert.Equal(-1, n4.Direction);
 		    Assert.Equal(n1.Domain.Id, n0.Domain.Id);
-		    Assert.Equal(n0.StartValue, n1.StartValue, MathUtils.Tolerance);
-		    Assert.Equal(n1.EndValue, n1.Focal.DirectedLength / (double) n1.BasisFocal.DirectedLength);
-		    Assert.Equal(0, n3.RemainderStartValue, MathUtils.Tolerance);
-		    Assert.Equal(5, n3.RemainderEndValue, MathUtils.Tolerance);
-		    Assert.Equal(2, n2.RemainderStartValue, MathUtils.Tolerance);
-		    Assert.Equal(0, n2.RemainderEndValue, MathUtils.Tolerance);
+		    Assert.Equal(n0.Value.Start, n1.Value.Start, MathUtils.Tolerance);
+		    Assert.Equal(n1.Value.End, n1.Focal.DirectedLength / (double) n1.BasisFocal.DirectedLength);
 
 		    Assert.Equal(-3, n2.OuterRounding.Start, MathUtils.Tolerance);
 		    Assert.Equal(0, n2.OuterRounding.End, MathUtils.Tolerance);

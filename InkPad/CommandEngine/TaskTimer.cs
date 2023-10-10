@@ -18,9 +18,9 @@ namespace InkPad.CommandEngine
         private float _delayTime = 0;
         protected bool IsReverse { get; set; } = false;
 
-        public MillisecondNumber DelayDuration { get; } // can 'type' numbers, this would be on a domain of 0-30 focal unit, and 0-max range, time trait.
-        public double DelayValue => DelayDuration.StartValue; // Delay is unot, duration is unit
-        public double DurationValue => DelayDuration.EndValue;
+        public MillisecondNumber TimeSpan { get; } // can 'type' numbers, this would be on a domain of 0-30 focal unit, and 0-max range, time trait.
+        public double DelayValue => TimeSpan.DelaySeconds; // Delay is unot, duration is unit
+        public double DurationValue => TimeSpan.DurationSeconds;
 
 
         public event TimedEventHandler StartTimedEvent;
@@ -29,7 +29,7 @@ namespace InkPad.CommandEngine
 
         public TaskTimer(MillisecondNumber delayDuration)
         {
-            DelayDuration = delayDuration;
+            TimeSpan = delayDuration;
             _pauseTime = DateTime.Now;
         }
 

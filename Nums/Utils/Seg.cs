@@ -69,7 +69,9 @@ public struct Seg : IEquatable<Seg?>
     public Seg NormalizeTo(Seg value) => Seg.NormalizeTo(this, value);
     public Seg ClampInner() => Seg.ClampInner(this);
     public Seg ClampOuter() => Seg.ClampOuter(this);
-    public Seg Round() => Seg.Round(this);
+    public Seg Round() => Seg.OuterRound(this);
+    public Seg OuterRound() => Seg.OuterRound(this);
+    public Seg InnderRound() => Seg.InnderRound(this);
     public Seg PositiveDirection() => PositiveDirection(this);
     public Seg NegativeDirection() => NegativeDirection(this);
 
@@ -141,7 +143,8 @@ public static Seg NormalizeTo(Seg from, Seg to) => from.Normalize() * to;
 
     public static Seg ClampInner(Seg value) => new Seg(Math.Floor(Math.Abs(value.Start)) * Math.Sign(value.Start), Math.Floor(Math.Abs(value.End)) * Math.Sign(value.End));
     public static Seg ClampOuter(Seg value) => new Seg(Math.Ceiling(Math.Abs(value.Start)) * Math.Sign(value.Start), Math.Ceiling(Math.Abs(value.End)) * Math.Sign(value.End));
-    public static Seg Round(Seg value) => new Seg(Math.Round(value.Start, MidpointRounding.AwayFromZero), Math.Round(value.End, MidpointRounding.AwayFromZero));
+    public static Seg OuterRound(Seg value) => new Seg(Math.Round(value.Start, MidpointRounding.AwayFromZero), Math.Round(value.End, MidpointRounding.AwayFromZero));
+    public static Seg InnderRound(Seg value) => new Seg(Math.Round(value.Start, MidpointRounding.ToZero), Math.Round(value.End, MidpointRounding.ToZero));
 
     public static double Abs(Seg value) => Complex.Abs(value.mComplex);
     //{

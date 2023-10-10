@@ -38,8 +38,9 @@ namespace InkPad.CommandEngine
 	    }
 	    public virtual bool TryMergeWith(ICommand command) => false;
 
-	    public MillisecondNumber LiveTimeSpan { get; set; }
-	    public long DurationMS => LiveTimeSpan.TickCount;
+        public MillisecondNumber LiveTimeSpan { get; set; } = MillisecondNumber.Zero;
+        
+	    public long DurationMS => LiveTimeSpan.DurationMS;
 	    public long DefaultDelay { get; set; }
 	    public long DefaultDuration { get; set; }
 

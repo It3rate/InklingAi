@@ -105,12 +105,14 @@ namespace Nums.Primitives
 
 		public static IFocal CreateZeroFocal(long ticks) => new Focal(0, ticks);
 		public static IFocal CreateBalancedFocal(long halfTicks) => new Focal(-halfTicks, halfTicks);
-		private static IFocal _minMaxFocal = new Focal(long.MinValue, long.MaxValue);
-		public static IFocal MinMaxFocal => _minMaxFocal;
-		private static IFocal _upMaxFocal = new Focal(0, long.MaxValue);
-		public static IFocal UpMaxFocal => _upMaxFocal;
 
-		public static long MinPosition(IFocal p, IFocal q) => Math.Min(p.Min, q.Min);
+        public static IFocal ZeroFocal { get; } = new Focal(0, 0);
+        public static IFocal UnitFocal { get; } = new Focal(0, 1);
+        public static IFocal UnotFocal { get; } = new Focal(0, -1);
+        public static IFocal MinMaxFocal { get; } = new Focal(long.MinValue, long.MaxValue);
+        public static IFocal UpMaxFocal { get; } = new Focal(0, long.MaxValue);
+
+        public static long MinPosition(IFocal p, IFocal q) => Math.Min(p.Min, q.Min);
         public static long MaxPosition(IFocal p, IFocal q) => Math.Max(p.Max, q.Max);
         public static long MinStart(IFocal p, IFocal q) => Math.Min(p.StartTickPosition, q.StartTickPosition);
         public static long MaxStart(IFocal p, IFocal q) => Math.Max(p.StartTickPosition, q.StartTickPosition);

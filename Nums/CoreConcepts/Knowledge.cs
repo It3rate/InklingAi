@@ -18,8 +18,8 @@ namespace Nums.CoreConcepts
 	    private void Initialize()
 	    {
             // these typed domains will be loaded from a file or something.
-            TimeTrait = new TimeTrait();
-		    MillisecondTimeDomain = MillisecondTimeDomain.MinMax;
+            TimeTrait = TimeTrait.Instance;
+		    MillisecondTimeDomain = MillisecondTimeDomain.Instance;
         }
 
 	    public TimeTrait TimeTrait { get; private set; }

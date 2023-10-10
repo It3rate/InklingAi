@@ -65,7 +65,7 @@ namespace InkPad.CommandEngine
 			command.Agent = Agent;
 			if (command.LiveTimeSpan == null)
 			{
-				command.LiveTimeSpan = new MillisecondNumber(LastTime.EndTicks + command.DefaultDelay, command.DefaultDuration);
+				command.LiveTimeSpan = new MillisecondNumber(LastTime.EndTick + command.DefaultDelay, command.DefaultDuration);
 			}
 
 			if (command.DefaultDelay == 0)
@@ -111,7 +111,7 @@ namespace InkPad.CommandEngine
 	        var delayed = _toAddAfterDelay.ToArray();
 	        foreach (var command in delayed)
 	        {
-		        if (currentTime.EndValue >= -command.LiveTimeSpan.StartValue)
+		        if (currentTime.EndTick >= -command.LiveTimeSpan.StartTick)
 		        {
 			        if (command.CanUndo)
 			        {
