@@ -33,7 +33,7 @@ namespace Nums.Primitives
         }
 
         public override bool Equals(object? obj) => obj is Formula other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Formula && Equals(other);
+        public bool Equals(IMathElement? other) => other is Formula f && Equals(f);
         public bool Equals(Formula? value) => Id.Equals(value?.Id);
         public override int GetHashCode() => Id.GetHashCode();
     }

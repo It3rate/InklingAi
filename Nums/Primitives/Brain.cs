@@ -96,7 +96,7 @@ namespace Nums.Primitives
         }
 
         public override bool Equals(object? obj) => obj is Brain other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Brain && Equals(other);
+        public bool Equals(IMathElement? other) => other is Brain brain && Equals(brain);
         public bool Equals(Brain? value) => Id.Equals(value?.Id);
         public override int GetHashCode() => Id.GetHashCode();
     }

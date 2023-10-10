@@ -11,7 +11,7 @@ namespace Nums.Primitives
     /// They can be composed of multiple traits (like mph or dollars/day or lwh) but do not need to be. 
     /// Terminal traits are traits that can't be broken into subtraits.
     /// </summary>
-    public class Trait : IMathElement
+    public class Trait : IMathElement, IEquatable<Trait>
 	{
         public MathElementKind Kind => MathElementKind.Trait;
 
@@ -51,7 +51,7 @@ namespace Nums.Primitives
         }
 
         public override bool Equals(object? obj) => obj is Trait other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Trait && Equals(other);
+        public bool Equals(IMathElement? other) => other is Trait trait && Equals(trait);
         public bool Equals(Trait? value) => Name.Equals(value?.Name);
         public override int GetHashCode() => Name.GetHashCode();
     }

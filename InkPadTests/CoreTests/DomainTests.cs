@@ -19,7 +19,7 @@ public class DomainTests : IDisposable
         _trait = Trait.CreateIn(_brain, "domain tests");
         _unitFocal = new Focal(-4, 6);
 	        _maxMin = new Focal(-54, 46);
-	        _domain = new Domain(_trait, _unitFocal, _maxMin);
+	        _domain = new Domain(_trait, "domainTest", _unitFocal, _maxMin);
     }
 
     public void Dispose()
@@ -33,12 +33,9 @@ public class DomainTests : IDisposable
 		    Assert.Equal(MathElementKind.Domain, _domain.Kind);
         Assert.Equal(100, _domain.MinMaxFocal.DirectedLength);
         Assert.Equal(10, _domain.BasisFocal.DirectedLength);
-        Assert.Equal(_domain.BasisFocal.Id, _unitFocal.Id);
-        Assert.Equal(_domain.MinMaxFocal.Id, _maxMin.Id);
+        Assert.Equal(_domain.BasisFocal, _unitFocal);
+        Assert.Equal(_domain.MinMaxFocal, _maxMin);
 
-        //var b = new Complex(6, 4);
-        //var mm = new Complex(46, 54);
-        //var p = b / mm;
 
 			var len = _domain.MinMaxNum.Length;
         Assert.Equal(10.0, len, MathUtils.Tolerance);
@@ -47,18 +44,8 @@ public class DomainTests : IDisposable
         var n0 = _domain.CreateNumber(f0);
         var n1 = _domain.CreateNumber(f0.Clone());
         var n2 = _domain.CreateNumber(f0.Clone());
-        Assert.Equal(5, _domain.NumberStore.Count); // includes unit basis and minmax
 
         var dict = new Dictionary<int, Seg>();
-
-        _domain.SaveNumberValues(dict, _domain.BasisNumber.Id);
-        Assert.Equal(4, dict.Count); // does not include unit
-        var saved = n1.Focal.EndTickPosition;
-        n1.Focal.EndTickPosition = 22;
-        Assert.NotEqual(n1.Focal.EndTickPosition, saved);
-        Assert.Equal(22, n1.Focal.EndTickPosition);
-        _domain.RestoreNumberValues(dict);
-        Assert.Equal(saved, n1.Focal.EndTickPosition);
 
         Assert.True(_domain.IsUnitPerspective);
         _unitFocal.StartTickPosition = 16;

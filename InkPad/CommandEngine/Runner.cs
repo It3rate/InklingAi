@@ -31,8 +31,8 @@ namespace InkPad.CommandEngine
         private static TimeSpan _delayTime = new TimeSpan(0);
         public static DateTime StartTime { get; private set; }
 
-        public MillisecondNumber CurrentMS { get; } = MillisecondNumber.Zero(false);
-        public MillisecondNumber DeltaMS { get; } = MillisecondNumber.Zero(false);
+        public MillisecondNumber CurrentMS { get; } = MillisecondNumber.Zero;
+        public MillisecondNumber DeltaMS { get; } = MillisecondNumber.Zero;
 
         private Timer _sysTimer;
         private TimeSpan _lastTime;

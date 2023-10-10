@@ -47,7 +47,7 @@ namespace InkPad.CommandEngine
 		private readonly List<ICommand> _toDelete = new List<ICommand>(); // commands that natrually end
 		private readonly List<ICommand> _toTerminate = new List<ICommand>(); // commands that didn't naturally finish
 
-		public readonly MillisecondNumber LastTime = MillisecondNumber.Zero(false);
+		public readonly MillisecondNumber LastTime = MillisecondNumber.Zero;
 
         public bool CanUndo => _stackIndex > 0;
 		public int UndoSize => _stackIndex;
@@ -65,7 +65,7 @@ namespace InkPad.CommandEngine
 			command.Agent = Agent;
 			if (command.LiveTimeSpan == null)
 			{
-				command.LiveTimeSpan = MillisecondNumber.Create(-LastTime.EndTicks + command.DefaultDelay, command.DefaultDuration);
+				command.LiveTimeSpan = new MillisecondNumber(LastTime.EndTicks + command.DefaultDelay, command.DefaultDuration);
 			}
 
 			if (command.DefaultDelay == 0)

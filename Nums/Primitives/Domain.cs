@@ -15,7 +15,7 @@ namespace Nums.Primitives
 
     // Min size is tick size. BasisFocal is start/end point (only one focal allowed for a unit). MinMaxFocal is bounds in ticks. todo: add conversion methods etc.
 
-    public class Domain : IMathElement
+    public class Domain : IMathElement, IEquatable<Domain>
     {
 	    public  MathElementKind Kind => MathElementKind.Domain;
         private static int domainCounter = 1 + (int)MathElementKind.Domain;
@@ -90,7 +90,7 @@ namespace Nums.Primitives
         }
 
         public override bool Equals(object? obj) => obj is Domain other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Domain && Equals(other);
+        public bool Equals(IMathElement? other) => other is Domain domain && Equals(domain);
         public bool Equals(Domain? value) => Id.Equals(value?.Id);
         public override int GetHashCode() => Id.GetHashCode();
 

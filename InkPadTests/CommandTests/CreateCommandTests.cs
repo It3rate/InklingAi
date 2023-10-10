@@ -53,7 +53,7 @@ namespace NumbersTests.CommandTests
 			_stack.Do(command);
 			Assert.Equal(1, _stack.UndoSize);
 			Assert.Single(command.Tasks);
-			Assert.Equal("TraitTest", _brain.TraitStore[command.Trait.Id].Name);
+			Assert.Equal("TraitTest", _brain.TraitStore[command.Trait.Name].Name);
 			_stack.Undo();
 			Assert.Equal(0, _stack.UndoSize);
 			Assert.Empty(command.Tasks);
@@ -64,7 +64,7 @@ namespace NumbersTests.CommandTests
         [Fact]
 		public void DomainCommandTests()
 		{
-			var command = new CreateDomainCommand(_workspace, _trait, 0, 10, -1000, 1000);
+			var command = new CreateDomainCommand(_workspace, _trait, "DomainCommandTests", 0, 10, -1000, 1000);
 			_stack.Do(command);
 			Assert.Equal(1, _stack.UndoSize);
 			Assert.Equal(0, _stack.RedoSize);
@@ -81,7 +81,7 @@ namespace NumbersTests.CommandTests
 		[Fact]
 		public void NumberCommandTests()
 		{
-			var domainCommand = new CreateDomainCommand(_workspace, _trait, 0, 10, -1000, 1000);
+			var domainCommand = new CreateDomainCommand(_workspace, _trait, "NumberCommandTests", 0, 10, -1000, 1000);
 			_stack.Do(domainCommand);
 
 			var command = new CreateNumberCommand(domainCommand.Domain, 100, 200);
@@ -102,13 +102,13 @@ namespace NumbersTests.CommandTests
 		[Fact]
 		public void DelayCommandTests()
 		{
-			var domainCommand = new CreateDomainCommand(_workspace, _trait, 0, 10, -1000, 1000);
+			var domainCommand = new CreateDomainCommand(_workspace, _trait, "DelayCommandTests", 0, 10, -1000, 1000);
 			_stack.Do(domainCommand);
 			var command = new CreateNumberCommand(domainCommand.Domain, 100, 200) {DefaultDelay = -500};
 			_stack.Do(command);
 			Assert.Equal(1, _stack.UndoSize);
 			Assert.Equal(0, _stack.RedoSize);
-            var time = MillisecondNumber.Create(0, 600);
+            var time = new MillisecondNumber(0, 600);
             _stack.Update(time, time);
             Assert.Equal(2, _stack.UndoSize);
             Assert.Equal(0, _stack.RedoSize);

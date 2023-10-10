@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nums.Primitives;
+using System;
 using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -196,7 +197,7 @@ public static Seg NormalizeTo(Seg from, Seg to) => from.Normalize() * to;
     public static bool operator ==(Seg left, Seg right) => left.mComplex == right.mComplex;// left.End == right.End && left.Start == right.Start;
     public static bool operator !=(Seg left, Seg right) => left.mComplex != right.mComplex; // left.End != right.End || left.Start != right.Start;
 
-    public override bool Equals(object? obj) => mComplex.Equals(obj);
+    public override bool Equals(object? other) => other is Seg seg && Equals(seg);
     public bool Equals(Seg? value) => mComplex.Equals(value?.mComplex);
     public override int GetHashCode() => mComplex.GetHashCode();
 

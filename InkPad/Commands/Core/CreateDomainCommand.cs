@@ -23,6 +23,7 @@ namespace InkPad.Commands.Core
 
         public Trait TaskTrait { get; }
         public Workspace TaskWorkspace { get; }
+        public string Name { get; }
 
         public long BasisStart { get; }
         public long BasisEnd { get; }
@@ -32,19 +33,21 @@ namespace InkPad.Commands.Core
         public IFocal BasisFocal { get; private set; }
         public IFocal MinMaxFocal { get; private set; }
 
-        public CreateDomainCommand(Workspace workspace, Trait trait, long basisStart, long basisEnd, long minMaxStart, long minMaxEnd)
+        public CreateDomainCommand(Workspace workspace, Trait trait, string name, long basisStart, long basisEnd, long minMaxStart, long minMaxEnd)
         {
             TaskWorkspace = workspace;
             TaskTrait = trait;
+            Name = name;
             BasisStart = basisStart;
             BasisEnd = basisEnd;
             MinMaxStart = minMaxStart;
             MinMaxEnd = minMaxEnd;
         }
-        public CreateDomainCommand(Workspace workspace, Trait trait, IFocal basisFocal, IFocal minMax)
+        public CreateDomainCommand(Workspace workspace, Trait trait, string name, IFocal basisFocal, IFocal minMax)
         {
             TaskWorkspace = workspace;
             TaskTrait = trait;
+            Name = name;
             BasisFocal = basisFocal;
             MinMaxFocal = minMax;
         }
@@ -62,7 +65,7 @@ namespace InkPad.Commands.Core
                 MinMaxFocal = MinMaxTask.CreatedFocal;
             }
 
-            DomainTask = new CreateDomainTask(TaskWorkspace, TaskTrait, BasisFocal, MinMaxFocal);
+            DomainTask = new CreateDomainTask(TaskWorkspace, TaskTrait, Name, BasisFocal, MinMaxFocal);
             AddTaskAndRun(DomainTask);
         }
 

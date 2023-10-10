@@ -38,7 +38,7 @@ namespace Nums.Primitives
     /// The values only have signifcance when used relative to a basis. A basis pointing 'left' is a unot basis (a negative unit).
     /// This is a virtual class as there will potentially be polylines of Focals if it makes sense.
     /// </summary>
-    public class Focal : IFocal
+    public class Focal : IFocal, IEquatable<Focal>
     {
         public MathElementKind Kind => MathElementKind.Focal;
         public virtual long StartTickPosition { get; set; }
@@ -396,8 +396,8 @@ namespace Nums.Primitives
 
 
         public override bool Equals(object? obj) => obj is Focal other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Focal && Equals(other);
-        public bool Equals(Focal? value) => StartTickPosition.Equals(value?.StartTickPosition) && EndTickPosition.Equals(value?.EndTickPosition);
+        public bool Equals(IMathElement? other) => other is Focal focal && Equals(focal);
+        public bool Equals(Focal? value) => value != null && StartTickPosition.Equals(value?.StartTickPosition) && EndTickPosition.Equals(value?.EndTickPosition);
         public override int GetHashCode()
         {
             unchecked

@@ -17,7 +17,7 @@ public class NumberSetTests : IDisposable
         _trait = Trait.CreateIn(_brain, "number tests");
         _unitFocal = new Focal( 0, 10);
         _maxMin = new Focal(-1000, 1000);
-        _domain = new Domain(_trait, _unitFocal, _maxMin);
+        _domain = new Domain(_trait, "domainTest", _unitFocal, _maxMin);
     }
 
     public void Dispose()

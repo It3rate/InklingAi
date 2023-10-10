@@ -23,7 +23,7 @@ namespace Nums.Primitives
         }
 
         public override bool Equals(object? obj) => obj is Selection other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Selection && Equals(other);
+        public bool Equals(IMathElement? other) => other is Selection s && Equals(s);
         public bool Equals(Selection? value) => Id.Equals(value?.Id);
         public override int GetHashCode() => Id.GetHashCode();
     }

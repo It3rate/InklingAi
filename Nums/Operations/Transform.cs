@@ -91,7 +91,7 @@ namespace Nums.Operations
         }
 
         public override bool Equals(object? obj) => obj is Transform other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Transform && Equals(other);
+        public bool Equals(IMathElement? other) => other is Transform t && Equals(t);
         public bool Equals(Transform? value) => Id.Equals(value?.Id);
         public override int GetHashCode() => Id.GetHashCode();
     }

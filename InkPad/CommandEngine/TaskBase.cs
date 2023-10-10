@@ -25,7 +25,7 @@ namespace InkPad.CommandEngine
         protected TaskBase()
         {
 	        Id = _idCounter++;
-            Timer = new TaskTimer(MillisecondNumber.Create(0));
+            Timer = new TaskTimer(new MillisecondNumber(0));
         }
         public virtual void RunTask() { }
         public virtual void UnRunTask() { }

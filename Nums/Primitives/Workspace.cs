@@ -7,7 +7,7 @@ using Nums.Utils;
 
 namespace Nums.Primitives
 {
-    public class Workspace : IMathElement
+    public class Workspace : IMathElement, IEquatable<Workspace>
     {
 	    private static int _idCounter = 0;
 	    public MathElementKind Kind => MathElementKind.Transform;
@@ -113,9 +113,9 @@ namespace Nums.Primitives
             Elements.Clear();
         }
 
-        public override bool Equals(object? obj) => obj is Domain other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Domain && Equals(other);
-        public bool Equals(Domain? value) => Id.Equals(value?.Id);
+        public override bool Equals(object? obj) => obj is Workspace other && Equals(other);
+        public bool Equals(IMathElement? other) => other is Workspace wksp && Equals(wksp);
+        public bool Equals(Workspace? value) => Id.Equals(value?.Id);
         public override int GetHashCode() => Id.GetHashCode();
 
     }

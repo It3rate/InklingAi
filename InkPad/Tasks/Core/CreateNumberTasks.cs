@@ -33,14 +33,12 @@ namespace InkPad.Tasks.Core
         {
             if (Number == null)
             {
-                Number = Domain.CreateNumber(Focal, false);
+                Number = Domain.CreateNumber(Focal);
             }
-            Domain.AddNumber(Number);
         }
 
         public override void UnRunTask()
         {
-            Domain.RemoveNumber(Number);
         }
     }
     public class CreateNumberByRangeTask : TaskBase, ICreateNumberTask
@@ -61,14 +59,12 @@ namespace InkPad.Tasks.Core
         {
             if (Number == null)
             {
-                Number = Domain.CreateNumber(NumRange, false);
+                Number = Domain.CreateNumber(NumRange);
             }
-            Domain.AddNumber(Number);
         }
 
         public override void UnRunTask()
         {
-            Domain.RemoveNumber(Number);
         }
     }
     public class CreateNumberByPositionsTask : TaskBase, ICreateNumberTask
@@ -91,14 +87,12 @@ namespace InkPad.Tasks.Core
         {
             if (Number == null)
             {
-                Number = Domain.CreateNumber(StartPosition, EndPosition, false);
+                Number = Domain.CreateNumber(StartPosition, EndPosition);
             }
-            Domain.AddNumber(Number);
         }
 
         public override void UnRunTask()
         {
-            Domain.RemoveNumber(Number);
         }
     }
 }

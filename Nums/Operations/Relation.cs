@@ -25,7 +25,7 @@ namespace Nums.Primitives
 
 
         public override bool Equals(object? obj) => obj is Relation other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Relation && Equals(other);
+        public bool Equals(IMathElement? other) => other is Relation r && Equals(r);
         public bool Equals(Relation? value) => Id.Equals(value?.Id);
         public override int GetHashCode() => Id.GetHashCode();
     }

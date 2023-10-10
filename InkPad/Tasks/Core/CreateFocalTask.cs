@@ -43,16 +43,10 @@ namespace InkPad.Tasks.Core
                     CreatedFocal = new Focal(StartPosition, EndPosition);
                 }
             }
-
-            Trait?.FocalStore.Add(CreatedFocal.Id, CreatedFocal);
         }
 
         public override void UnRunTask()
         {
-            if (CreatedFocal != null)
-            {
-                Trait?.FocalStore.Remove(CreatedFocal.Id);
-            }
         }
     }
 }

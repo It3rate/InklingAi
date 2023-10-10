@@ -4,7 +4,7 @@ using Nums.Utils;
 
 namespace Nums.Primitives
 {
-    public class Number : IMathElement
+    public class Number : IMathElement, IEquatable<Number>
 	{
 		public MathElementKind Kind => MathElementKind.Number;
         public Domain Domain { get; set; }
@@ -84,10 +84,13 @@ namespace Nums.Primitives
 		public long RemainderEndValue => Domain.IsApproximate ? 0 : Math.Abs(EndTicks % BasisFocal.NonZeroLength);
 		public Seg RangeInMinMax => Focal.UnitTRangeIn(Domain.MinMaxFocal); //*
 
-		public Seg FloorRange => new Seg(Math.Ceiling(StartValue), Math.Floor(EndValue));
-		public Seg CeilingRange => new Seg(Math.Floor(StartValue), Math.Ceiling(EndValue));
-		public Seg RoundedRange => new Seg(Math.Round(StartValue, MidpointRounding.AwayFromZero), Math.Round(EndValue, MidpointRounding.AwayFromZero));
-		public Seg RemainderRange => Value - FloorRange;
+		public Seg InnerRounding =>
+            new Seg(Math.Round(StartValue, MidpointRounding.ToZero),
+            Math.Round(EndValue, MidpointRounding.ToZero));
+        public Seg OuterRounding =>
+            new Seg(Math.Round(StartValue, MidpointRounding.AwayFromZero),
+            Math.Round(EndValue, MidpointRounding.AwayFromZero));
+		public Seg RemainderRange => Value - InnerRounding;
 
 		public void PlusTick() => EndTickPosition += 1;
 		public void MinusTick() => EndTickPosition -= 1;
@@ -288,11 +291,12 @@ namespace Nums.Primitives
         public override string ToString()
 		{
 			var v = Value;
-			return $"[{-v.Start:0.00}->{v.End:0.00}]";
+            var unot = IsUnotPerspective ? "i" : "";
+			return $"Num:[{v.Start:0.00}->{v.End:0.00}]{unot}";
 		}
 
         public override bool Equals(object? obj) => obj is Number other && Equals(other);
-        public bool Equals(IMathElement? other) => other is Number && Equals(other);
+        public bool Equals(IMathElement? other) => other is Number num && Equals(num);
         public bool Equals(Number? value) => Domain.Equals(value?.Domain) && Focal.Equals(value?.Focal);
 
         public override int GetHashCode()
