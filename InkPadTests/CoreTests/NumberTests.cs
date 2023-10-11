@@ -21,6 +21,7 @@ public class NumberTests : IDisposable
         _maxMin = new Focal(-1000, 1010);
         _domain = new Domain(_trait, "testDomain", _unitFocal, _maxMin);
     }
+
     [Fact]
     public void UnitChangePositionTests()
     {

@@ -78,29 +78,7 @@ public class Number : IMathElement, IEquatable<Number>
     {
         Value /= other.Value;
     }
-    public double RatioAt(double pointOnLine)
-    {
-        var val = Value;
-        var len = val.Length;
-        return (pointOnLine + val.Start) / len;
-    }
-    public void ChangeDomain(Domain newDomain)
-    {
-        if (newDomain != Domain)
-        {
-            var value = Value;
-            Domain = newDomain;
-            Value = value;
-        }
-    }
-    public bool FullyContains(Number toTest, bool includeEndpoints = true) => toTest != null ? Value.FullyContains(toTest.Value, includeEndpoints) : false;
-    public Number AlignedDomainCopy(Number toCopy) => AlignToDomain(toCopy, Domain);
-    public static Number AlignToDomain(Number target, Domain domain)
-    {
-        var result = target.Clone();
-        result.ChangeDomain(domain);
-        return result;
-    }
+
     public void InterpolateFromZero(Number t, Number result) => InterpolateFromZero(this, t, result);
     public void InterpolateFrom(Number source, Number t, Number result) => Interpolate(source, this, t, result);
     public void InterpolateTo(Number target, Number t, Number result) => Interpolate(this, target, t, result);
@@ -139,6 +117,30 @@ public class Number : IMathElement, IEquatable<Number>
         result.Value = new Seg(
             (targetValue.Start - sourceValue.Start) * tValue.Start + sourceValue.Start, 
             (targetValue.End - sourceValue.End) * tValue.End + sourceValue.End);
+    }
+
+    public double RatioAt(double pointOnLine)
+    {
+        var val = Value;
+        var len = val.Length;
+        return (pointOnLine + val.Start) / len;
+    }
+    public void ChangeDomain(Domain newDomain)
+    {
+        if (newDomain != Domain)
+        {
+            var value = Value;
+            Domain = newDomain;
+            Value = value;
+        }
+    }
+    public bool FullyContains(Number toTest, bool includeEndpoints = true) => toTest != null ? Value.FullyContains(toTest.Value, includeEndpoints) : false;
+    public Number AlignedDomainCopy(Number toCopy) => AlignToDomain(toCopy, Domain);
+    public static Number AlignToDomain(Number target, Domain domain)
+    {
+        var result = target.Clone();
+        result.ChangeDomain(domain);
+        return result;
     }
 
     // segment comparison considers unot numbers to also have positive segments in the negative space, and
