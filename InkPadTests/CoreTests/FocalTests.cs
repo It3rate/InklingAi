@@ -7,10 +7,10 @@ namespace NumbersTests
 
     public class FocalTests : IDisposable
     {
-	    private Brain _brain;
+        private Brain _brain;
         private Trait _trait;
 
-	    public FocalTests()
+        public FocalTests()
         {
             _brain = Brain.ActiveBrain;
             _trait = Trait.CreateIn(_brain, "numbers tests");
@@ -22,13 +22,13 @@ namespace NumbersTests
         }
 
         [Fact]
-	    public void BasisSignTests()
-	    {
-		    IFocal fb = new Focal( 0, 10);
-		    IFocal fn = new Focal(20, 30);
-		    IFocal ftest = new Focal(0, 0);
+        public void BasisSignTests()
+        {
+            IFocal fb = new Focal(0, 10);
+            IFocal fn = new Focal(20, 30);
+            IFocal ftest = new Focal(0, 0);
 
-		    // focal [0,10]  fn [20, 30]
+            // focal [0,10]  fn [20, 30]
             Assert.Equal(new Seg(2, 3), fn.GetSegWithBasis(fb));
             ftest.SetTicksWithSegBasis(new Seg(2, 3), fb);
             Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
@@ -37,52 +37,52 @@ namespace NumbersTests
             fb.EndTickPosition = -10; // focal [0,-10]  fn [40, 30]
 
             Assert.Equal(new Seg(-3, -2), fn.GetSegWithBasis(fb));
-		    ftest.SetTicksWithSegBasis(new Seg(-3, -2), fb);
-		    Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
-		    Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
+            ftest.SetTicksWithSegBasis(new Seg(-3, -2), fb);
+            Assert.Equal(ftest.StartTickPosition, fn.StartTickPosition);
+            Assert.Equal(ftest.EndTickPosition, fn.EndTickPosition);
 
-			fb = new Focal(0, -10);
-			fn = new Focal(40, 30);
+            fb = new Focal(0, -10);
+            fn = new Focal(40, 30);
 
-			Assert.Equal(new Seg(-3, -4), fn.GetSegWithBasis(fb));
+            Assert.Equal(new Seg(-3, -4), fn.GetSegWithBasis(fb));
             ftest.SetTicksWithSegBasis(new Seg(-3, -4), fb);
             Assert.Equal(40, fn.StartTickPosition);
             Assert.Equal(30, fn.EndTickPosition);
 
-			fb = new Focal(0, 10);
-			fn = new Focal(40, 30);
+            fb = new Focal(0, 10);
+            fn = new Focal(40, 30);
 
-			Assert.Equal(new Seg(4, 3), fn.GetSegWithBasis(fb));
+            Assert.Equal(new Seg(4, 3), fn.GetSegWithBasis(fb));
             ftest.SetTicksWithSegBasis(new Seg(4, 3), fb);
             Assert.Equal(40, fn.StartTickPosition);
             Assert.Equal(30, fn.EndTickPosition);
         }
-	    [Fact]
-	    public void ReciprocalTests()
-	    {
-		    IFocal f0 = new Focal(0, 10);
-		    IFocal f1 = new Focal(132, 287);
-		    Assert.Equal(13.2, f1.GetSegWithBasis(f0).Start);
-		    Assert.Equal(28.7, f1.GetSegWithBasis(f0).End);
+        [Fact]
+        public void ReciprocalTests()
+        {
+            IFocal f0 = new Focal(0, 10);
+            IFocal f1 = new Focal(132, 287);
+            Assert.Equal(13.2, f1.GetSegWithBasis(f0).Start);
+            Assert.Equal(28.7, f1.GetSegWithBasis(f0).End);
 
-			Assert.Equal(-0.8516, f0.GetSegWithBasis(f1).Start, 3);
-			Assert.Equal(-0.7870, f0.GetSegWithBasis(f1).End, 3);
-		}
+            Assert.Equal(-0.8516, f0.GetSegWithBasis(f1).Start, 3);
+            Assert.Equal(-0.7870, f0.GetSegWithBasis(f1).End, 3);
+        }
 
         [Fact]
-	    public void RangeToUnitTests()
-	    {
-		    IFocal fb = new Focal(0, 10);
-		    IFocal fn = new Focal(20, 30);
-		    IFocal testFocal = new Focal(0, 0);
-		    var range = fn.GetSegWithBasis(fb);
+        public void RangeToUnitTests()
+        {
+            IFocal fb = new Focal(0, 10);
+            IFocal fn = new Focal(20, 30);
+            IFocal testFocal = new Focal(0, 0);
+            var range = fn.GetSegWithBasis(fb);
             testFocal.SetTicksWithSegBasis(range, fb);
             Assert.Equal(testFocal.StartTickPosition, fn.StartTickPosition);
             Assert.Equal(testFocal.EndTickPosition, fn.EndTickPosition);
 
         }
 
-	    [Fact]
+        [Fact]
         public void CoreFocalTests()
         {
             IFocal f = new Focal(150, 250);
@@ -125,6 +125,66 @@ namespace NumbersTests
             Assert.Equal(1, f2.NonZeroLength);
             Assert.Equal(0ul, f2.Length);
 
+        }
+        [Fact]
+        public void GrowShrinkTests()
+        {
+            IFocal f = new Focal(150, 250);
+            f.GrowEnd(20);
+            Assert.Equal(270, f.EndTickPosition);
+            f.GrowStart(20);
+            Assert.Equal(130, f.StartTickPosition);
+            f.ShrinkEnd(20);
+            Assert.Equal(250, f.EndTickPosition);
+            f.ShrinkStart(20);
+            Assert.Equal(150, f.StartTickPosition);
+
+            f = new Focal(250, 150);
+            f.GrowEnd(20);
+            Assert.Equal(130, f.EndTickPosition);
+            f.GrowStart(20);
+            Assert.Equal(270, f.StartTickPosition);
+            f.ShrinkEnd(20);
+            Assert.Equal(150, f.EndTickPosition);
+            f.ShrinkStart(20);
+            Assert.Equal(250, f.StartTickPosition);
+
+            f = new Focal(-250, -150);
+            f.GrowEnd(20);
+            Assert.Equal(-130, f.EndTickPosition);
+            f.GrowStart(20);
+            Assert.Equal(-270, f.StartTickPosition);
+            f.ShrinkEnd(20);
+            Assert.Equal(-150, f.EndTickPosition);
+            f.ShrinkStart(20);
+            Assert.Equal(-250, f.StartTickPosition);
+        }
+        [Fact]
+        public void StretchTests()
+        {
+            IFocal f = new Focal(150, 250);
+            f.StretchBy(new Focal(0, 10));
+            Assert.Equal(new Focal(1500, 2500), f);
+            f.SqueezeBy(new Focal(0, 10));
+            Assert.Equal(new Focal(150, 250), f);
+
+            f = new Focal(250, 150);
+            f.StretchBy(new Focal(0, 10));
+            Assert.Equal(new Focal(2500, 1500), f);
+            f.SqueezeBy(new Focal(0, 10));
+            Assert.Equal(new Focal(250, 150), f);
+
+            f = new Focal(150, 250);
+            f.StretchBy(new Focal(10, 0));
+            Assert.Equal(new Focal(2500, -1500), f);
+            f.SqueezeBy(new Focal(10, 0));
+            Assert.Equal(new Focal(150, 250), f);
+
+            f = new Focal(150, 250);
+            f.StretchBy(new Focal(10, 20));
+            Assert.Equal(new Focal(5500, 3500), f);
+            f.SqueezeBy(new Focal(10, 20));
+            Assert.Equal(new Focal(150, 250), f);
         }
     }
 }

@@ -18,13 +18,20 @@ namespace Nums.Primitives
         bool IsUnotPerspective { get; }
         long Min { get; }
         long Max { get; }
-        Seg Seg { get; }
+        Seg Seg { get; set; }
 
 		IFocal Shift(long value);
 		Seg ShiftedSeg(long value);
 		void ReverseDirection();
         Seg GetSegWithBasis(IFocal basis);
         void SetTicksWithSegBasis(Seg seg, IFocal basis);
+
+        void GrowEnd(long ticks);
+        void GrowStart(long ticks);
+        void ShrinkEnd(long ticks);
+        void ShrinkStart(long ticks);
+        void StretchBy(IFocal amount);
+        public void SqueezeBy(IFocal amount);
 
         Seg UnitTRangeIn(IFocal basis);
         IFocal Clone();
@@ -94,14 +101,26 @@ namespace Nums.Primitives
             return new Seg(start, end);
         }
 
-		public virtual Seg Seg => new Seg(StartTickPosition, EndTickPosition);
-		public virtual ulong Length => (ulong)Math.Abs(EndTickPosition - StartTickPosition);
+		public virtual Seg Seg
+        {
+            get => new Seg(StartTickPosition, EndTickPosition);
+            set { StartTickPosition = (long)value.Start; EndTickPosition = (long)value.End; }
+        }
+
+        public virtual ulong Length => (ulong)Math.Abs(EndTickPosition - StartTickPosition);
 		public virtual long DirectedLength => EndTickPosition - StartTickPosition;
 		public virtual long NonZeroLength => DirectedLength == 0 ? 1 : DirectedLength;
         public virtual long Min => StartTickPosition <= EndTickPosition ? StartTickPosition : EndTickPosition;
         public virtual long Max => StartTickPosition >= EndTickPosition ? StartTickPosition : EndTickPosition;
 
-		public virtual IFocal Clone() => new Focal(StartTickPosition, EndTickPosition);
+        public void GrowEnd(long ticks) => EndTickPosition += ticks * Direction;
+        public void GrowStart(long ticks) => StartTickPosition -= ticks * Direction;
+        public void ShrinkEnd(long ticks) => EndTickPosition -= ticks * Direction;
+        public void ShrinkStart(long ticks) => StartTickPosition += ticks * Direction;
+        public void StretchBy(IFocal amount) => Seg = (Seg * amount.Seg);
+        public void SqueezeBy(IFocal amount) => Seg = (Seg / amount.Seg);
+
+        public virtual IFocal Clone() => new Focal(StartTickPosition, EndTickPosition);
 
 		public static IFocal CreateZeroFocal(long ticks) => new Focal(0, ticks);
 		public static IFocal CreateBalancedFocal(long halfTicks) => new Focal(-halfTicks, halfTicks);
