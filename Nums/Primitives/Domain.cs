@@ -24,7 +24,7 @@ namespace Nums.Primitives
 
         public string Name { get; } = "";
         public Trait Trait { get; protected set; }
-        public IFocal BasisFocal { get; protected set; }
+        public IFocal BasisFocal { get; set; }
         public IFocal MinMaxFocal { get; protected set; }
         public ulong TickSize { get; protected set; } = 1L; // min of 1, tick sizes larger than units are estimates to the nearest ticksize
 

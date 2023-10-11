@@ -29,21 +29,6 @@ public class Number : IMathElement, IEquatable<Number>
         get => Domain.GetValueOf(Focal);
         set => Domain.SetValueOf(Focal, value);
     }
-
-    public Number SetWith(Number other)
-    {
-        if (Domain.Id == other.Domain.Id)
-        {
-            StartTick = other.StartTick;
-            EndTick = other.EndTick;
-        }
-        else
-        {
-            Value = other.Value;
-        }
-        return other;
-    }
-
     public long StartTick
     {
         get => Focal.StartTickPosition;
@@ -54,17 +39,28 @@ public class Number : IMathElement, IEquatable<Number>
         get => Focal.EndTickPosition;
         set => Focal.EndTickPosition = value;
     }
-
     public Seg RangeInMinMax => Focal.UnitTRangeIn(Domain.MinMaxFocal);
-
     public Seg InnerRounding => Value.InnderRound();
     public Seg OuterRounding => Value.OuterRound();
     public Seg RemainderRange => Value - InnerRounding;
+
 
     // Operations with segments and units allow moving the unit around freely, so for example,
     // you can shift a segment by aligning the unit with start or end,
     // and scale in place by moving the unit to left, right or center (equivalent to affine scale, where you move to zero, scale, then move back)
     // need to have overloads that allow shifting the unit temporarily
+    public void SetWith(Number other)
+    {
+        if (Domain.Id == other.Domain.Id)
+        {
+            StartTick = other.StartTick;
+            EndTick = other.EndTick;
+        }
+        else
+        {
+            Value = other.Value;
+        }
+    }
     public void Add(Number other)
     {
         // todo: eventually all math on Numbers will be in ticks, allowing preservation of precision etc. Requires syncing of basis, domains.

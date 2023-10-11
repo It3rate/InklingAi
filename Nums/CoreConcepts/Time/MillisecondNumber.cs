@@ -14,7 +14,6 @@ namespace Nums.CoreConcepts.Time
         public long DurationMS => (long)Value.DirectedLength;
         public long TickCount => (long)Focal.Length;
 
-
         public static MillisecondNumber Zero = new MillisecondNumber(new Focal(0,0));
     }
 }
