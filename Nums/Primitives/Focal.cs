@@ -30,6 +30,10 @@ namespace Nums.Primitives
         void GrowStart(long ticks);
         void ShrinkEnd(long ticks);
         void ShrinkStart(long ticks);
+        void GrowEnd(IFocal other);
+        void GrowStart(IFocal other);
+        void ShrinkEnd(IFocal other);
+        void ShrinkStart(IFocal other);
         void StretchBy(IFocal amount);
         public void SqueezeBy(IFocal amount);
 
@@ -117,6 +121,12 @@ namespace Nums.Primitives
         public void GrowStart(long ticks) => StartTickPosition -= ticks * Direction;
         public void ShrinkEnd(long ticks) => EndTickPosition -= ticks * Direction;
         public void ShrinkStart(long ticks) => StartTickPosition += ticks * Direction;
+
+        public void GrowEnd(IFocal other) => EndTickPosition += other.DirectedLength * Direction;
+        public void GrowStart(IFocal other) => StartTickPosition -= other.DirectedLength * Direction;
+        public void ShrinkEnd(IFocal other) => EndTickPosition -= other.DirectedLength * Direction;
+        public void ShrinkStart(IFocal other) => StartTickPosition += other.DirectedLength * Direction;
+
         public void StretchBy(IFocal amount) => Seg = (Seg * amount.Seg);
         public void SqueezeBy(IFocal amount) => Seg = (Seg / amount.Seg);
 
