@@ -1,6 +1,7 @@
 ﻿namespace Nums.Composites;
 
 using Nums.Primitives;
+using Nums.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,6 @@ using System.Threading.Tasks;
 
 public class PolyFocal : Focal
 {
-    public override long StartTickPosition
-    {
-        get => _positions[0];
-        set => _positions[0] = value;
-    }
-    public override long EndTickPosition
-    {
-        get => _positions[_positions.Length - 1];
-        set => _positions[_positions.Length - 1] = value;
-    }
-
-    private long[] _positions;
     public long[] Positions {
         get => _positions;
         set
@@ -32,12 +21,28 @@ public class PolyFocal : Focal
 
     public PolyFocal(params long[] positions)
     {
-        _positions = positions;
+        _positions = (long[])positions.Clone();
     }
+
+
+    public override long DirectedLength => Positions.Select(x => x).Sum();
+    public override ulong Length => (ulong)_positions.Zip(_positions.Skip(1), (a, b) => Math.Abs(a - b)).Sum();
+    
+
+    // these work with segs, so needs a polyseg, or maybe just array of segs?
+    //Seg Seg { get; set; } // 
+    //Seg ShiftedSeg(long value);
+    //Seg GetSegWithBasis(IFocal basis);
+    //void SetTicksWithSegBasis(Seg seg, IFocal basis);
+    //void StretchBy(IFocal amount);
+    //public void SqueezeBy(IFocal amount);
+    //Seg UnitTRangeIn(IFocal basis);
+
+
 
     public override IFocal Clone()
     {
-        return new PolyFocal(Positions);
+        return new PolyFocal((long[])Positions.Clone());
     }
 
 }

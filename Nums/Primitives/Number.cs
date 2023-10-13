@@ -40,7 +40,7 @@ public class Number : IMathElement, IEquatable<Number>
         set => Focal.EndTickPosition = value;
     }
     public Seg RangeInMinMax => Focal.UnitTRangeIn(Domain.MinMaxFocal);
-    public Seg InnerRounding => Value.InnderRound();
+    public Seg InnerRounding => Value.InnerRound();
     public Seg OuterRounding => Value.OuterRound();
     public Seg RemainderRange => Value - InnerRounding;
 
