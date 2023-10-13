@@ -102,6 +102,8 @@ namespace Nums.Primitives
 		{
             _positions = _positions.Reverse().ToArray();
 		}
+        public virtual void StretchBy(IFocal amount) => Seg = (Seg * amount.Seg);
+        public virtual void SqueezeBy(IFocal amount) => Seg = (Seg / amount.Seg);
 		public virtual Seg UnitTRangeIn(IFocal basis)
         {
             var dl = basis.DirectedLength == 0 ? 1 : basis.DirectedLength;
@@ -133,8 +135,6 @@ namespace Nums.Primitives
         public void ShrinkEnd(IFocal other) => EndTickPosition -= other.DirectedLength * Direction;
         public void ShrinkStart(IFocal other) => StartTickPosition += other.DirectedLength * Direction;
 
-        public void StretchBy(IFocal amount) => Seg = (Seg * amount.Seg);
-        public void SqueezeBy(IFocal amount) => Seg = (Seg / amount.Seg);
 
         public virtual IFocal Clone() => new Focal(_positions);
 
