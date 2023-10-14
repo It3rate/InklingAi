@@ -65,8 +65,20 @@ namespace Nums.Primitives
         public Number Zero() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.StartTickPosition);
         public Number One() => CreateNumber(BasisFocal.StartTickPosition, BasisFocal.EndTickPosition);
 
-        public Seg GetValueOf(IFocal focal) => focal.GetSegWithBasis(BasisFocal);
-        public void SetValueOf(IFocal focal, Seg range) => focal.SetTicksWithSegBasis(range, BasisFocal);
+		public double GetValueOf(long position)
+		{
+			var f = new Focal(position, position);
+			var seg = f.GetSegWithBasis(BasisFocal);
+			return seg.End;
+		}
+		public long GetValueOf(double val)
+		{
+            var seg = new Seg(val, val);
+            var div = seg / BasisFocal.Seg;
+            return (long)div.End;
+		}
+		public Seg GetValueOf(IFocal focal) => focal.GetSegWithBasis(BasisFocal);
+		public void SetValueOf(IFocal focal, Seg range) => focal.SetTicksWithSegBasis(range, BasisFocal);
         public Seg GetValueOf(Number num) => GetValueOf(num.Focal);
         public void SetValueOf(Number num, Seg range) => SetValueOf(num.Focal,range);
 

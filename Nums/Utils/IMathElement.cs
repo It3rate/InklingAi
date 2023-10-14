@@ -20,5 +20,6 @@
 	    NumberSet  = 0x0A000000,
 	    Selection  = 0x0B000000, // probably not needed
         Focal      = 0x0C000000,
-    }
+		PolyNumber = 0x0D000000,
+	}
 }  

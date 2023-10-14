@@ -67,7 +67,6 @@ namespace Nums.Primitives
             }
         }
 
-
         public void Reset(IFocal[] focals)
         {
             Focals.Clear();
