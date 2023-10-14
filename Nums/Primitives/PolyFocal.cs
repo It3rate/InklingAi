@@ -1,6 +1,5 @@
-﻿namespace Nums.Composites;
+﻿namespace Nums.Primitives;
 
-using Nums.Primitives;
 using Nums.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,8 @@ using System.Threading.Tasks;
 
 public class PolyFocal : Focal
 {
-    public long[] Positions {
+    public long[] Positions
+    {
         get => _positions;
         set
         {
