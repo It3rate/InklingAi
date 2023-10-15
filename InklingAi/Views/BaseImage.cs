@@ -165,19 +165,14 @@ public abstract class BaseImage : UserControl
                 var skSource = sourceRect.ToSKRect();
                 var skDest = destRect.ToSKRect();
 
+            using (SKPaint paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High })
+            {
                 if (alpha != 1.0)
                 {
-                    using (SKPaint paint = new SKPaint())
-                    {
-                        paint.BlendMode = SKBlendMode.ColorDodge;
-                        canvas.DrawBitmap(img, skSource, skDest, paint);
-                    }
-
+                    paint.BlendMode = SKBlendMode.ColorDodge;
                 }
-                else
-                {
-                    canvas.DrawBitmap(img, skSource, skDest);
-                }
+                canvas.DrawBitmap(img, skSource, skDest, paint);
+            }
         }
     }
 

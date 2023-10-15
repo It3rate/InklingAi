@@ -54,5 +54,10 @@ namespace InkPad.Adapters
 			result.AddPoly(ToPoints(), closePath);
 			return result;
 		}
+
+		public SKPath PointsToOptimizedCurve(int optLevel)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
