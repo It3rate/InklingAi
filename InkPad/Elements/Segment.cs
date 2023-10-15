@@ -17,12 +17,12 @@
         YAxis,
     }
 
-    public class Trait : SegmentBase, ISegmentElement, IMidpointSettable
+    public class Segment : SegmentBase, ISegmentElement, IMidpointSettable
     {
         public override ElementKind ElementKind => ElementKind.Trait;
         public override IElement EmptyElement => Empty;
-        public static readonly Trait Empty = new Trait();
-        private Trait() : base(true) { TraitKind = TraitKind.None; }
+        public static readonly Segment Empty = new Segment();
+        private Segment() : base(true) { TraitKind = TraitKind.None; }
 
         public IPoint StartPoint => Pad.PointAt(StartKey);
         public IPoint EndPoint => Pad.PointAt(EndKey);
@@ -33,13 +33,13 @@
         public override SKPoint EndPosition => EndPoint.Position;
         public override List<IPoint> Points => IsEmpty ? new List<IPoint> { } : new List<IPoint> { StartPoint, EndPoint };
 
-        public Trait(TraitKind traitKind, IPoint start, IPoint end) : base(start.PadKind)
+        public Segment(TraitKind traitKind, IPoint start, IPoint end) : base(start.PadKind)
         {
             TraitKind = traitKind;
             StartKey = start.Key;
             EndKey = end.Key;
         }
-        public Trait(float x0, float y0, float x1, float y1, PadKind padKind = PadKind.Input, TraitKind traitKind = TraitKind.Default) : base(padKind)
+        public Segment(float x0, float y0, float x1, float y1, PadKind padKind = PadKind.Input, TraitKind traitKind = TraitKind.Default) : base(padKind)
         {
             TraitKind = traitKind;
             StartKey = new TerminalPoint(padKind, new SKPoint(x0, y0)).Key;
@@ -50,7 +50,7 @@
         {
             var sp = (IPoint)StartPoint.Duplicate(false);
             var ep = (IPoint)EndPoint.Duplicate(false);
-            var dup = new Trait(TraitKind, sp, ep);
+            var dup = new Segment(TraitKind, sp, ep);
             if (addElement)
             {
                 Pad.AddElement(sp);
@@ -124,9 +124,9 @@
 
         public bool IsHorizontal() => Segment.IsHorizontal();
         public bool IsVertical() => Segment.IsVertical();
-        public bool IsCollinearTo(Trait trait) => Segment.IsCollinearTo(trait.Segment);
-        public bool IsParallelTo(Trait trait) => Segment.IsParallelTo(trait.Segment);
-        public bool IsPerpendicularTo(Trait trait) => Segment.IsPerpendicularTo(trait.Segment);
+        public bool IsCollinearTo(Segment trait) => Segment.IsCollinearTo(trait.Segment);
+        public bool IsParallelTo(Segment trait) => Segment.IsParallelTo(trait.Segment);
+        public bool IsPerpendicularTo(Segment trait) => Segment.IsPerpendicularTo(trait.Segment);
 
         public void SetLengthByMidpoint(float length)
         {
@@ -141,11 +141,11 @@
             return EndPoint.Position;
         }
 
-        public static bool operator ==(Trait left, Trait right) =>
+        public static bool operator ==(Segment left, Segment right) =>
             left.Key == right.Key && left.TraitKind == right.TraitKind && left.StartKey == right.StartKey && left.EndKey == right.EndKey;
-        public static bool operator !=(Trait left, Trait right) =>
+        public static bool operator !=(Segment left, Segment right) =>
             left.Key != right.Key || left.TraitKind != right.TraitKind || left.StartKey != right.StartKey || left.EndKey != right.EndKey;
-        public override bool Equals(object obj) => obj is Trait value && this == value;
+        public override bool Equals(object obj) => obj is Segment value && this == value;
         public override int GetHashCode() => Key * 17 + (int)TraitKind * 23 + StartKey * 29 + EndKey * 31;
     }
 }

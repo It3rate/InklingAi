@@ -14,8 +14,9 @@ namespace Nums.Primitives
 		public int Id { get; internal set; }
 		public int CreationIndex => Id - (int)Kind - 1;
 
-		Domain Domain { get; set; }
-		PolyFocal PolyFocal { get; set; }
+		public Domain Domain { get; set; }
+		public PolyFocal PolyFocal { get; set; }
+		public int Count => PolyFocal.Count;
 
 		public PolyNumber(Domain domain, PolyFocal focals)
 		{
