@@ -51,6 +51,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InkPad\InkPad.csproj" />
+    <ProjectReference Include="..\Nums\Nums.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Views\GalleryControl.axaml.cs">
       <DependentUpon>GalleryControl.axaml</DependentUpon>
     </Compile>

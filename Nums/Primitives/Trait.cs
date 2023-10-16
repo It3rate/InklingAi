@@ -17,7 +17,7 @@ namespace Nums.Primitives
 
         public string Name { get; } = "";
 
-        public readonly Dictionary<string, Domain> DomainStore = new Dictionary<string, Domain>();
+        //public readonly Dictionary<string, Domain> DomainStore = new Dictionary<string, Domain>();
 
         public Trait(string name)
         {
@@ -36,19 +36,19 @@ namespace Nums.Primitives
 		    return AddDomain(name, new Focal(0, basisTicks), Focal.MinMaxFocal);
 	    }
 
-        public IEnumerable<Domain> Domains()
-	    {
-		    foreach (var domain in DomainStore.Values)
-		    {
-			    yield return domain;
-		    }
-	    }
+     //   public IEnumerable<Domain> Domains()
+	    //{
+		   // foreach (var domain in DomainStore.Values)
+		   // {
+			  //  yield return domain;
+		   // }
+	    //}
 
-        public Domain? DomainByName(string name)
-	    {
-		    DomainStore.TryGetValue(name, out var result);
-		    return result;
-        }
+     //   public Domain? DomainByName(string name)
+	    //{
+		   // DomainStore.TryGetValue(name, out var result);
+		   // return result;
+     //   }
 
         public override bool Equals(object? obj) => obj is Trait other && Equals(other);
         public bool Equals(IMathElement? other) => other is Trait trait && Equals(trait);

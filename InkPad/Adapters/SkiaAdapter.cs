@@ -1,4 +1,6 @@
 ﻿using Nums.Composites;
+using Nums.CoreConcepts.CoreTraits;
+using Nums.Primitives;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -8,20 +10,17 @@ using System.Threading.Tasks;
 
 namespace InkPad.Adapters
 {
-	public class SkiaPolyLineAdapter
+	public abstract class SkiaAdapter
 	{
-		private PolyNumberSet _polyline;
+		protected PolyNumberSet _polyset;
 
-		public SkiaPolyLineAdapter(PolyNumberSet polyline)
-		{
-			_polyline = polyline;
-		}
+		public int Count => _polyset.Count;
 
 		public SKPoint MakePoint(double[] values) => new SKPoint((float)values[0], (float)values[1]);
 		public SKPoint[] ToPoints()
 		{
-			var result = new SKPoint[_polyline.Count];
-			var pts = _polyline.GetIndexedValues();
+			var result = new SKPoint[_polyset.Count];
+			var pts = _polyset.GetIndexedValues();
 
 			for (int i = 0; i < pts.Length; i++)
 			{
@@ -33,7 +32,7 @@ namespace InkPad.Adapters
 		public SKPath ToQuadCurves(bool closePath = true)
 		{
 			var result = new SKPath();
-			var pts = _polyline.GetIndexedValues();
+			var pts = _polyset.GetIndexedValues();
 
 			result.MoveTo(MakePoint(pts[0]));
 			for (int i = 1; i < pts.Length; i++)
@@ -58,6 +57,10 @@ namespace InkPad.Adapters
 		public SKPath PointsToOptimizedCurve(int optLevel)
 		{
 			throw new NotImplementedException();
+		}
+		public void Reset()
+		{
+			_polyset.Reset();
 		}
 	}
 }

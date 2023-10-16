@@ -20,6 +20,8 @@ using Avalonia.Skia;
 using SkiaSharp;
 using InklingAi.Utils;
 using Avalonia.Threading;
+using System.Diagnostics;
+using Avalonia.Controls.Shapes;
 
 public abstract class BaseImage : UserControl
 {
@@ -27,8 +29,6 @@ public abstract class BaseImage : UserControl
 
     protected List<ImageData> _imageDataList = new();
     public float _widthExtra = 2f;
-    private Point? _startPoint;
-    private int _minDragDistance = 8;
 
     #region Avalonia Properties
 
@@ -79,7 +79,8 @@ public abstract class BaseImage : UserControl
     }
 
     Stretch _stretch = Stretch.UniformToFill;
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+	protected virtual void SetImage(ImageData? imageData) { }
+	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         var prop = change.Property;
@@ -96,44 +97,86 @@ public abstract class BaseImage : UserControl
         }
     }
 
-    #region Mouse Events
-    private void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        _startPoint = e.GetPosition(this);
-        OnImagePointerMoved(sender, e);
-    }
+	#region Mouse Events
+	protected Point? _startPosition;
+	protected Point _currentPosition;
+	protected bool _isMouseInside = true;
+	protected int _minDragDistance = 8;
+	protected bool _canDrag = true;
 
+	protected virtual void OnMouseDown(Point currentPosition) { }
+	protected virtual void OnMouseMoved(Point currentPosition, Point diff) { }
+	protected virtual void OnMouseUp(Point currentPosition, Point diff) { }
+	protected virtual void OnDragOver(object? sender, DragEventArgs e) { }
+	protected virtual void OnDrop(object? sender, DragEventArgs e) { }
+
+	protected void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _startPosition = e.GetPosition(this);
+        OnMouseDown((Point)_startPosition);
+    }
+	protected void OnImagePointerMoved(object? sender, PointerEventArgs e)
+	{
+		if (!_startPosition.HasValue)
+            return;
+
+		_currentPosition = e.GetPosition(this);
+        var diff = _currentPosition - _startPosition.Value;
+
+        if (_canDrag && (Math.Abs(diff.X) > _minDragDistance || Math.Abs(diff.Y) > _minDragDistance))
+        {
+            _ = DoDrag(sender, e);
+        }
+        else
+		{
+			OnMouseMoved(_currentPosition, diff);
+		}
+    }
+	protected void OnImagePointerReleased(object? sender, PointerReleasedEventArgs e)
+	{
+        if (_startPosition.HasValue)
+        {
+            _currentPosition = e.GetPosition(this);
+            var diff = _currentPosition - _startPosition.Value;
+            OnMouseUp(_currentPosition, diff);
+        }
+        _startPosition = null;
+    }
     private async Task DoDrag(object? sender, PointerEventArgs e)
     {
         var dragData = new DataObject();
         dragData.Set(DataFormats.Files, _imageDataList);
         var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
-        _startPoint = null;
+        _startPosition = null;
     }
-    protected virtual void OnDragOver(object? sender, DragEventArgs e)
+    protected virtual void AcceptImageDrop(IDataObject dataObject)
     {
-    }
-
-    protected abstract void OnDrop(object? sender, DragEventArgs e);
-
-    private void OnImagePointerMoved(object? sender, PointerEventArgs e)
-    {
-        if (!_startPoint.HasValue)
-            return;
-
-        var currentPosition = e.GetPosition(this);
-        var diff = currentPosition - _startPoint.Value;
-
-        if (Math.Abs(diff.X) > _minDragDistance || Math.Abs(diff.Y) > _minDragDistance)
-        {
-            _ = DoDrag(sender, e);
-        }
-    }
-
-    private void OnImagePointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        _startPoint = null;
-    }
+		if (dataObject.Contains(DataFormats.Files))
+		{
+			var data = dataObject.Get(DataFormats.Files);
+			if (data is IEnumerable<IStorageItem> dataList)
+			{
+				var firstFile = dataList.FirstOrDefault();
+				var path = firstFile?.Path.AbsolutePath ?? "";
+				if (path != "" && File.Exists(path))
+				{
+                    SetImage(new ImageData(ImageKind.File, path));
+				}
+			}
+			else if (data is IEnumerable<ImageData> stringList)
+			{
+				var first = stringList.First();
+				if (first != null)
+				{
+					SetImage(first);
+				}
+			}
+			else if (data is string filename)
+			{
+				SetImage(new ImageData(ImageKind.File, filename));
+			}
+		}
+	}
     #endregion
 
     protected abstract void RenderSkia(SKCanvas canvas);

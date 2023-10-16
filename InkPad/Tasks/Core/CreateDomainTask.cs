@@ -35,17 +35,17 @@ namespace InkPad.Tasks.Core
             {
                 TaskDomain = new Domain(Trait, Name, BasisFocal, MinMax);
             }
-            else
-            {
-                Trait.DomainStore.Add(Name, TaskDomain);
-            }
+            //else
+            //{
+            //    Trait.DomainStore.Add(Name, TaskDomain);
+            //}
             TaskWorkspace.AddDomains(false, TaskDomain);
         }
 
         public override void UnRunTask()
         {
             TaskWorkspace.RemoveDomains(false, TaskDomain);
-            Trait.DomainStore.Remove(Name);
+            //Trait.DomainStore.Remove(Name);
         }
     }
 }

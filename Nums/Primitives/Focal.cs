@@ -52,9 +52,42 @@ namespace Nums.Primitives
     {
         public MathElementKind Kind => MathElementKind.Focal;
         protected List<long> _positions = new List<long>() { 0, 0 };
-        public virtual long StartTickPosition { get => _positions[0]; set => _positions[0] = value; }
-        public virtual long EndTickPosition { get => _positions[_positions.Count - 1]; set => _positions[_positions.Count - 1] = value; }
+        public virtual long StartTickPosition
+        {
+            get => _positions.Count > 0 ? _positions[0] : 0;
+            set
+            {
+                if (_positions.Count > 0)
+                {
+                    _positions[0] = value;
+                }
+                else
+                {
+                    _positions.Add(value);
+                }
+            }
+        }
 
+		public virtual long EndTickPosition
+        {
+            get => _positions.Count > 1 ? _positions[_positions.Count - 1] : 0;
+            set
+            {
+                if(_positions.Count > 1)
+				{
+					_positions[_positions.Count - 1] = value;
+				}
+				else if (_positions.Count == 0)
+				{
+					_positions.Add(0);
+					_positions.Add(value);
+				}
+				else
+				{
+					_positions.Add(value);
+				}
+			}
+        }
 		// Focal values are always added as unit perspective positions, because
 		// there is no unit defined that allows the start point to be interpreted as a unot perspective.
 		// Focals are pre-number, positions, not value interpretations.
@@ -120,8 +153,8 @@ namespace Nums.Primitives
         public virtual ulong Length => (ulong)Math.Abs(EndTickPosition - StartTickPosition);
 		public virtual long DirectedLength => EndTickPosition - StartTickPosition;
 
-        public virtual long Min => _positions.Min();
-        public virtual long Max => _positions.Max();
+        public virtual long Min => _positions.Count > 0 ? _positions.Min() : 0;
+        public virtual long Max => _positions.Count > 0 ? _positions.Max() : 0;
 
         public void GrowEnd(long ticks) => EndTickPosition += ticks * Direction;
         public void GrowStart(long ticks) => StartTickPosition -= ticks * Direction;

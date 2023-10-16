@@ -25,25 +25,29 @@ public class PolyFocal : Focal
     public int Count => _positions.Count;
 
     public PolyFocal(params long[] positions)
-	{
-		_positions.AddRange(positions);
-	}
+    {
+        _positions.AddRange(positions);
+    }
 
-	public void AddPosition(long position)
-	{
-		_positions.Add(position);
-	}
-	public void AddPositions(long[] positions)
-	{
-		_positions.AddRange(positions);
-	}
-	public void RemovePosition()
-	{
-		if (_positions.Count > 2)
-		{
-			_positions.RemoveAt(_positions.Count - 1);
-		}
-	}
+    public void AddPosition(long position)
+    {
+        _positions.Add(position);
+    }
+    public void AddPositions(long[] positions)
+    {
+        _positions.AddRange(positions);
+    }
+    public void RemovePosition()
+    {
+        if (_positions.Count > 2)
+        {
+            _positions.RemoveAt(_positions.Count - 1);
+        }
+    }
+    public void Clear()
+    {
+        _positions.Clear();
+    }
 
 	public IFocal FocalAt(int index)
 	{

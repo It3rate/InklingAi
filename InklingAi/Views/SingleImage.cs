@@ -74,8 +74,7 @@
                     break;
             }
         }
-
-        private void SetImage(ImageData? imageData)
+        protected override void SetImage(ImageData? imageData)
         {
             if(_imageDataList.Count > 0)
             {
@@ -85,47 +84,25 @@
                 InvalidateVisual();
             }
             else
-            {
-                ImageDataItem = imageData;
+			{
+                if (imageData?.InputPath != ImageDataItem?.InputPath)
+                {
+                    ImageDataItem = imageData;
+                }
             }
         }
+
         protected override void OnDragOver(object? sender, DragEventArgs e)
         {
             e.DragEffects = DragDropEffects.Copy;
             e.Handled = true;
         }
-
         protected override void OnDrop(object? sender, DragEventArgs e)
         {
             var result = e.DragEffects;
             if ((result & DragDropEffects.Copy) != DragDropEffects.None)
             {
-                if (e.Data.Contains(DataFormats.Files))
-                {
-                    var data = e.Data.Get(DataFormats.Files);
-                    if (data is IEnumerable<IStorageItem> dataList)
-                    {
-                        var firstFile = dataList.FirstOrDefault();
-                        var path = firstFile?.Path.AbsolutePath ?? "";
-                        if (path != "" && File.Exists(path))
-                        {
-                            ImageDataItem = new ImageData(ImageKind.File, path);
-                        }
-                    }
-                    else if (data is IEnumerable<ImageData> stringList)
-                    {
-                        var first = stringList.First();
-                        if (first != null)
-                        {
-                            SetImage(first);
-                            //ImageDataItem = first;
-                        }
-                    }
-                    else if (data is string filename && filename != ImageDataItem.InputPath)
-                    {
-                        ImageDataItem = new ImageData(ImageKind.File, filename);
-                    }
-                }
+                AcceptImageDrop(e.Data);
             }
         }
 

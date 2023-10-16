@@ -48,8 +48,9 @@ public class PolyNumberSet
 	}
 	public double[][] GetIndexedValues()
 	{
-		var result = new double[Count][];
-		for (int i = 0; i < Count; i++)
+		var len = Count;
+		var result = new double[len][];
+		for (int i = 0; i < len; i++)
 		{
 			result[i] = new double[Dimensions];
 			for (int j = 0; j < Dimensions; j++)
@@ -58,5 +59,12 @@ public class PolyNumberSet
 			}
 		}
 		return result;
+	}
+	public void Reset()
+	{
+		for (int i = 0; i < _polynumbers.Length; i++)
+		{
+			_polynumbers[i].Reset();
+		}
 	}
 }

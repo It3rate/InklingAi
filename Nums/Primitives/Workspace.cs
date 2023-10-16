@@ -62,7 +62,7 @@ namespace Nums.Primitives
 		        AddElements(trait);
 		        if (includeChildren)
 		        {
-			        AddDomains(includeChildren,trait.DomainStore.Values.ToArray());
+			        //AddDomains(includeChildren,trait.DomainStore.Values.ToArray());
 		        }
 	        }
         }
@@ -73,7 +73,7 @@ namespace Nums.Primitives
 		        RemoveElements(trait);
 		        if (includeChildren)
 		        {
-			        RemoveDomains(includeChildren, trait.DomainStore.Values.ToArray());
+			        //RemoveDomains(includeChildren, trait.DomainStore.Values.ToArray());
 		        }
 	        }
         }
@@ -95,18 +95,18 @@ namespace Nums.Primitives
 	        }
         }
 
-        public IEnumerable<Domain> ActiveSiblingDomains(Domain domain)
-        {
-	        var ds = domain.Trait.DomainStore;
-	        var domains = ds.Values.Where(key => Elements.Contains(key));
-	        foreach (var d in domains)
-	        {
-		        if (d != domain)
-		        {
-			        yield return d;
-		        }
-	        }
-        }
+        //public IEnumerable<Domain> ActiveSiblingDomains(Domain domain)
+        //{
+	       // var ds = domain.Trait.DomainStore;
+	       // var domains = ds.Values.Where(key => Elements.Contains(key));
+	       // foreach (var d in domains)
+	       // {
+		      //  if (d != domain)
+		      //  {
+			     //   yield return d;
+		      //  }
+	       // }
+        //}
 
         public void ClearAll()
         {

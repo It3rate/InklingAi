@@ -43,7 +43,7 @@ namespace Nums.Primitives
 
 	        BasisFocal = basisFocal;
 	        MinMaxFocal = minMaxFocal ?? Focal.MinMaxFocal.Clone();
-            Trait.DomainStore.Add(Name, this);
+            //Trait.DomainStore.Add(Name, this);
         }
 
         public Number CreateNumber(IFocal focal)

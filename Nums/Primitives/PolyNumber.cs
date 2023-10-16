@@ -58,5 +58,10 @@ namespace Nums.Primitives
 			}
 			return result;
 		}
+
+		public void Reset()
+		{
+			PolyFocal.Clear();
+		}
 	}
 }

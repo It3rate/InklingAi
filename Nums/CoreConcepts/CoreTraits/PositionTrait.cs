@@ -5,7 +5,9 @@ using Nums.Primitives;
 
 public class PositionTrait : Trait
 {
-    public static PositionTrait CreateIn(Knowledge knowledge) => (PositionTrait)knowledge.Brain.AddTrait(new PositionTrait());
+    public static PositionTrait Instance { get; } = new PositionTrait();
 
-    public PositionTrait() : base("Position") { }
+	public static PositionTrait CreateIn(Knowledge knowledge) => (PositionTrait)knowledge.Brain.AddTrait(new PositionTrait());
+
+    private PositionTrait() : base("Position") { }
 }
