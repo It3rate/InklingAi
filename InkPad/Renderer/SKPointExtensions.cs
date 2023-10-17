@@ -1,5 +1,6 @@
 ﻿namespace InkPad.Renderer;
 
+using InkPad.Elements;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -46,12 +47,24 @@ public static class SkPointExtension
     public static float SquaredDistanceTo(this SKPoint self, SKPoint b) => (self - b).LengthSquared;
     public static float DotProduct(this SKPoint self, SKPoint pt) => self.X * pt.X + self.Y * pt.Y;
     public static float Atan2(this SKPoint self, SKPoint pt) => (float)Math.Atan2(pt.Y - self.Y, pt.X - self.X);
-    public static float DistanceToLine(this SKPoint self, SKSegment line, bool clamp = true) => line.DistanceTo(self, clamp);
-    public static float SignedDistanceTo(this SKPoint self, SKPoint pt)
+	public static float DistanceToLine(this SKPoint self, SKSegment line, bool clamp = true) => line.DistanceTo(self, clamp);
+    public static float DistanceToLine(this SKPoint self, SKPoint p0, SKPoint p1)
+    {
+        var seg = new SKSegment(p0, p1);
+        return seg.DistanceTo(self);
+    }
+	public static float SignedDistanceTo(this SKPoint self, SKPoint pt)
     {
         var sDist = (pt.X - self.X) * (pt.X - self.X) + (pt.Y - self.Y) * (pt.Y - self.Y);
         return (float)Math.Sqrt(sDist) * (sDist >= 0 ? 1f : -1f);
     }
+    public static float AreaOf(this SKPoint p0, SKPoint p1, SKPoint p2)
+	{
+		return MathF.Abs(.5f * (
+			p0.X * p1.Y + p1.X * p2.Y +
+			p2.X * p0.Y - p1.X * p0.Y -
+			p2.X * p1.Y - p0.X * p2.Y));
+	}
 
     public static (float, float, float) ABCLine(this SKPoint self, SKPoint pt)
     {

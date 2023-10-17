@@ -1,6 +1,7 @@
 ﻿using Nums.Composites;
 using Nums.CoreConcepts.CoreTraits;
 using Nums.Primitives;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,4 +26,5 @@ public class SkPolylineAdapter : SkiaAdapter
 	{
 		_polyset.AddValues(x, y);
 	}
+
 }

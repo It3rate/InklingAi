@@ -175,12 +175,13 @@ public class PaintableImage : BaseImage
 	protected override void RenderSkia(SKCanvas canvas)
 	{
 		canvas.Clear(SKColors.White);
-		var path = _curPath.ToPath(false); 
+		var path = _curPath.ToOptimizedCurve(false); 
 		using var paint = new SKPaint
 		{
 			Style = SKPaintStyle.Stroke,
-			Color = SKColors.Red,
-			StrokeWidth = 4,
+			Color = new SKColor(255, 0, 0, 50),
+			StrokeCap = SKStrokeCap.Round,
+			StrokeWidth = 20,
 			IsAntialias = true,
 		};
 		canvas.DrawPath(path, paint);
