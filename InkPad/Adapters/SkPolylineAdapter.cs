@@ -27,4 +27,18 @@ public class SkPolylineAdapter : SkiaAdapter
 		_polyset.AddValues(x, y);
 	}
 
+    private int _lastRenderPointCount = 0;
+    private SKPaint? _lastPaint;
+    public SKPath? _lastPath;
+    public SKPath PathOutline(SKPaint paint)
+    {
+        if(_lastPath == null || Count != _lastRenderPointCount || paint.StrokeWidth != _lastPaint.StrokeWidth)
+        {
+            _lastPaint = paint;
+            _lastRenderPointCount = Count;
+            var path = ToOptimizedCurve(false);
+            _lastPath = paint.GetFillPath(path);
+        }
+        return _lastPath;
+    }
 }
