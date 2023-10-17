@@ -172,19 +172,23 @@ public class PaintableImage : BaseImage
 
 
 	protected override void OnDrop(object? sender, DragEventArgs e) { }
-	protected override void RenderSkia(SKCanvas canvas)
+    private SKPaint _strokePaint = new SKPaint
+    {
+        Style = SKPaintStyle.Stroke,
+        Color = new SKColor(255, 0, 0, 50),
+        StrokeCap = SKStrokeCap.Round,
+        StrokeJoin = SKStrokeJoin.Round,
+        StrokeMiter = 3.0f,
+        StrokeWidth = 20,
+        IsAntialias = true,
+    };
+
+    protected override void RenderSkia(SKCanvas canvas)
 	{
 		canvas.Clear(SKColors.White);
-		var path = _curPath.ToOptimizedCurve(false); 
-		using var paint = new SKPaint
-		{
-			Style = SKPaintStyle.Stroke,
-			Color = new SKColor(255, 0, 0, 50),
-			StrokeCap = SKStrokeCap.Round,
-			StrokeWidth = 20,
-			IsAntialias = true,
-		};
-		canvas.DrawPath(path, paint);
+		var path = _curPath.ToOptimizedCurve(false);
+        _strokePaint.Color = new SKColor(0, 0, 255, 50);
+		canvas.DrawPath(path, _strokePaint);
 	}
 
 }
