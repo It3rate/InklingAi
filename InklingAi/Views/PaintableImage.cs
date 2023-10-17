@@ -9,7 +9,7 @@ using InklingAi.ViewModels;
 
 public class PaintableImage : BaseImage
 {
-	private SkPolylineAdapter _curPath;
+    private SkPolylineAdapter? _curPath;
 	public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
 	public PaintableImage()
@@ -184,12 +184,15 @@ public class PaintableImage : BaseImage
     };
 
     protected override void RenderSkia(SKCanvas canvas)
-	{
-		canvas.Clear(SKColors.White);
-		var path = _curPath.ToOptimizedCurve(false);
-        _strokePaint.Color = new SKColor(0, 0, 255, 50);
-		canvas.DrawPath(path, _strokePaint);
-	}
+    {
+        //canvas.Clear(SKColors.Transparent);
+        if (_curPath != null)
+        {
+            var path = _curPath.ToOptimizedCurve(false);
+            _strokePaint.Color = new SKColor(0, 0, 255, 50);
+            canvas.DrawPath(path, _strokePaint);
+        }
+    }
 
 }
 
