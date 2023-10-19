@@ -65,5 +65,8 @@
     <Compile Update="Views\InputControls.axaml.cs">
       <DependentUpon>InputControls.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\DrawingToolbar.axaml.cs">
+      <DependentUpon>DrawingToolbar.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

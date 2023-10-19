@@ -38,10 +38,13 @@
 			<Grid Grid.Column="2" Name="_mainContainer" >
 				<Viewbox Name="_viewbox" Stretch="Uniform">
 					<Border Name="_border" Classes="image" Margin="70">
-					<Grid>
-						<controls:CompositeImage ImageDataItems="{Binding InfluenceData.ActiveItems}"/>
-						<controls:PaintableImage/>
-					</Grid>
+            <StackPanel VerticalAlignment="Bottom">
+              <Label>Influencing Image</Label>
+							<Grid>
+								<controls:CompositeImage ImageDataItems="{Binding InfluenceData.ActiveItems}"/>
+								<controls:PaintableImage/>
+							</Grid>
+            </StackPanel>
 					</Border>
 				</Viewbox>
 			</Grid>
