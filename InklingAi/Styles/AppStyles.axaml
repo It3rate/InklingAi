@@ -8,12 +8,13 @@
 		<StackPanel>
 			<Button>test</Button>
 			<Button Classes="image">test2</Button>
-			<ToggleButton Classes="image_button" IsChecked="True" Width="40">
+			<ToggleButton Classes="image_button" IsChecked="True" Width="50">
 				<Panel>
 					<Image Classes="seed_locked" Source="/Assets/unlock_64.png" />
 					<Image Classes="seed_unlocked" Source="/Assets/lock_64.png" />
 				</Panel>
 			</ToggleButton>
+      <NumericUpDown Value="77" Minimum="0" Maximum="100" />
 		</StackPanel>
 	</Design.PreviewWith>
 	
@@ -88,5 +89,14 @@
 		<Setter Property="IsVisible" Value="True"/>
 	</Style>
 
+  <Style Selector="NumericUpDown">
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="FontSize" Value="10"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Right"/>
+  </Style>
 	
 </Styles>

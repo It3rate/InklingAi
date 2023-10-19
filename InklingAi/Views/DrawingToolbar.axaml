@@ -5,46 +5,27 @@
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="50"
              x:Class="InklingAi.Views.DrawingToolbar">
 
-	<Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
-		<Button Grid.Column="0" Classes="image"
+  <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+    <Button Grid.Row="0" Classes="image"
 				CommandParameter="Arrow">
-			<Svg Path="/Assets/drawArrow.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="1" Classes="image"
-				CommandParameter="BrushSize">
-			<Svg Path="/Assets/drawBrushSize.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="2" Classes="image"
-				CommandParameter="Color">
-			<Svg Path="/Assets/drawColor.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="3" Classes="image"
-				CommandParameter="Dropper">
-			<Svg Path="/Assets/drawDropper.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="4" Classes="image"
+      <Svg Path="/Assets/drawArrow.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="4" Classes="image"
 				CommandParameter="Erase">
-			<Svg Path="/Assets/drawErase.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="5" Classes="image"
-				CommandParameter="Feather">
-			<Svg Path="/Assets/drawFeather.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="6" Classes="image"
+      <Svg Path="/Assets/drawErase.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="6" Classes="image"
 				CommandParameter="Paint">
-			<Svg Path="/Assets/drawPaint.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="7" Classes="image" 
+      <Svg Path="/Assets/drawPaint.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="7" Classes="image"
 				CommandParameter="Pen">
-			<Svg Path="/Assets/drawPen.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="8" Classes="image" 
+      <Svg Path="/Assets/drawPen.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="8" Classes="image"
 				CommandParameter="Resize">
-			<Svg Path="/Assets/drawResize.svg" Stretch="Uniform"/>
-		</Button>
-		<Button Grid.Column="9" Classes="image" 
-				CommandParameter="Transparent">
-			<Svg Path="/Assets/drawTransparent.svg" Stretch="Uniform"/>
-		</Button>
-	</Grid>
+      <Svg Path="/Assets/drawResize.svg" Stretch="Uniform"/>
+    </Button>
+  </Grid>
+  
 </UserControl>
