@@ -13,6 +13,7 @@ public class PaintableImage : BaseImage
     private List<SkPolylineAdapter> _paths { get; } = new List<SkPolylineAdapter>();
     private SkPolylineAdapter? _curPath;
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
+    public DrawingData DrawingData => DrawingData.Instance;
 
     public PaintableImage()
     {
@@ -176,7 +177,6 @@ public class PaintableImage : BaseImage
 
 
     protected override void OnDrop(object? sender, DragEventArgs e) { }
-    private static float _defaultStrokeSize = 10;
     private SKPaint _drawingPaint = new SKPaint
     {
         Style = SKPaintStyle.Stroke,
@@ -184,7 +184,6 @@ public class PaintableImage : BaseImage
         StrokeCap = SKStrokeCap.Round,
         StrokeJoin = SKStrokeJoin.Round,
         StrokeMiter = 3.0f,
-        StrokeWidth = _defaultStrokeSize,
         IsAntialias = true,
     };
     private SKPaint _strokePaint = new SKPaint
@@ -194,7 +193,6 @@ public class PaintableImage : BaseImage
         StrokeCap = SKStrokeCap.Round,
         StrokeJoin = SKStrokeJoin.Round,
         StrokeMiter = 3.0f,
-        StrokeWidth = _defaultStrokeSize,
         IsAntialias = true,
     };
     private SKPaint _fillPaint = new SKPaint
@@ -206,6 +204,11 @@ public class PaintableImage : BaseImage
 
     protected override void RenderSkia(SKCanvas canvas)
     {
+        _strokePaint.StrokeWidth = DrawingData.BrushSize;
+        _strokePaint.Color = new SKColor((uint)((DrawingData.Transparency << 24) + DrawingData.CurrentColor));
+
+        _drawingPaint.StrokeWidth = _strokePaint.StrokeWidth;
+        _drawingPaint.Color = _strokePaint.Color;
         //canvas.Clear(SKColors.Transparent);
         foreach (var path in _paths)
         {

@@ -22,6 +22,7 @@ public partial class MainViewModel : ViewModelBase
     public StableDiffusionController sdController;
     public GalleryData GalleryData { get; } = new();
     public InfluenceData InfluenceData { get; } = new();
+    public DrawingData DrawingData => DrawingData.Instance;
 
     public MainViewModel()
     {
