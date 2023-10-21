@@ -15,20 +15,20 @@
     <Button Grid.Column="0" Classes="image" CommandParameter="BrushSize">
       <Svg Path="/Assets/drawBrushSize.svg" Stretch="Uniform"/>
     </Button>
-    <NumericUpDown Grid.Column="1" Value="{Binding DrawingData.BrushSize}"
+    <NumericUpDown Grid.Column="1" Value="{Binding DrawingData.BrushSize}" Width="50"
                    Minimum="0" Maximum="60" Increment="2" AllowSpin="True"/>
     
     <Button Grid.Column="2" Classes="image" Margin="20,0,0,0" CommandParameter="Transparent">
       <Svg Path="/Assets/drawTransparent.svg" Stretch="Uniform"/>
     </Button>
-    <NumericUpDown Grid.Column="3" Value="{Binding DrawingData.Transparency}"
+    <NumericUpDown Grid.Column="3" Value="{Binding DrawingData.Transparency}" Width="56"
                    Minimum="0" Maximum="255" Increment="10" AllowSpin="True"/>
     
     <Button Grid.Column="4" Classes="image" Margin="20,0,0,0"
 				CommandParameter="Feather">
       <Svg Path="/Assets/drawFeather.svg" Stretch="Uniform"/>
     </Button>
-    <NumericUpDown Grid.Column="5" Value="{Binding DrawingData.Feather}"
+    <NumericUpDown Grid.Column="5" Value="{Binding DrawingData.Feather}" Width="50"
                    Minimum="0" Maximum="100" Increment="2" AllowSpin="True"/>
     
     <Button Grid.Column="6" Classes="image" Margin="20,0,0,0"

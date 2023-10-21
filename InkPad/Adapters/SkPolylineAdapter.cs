@@ -33,25 +33,14 @@ public class SkPolylineAdapter : SkiaAdapter
         }
     }
 
-    public int _transparency { get; set; } = 255;
-    public int Transparency { get => _transparency; 
-        set
-        {
-            if (_transparency != value)
-            {
-                _transparency = value; 
-                _brushDirty = true;
-            }
-        }
-    }
 
-    public uint _currentColor { get; set; } = 255;
-    public uint CurrentColor { get => _currentColor; 
+    public uint _colorValue { get; set; }
+    public uint ColorValue { get => _colorValue; 
         set
         {
-            if (_currentColor != value)
+            if (_colorValue != value)
             {
-                _currentColor = value;
+				_colorValue = value;
                 _brushDirty = true;
             }
         }
@@ -69,7 +58,7 @@ public class SkPolylineAdapter : SkiaAdapter
                 _paint = new SKPaint()
                 {
                     Style = SKPaintStyle.Stroke,
-                    Color = new SKColor((uint)((Transparency << 24) + CurrentColor)),
+                    Color = new SKColor(ColorValue),
                     StrokeWidth = BrushSize,
                     StrokeCap = SKStrokeCap.Round,
                     StrokeJoin = SKStrokeJoin.Round,
@@ -81,7 +70,7 @@ public class SkPolylineAdapter : SkiaAdapter
             return _paint;
         }
     }
-    public SkPolylineAdapter(int width, int height, float? brushSize = null, int? transparency = null, uint? currentColor = null, float? feather = null)
+    public SkPolylineAdapter(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null)
     {
         var trait = PositionTrait.Instance;
         var xDomain = new Domain(trait, "xAxis", Focal.UnitFocal, new Focal(0, width));
@@ -94,13 +83,9 @@ public class SkPolylineAdapter : SkiaAdapter
         {
             BrushSize = brushSize.Value;
         }
-        if (transparency != null)
-        {
-            Transparency = transparency.Value;
-        }
         if (currentColor != null)
         {
-            CurrentColor = currentColor.Value;
+            ColorValue = currentColor.Value;
         }
         if (feather != null)
         {

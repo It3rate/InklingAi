@@ -18,7 +18,7 @@
 			string result = "#FF0000";
 			if (value is uint d)
 			{
-				result = "#" + d.ToString("X6", CultureInfo.InvariantCulture);
+				result = "#" + d.ToString("X8", CultureInfo.InvariantCulture);
 			}
 			return new SolidColorBrush(Color.Parse(result));
 		}
@@ -28,7 +28,7 @@
 			uint result = 0;
 			if (value is SolidColorBrush brush)
 			{
-				result = (uint)((brush.Color.R << 16) | (brush.Color.G << 8) | (brush.Color.B)); ;
+				result = (uint)((brush.Color.A << 24) | (brush.Color.R << 16) | (brush.Color.G << 8) | (brush.Color.B)); ;
 			}
 			return result;
 		}

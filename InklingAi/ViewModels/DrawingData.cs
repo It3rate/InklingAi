@@ -8,20 +8,37 @@
 	using Avalonia.Media;
 	using SkiaSharp;
 
-    public class DrawingData
-    {
+    public class DrawingData : ViewModelBase
+	{
         public static DrawingData Instance { get; } = new DrawingData();
         public BrushMode BrushMode { get; set; } = BrushMode.None;
         public DrawMode DrawMode { get; set; } = DrawMode.Arrow;
         public float BrushSize { get; set; } = 20f;
         public float Feather { get; set; } = 0f;
-        public int Transparency { get; set; } = 255;
         public SKPoint ClonePoint { get; set; } = SKPoint.Empty;
 
-        Color _selColor = Colors.Bisque;
+		private byte _transparency = 255;
+		public byte Transparency 
+        { 
+            get => _transparency;
+            set
+			{
+				SetProperty(ref _transparency, value);
+				SelColor = new Color(_transparency, _selColor.R, _selColor.G, _selColor.B);
+            }
+        }
+
+		Color _selColor = Color.FromUInt32(0xFF0072B2);
 		public Color SelColor {
             get => _selColor;
-            set => _selColor = value;
+            set
+			{
+				SetProperty(ref _selColor, value);
+                if (_transparency != _selColor.A)
+                {
+                    Transparency = _selColor.A;
+                }
+            }
         }
         public Color CurrentGray { get; set; } = Colors.Gray;
 

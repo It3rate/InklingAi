@@ -32,8 +32,7 @@ public class PaintableImage : BaseImage
 
     protected override void OnMouseDown(Point currentPosition)
 	{
-		_curPath.CurrentColor = DrawingData.SelColor.ToUInt32();
-		_curPath.Transparency = DrawingData.Transparency;
+		_curPath.ColorValue = DrawingData.SelColor.ToUInt32();
 		_curPath.BrushSize = DrawingData.BrushSize;
 		_curPath.Feather = DrawingData.Feather;
 		_curPath.Reset();
@@ -60,7 +59,7 @@ public class PaintableImage : BaseImage
     private void CreateNewPath()
     {
         _curPath = new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height,
-            DrawingData.BrushSize, DrawingData.Transparency, DrawingData.SelColor.ToUInt32(), DrawingData.Feather);
+            DrawingData.BrushSize, DrawingData.SelColor.ToUInt32(), DrawingData.Feather);
     }
     //public void OnMouseMove(Panel? sender, MouseEventArgs e)
     //{
@@ -202,15 +201,9 @@ public class PaintableImage : BaseImage
 
     protected override void RenderSkia(SKCanvas canvas)
     {
-        //_strokePaint.StrokeWidth = DrawingData.BrushSize;
-        //_strokePaint.Color = new SKColor((uint)((DrawingData.Transparency << 24) + DrawingData.CurrentColor));
-
-        //_drawingPaint.StrokeWidth = _strokePaint.StrokeWidth;
-        //_drawingPaint.Color = _strokePaint.Color;
-        //canvas.Clear(SKColors.Transparent);
-        foreach (var path in _paths)
+        for (int i = 0; i < _paths.Count; i++) // Note: foreach can have collection modified issues
         {
-            DrawShape(canvas, path);
+            DrawShape(canvas, _paths[i]);
         }
 
         if (_curPath != null)
