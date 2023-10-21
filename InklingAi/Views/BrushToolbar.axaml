@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="40"
+			 xmlns:colorpicker="clr-namespace:AvaloniaColorPicker;assembly=AvaloniaColorPicker"
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
              x:Class="InklingAi.Views.BrushToolbar">
 
@@ -11,15 +12,13 @@
   </UserControl.Resources>
 
   <Grid ColumnDefinitions="Auto, 56, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
-    <Button Grid.Column="0" Classes="image"
-				CommandParameter="BrushSize">
+    <Button Grid.Column="0" Classes="image" CommandParameter="BrushSize">
       <Svg Path="/Assets/drawBrushSize.svg" Stretch="Uniform"/>
     </Button>
     <NumericUpDown Grid.Column="1" Value="{Binding DrawingData.BrushSize}"
                    Minimum="0" Maximum="60" Increment="2" AllowSpin="True"/>
     
-    <Button Grid.Column="2" Classes="image" Margin="20,0,0,0"
-				CommandParameter="Transparent">
+    <Button Grid.Column="2" Classes="image" Margin="20,0,0,0" CommandParameter="Transparent">
       <Svg Path="/Assets/drawTransparent.svg" Stretch="Uniform"/>
     </Button>
     <NumericUpDown Grid.Column="3" Value="{Binding DrawingData.Transparency}"
@@ -36,11 +35,11 @@
 				CommandParameter="Color">
       <Svg Path="/Assets/drawColor.svg" Stretch="Uniform"/>
     </Button>
-    <Button Grid.Column="7" Width="50" Height="30" CornerRadius="8" BorderBrush="Black"
-            Background="{Binding DrawingData.CurrentColor, 
-					              Converter={StaticResource ColorConverter}}"/>
-    <Button Grid.Column="8" Classes="image"
-				CommandParameter="Dropper">
+	  
+	<colorpicker:ColorButton  Grid.Column="7" Width="50" Height="30" 
+			Color="{Binding DrawingData.SelColor, Mode=TwoWay}" />
+	  
+	<Button Grid.Column="8" Classes="image" CommandParameter="Dropper">
       <Svg Path="/Assets/drawDropper.svg" Stretch="Uniform"/>
     </Button>
   </Grid>

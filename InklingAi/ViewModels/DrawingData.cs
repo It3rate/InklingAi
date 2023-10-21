@@ -5,7 +5,8 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using SkiaSharp;
+	using Avalonia.Media;
+	using SkiaSharp;
 
     public class DrawingData
     {
@@ -15,11 +16,17 @@
         public float BrushSize { get; set; } = 20f;
         public float Feather { get; set; } = 0f;
         public int Transparency { get; set; } = 255;
-        public uint CurrentColor { get; set; } = 0xFF5511DD;
-        public SKColor CurrentGray { get; set; } = SKColors.Gray;
         public SKPoint ClonePoint { get; set; } = SKPoint.Empty;
 
-        private DrawingData() { }
+        Color _selColor = Colors.Bisque;
+		public Color SelColor {
+            get => _selColor;
+            set => _selColor = value;
+        }
+        public Color CurrentGray { get; set; } = Colors.Gray;
+
+
+		private DrawingData() { }
     }
 
     public enum BrushMode

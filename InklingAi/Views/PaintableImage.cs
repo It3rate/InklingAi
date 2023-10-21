@@ -20,19 +20,23 @@ public class PaintableImage : BaseImage
     {
         _canDrag = false;
         this.LayoutUpdated += OnLayoutUpdated;
-    }
+		CreateNewPath();
+	}
 
 
     protected void OnLayoutUpdated(object? sender, EventArgs e)
     {
-        CreateNewPath();
     }
 
     #region Mouse Events
 
     protected override void OnMouseDown(Point currentPosition)
-    {
-        _curPath.Reset();
+	{
+		_curPath.CurrentColor = DrawingData.SelColor.ToUInt32();
+		_curPath.Transparency = DrawingData.Transparency;
+		_curPath.BrushSize = DrawingData.BrushSize;
+		_curPath.Feather = DrawingData.Feather;
+		_curPath.Reset();
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
     }
     protected override void OnMouseMoved(Point currentPosition, Point diff)
@@ -56,7 +60,7 @@ public class PaintableImage : BaseImage
     private void CreateNewPath()
     {
         _curPath = new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height,
-            DrawingData.BrushSize, DrawingData.Transparency, DrawingData.CurrentColor, DrawingData.Feather);
+            DrawingData.BrushSize, DrawingData.Transparency, DrawingData.SelColor.ToUInt32(), DrawingData.Feather);
     }
     //public void OnMouseMove(Panel? sender, MouseEventArgs e)
     //{
