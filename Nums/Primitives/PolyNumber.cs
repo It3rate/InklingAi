@@ -31,9 +31,9 @@ namespace Nums.Primitives
 		{
 			PolyFocal.AddPositions(positions);
 		}
-		public void RemovePosition() 
+		public void RemoveLastPosition() 
 		{
-			PolyFocal.RemovePosition();
+			PolyFocal.RemoveLastPosition();
 		}
 		public void AddValue(double val)
 		{

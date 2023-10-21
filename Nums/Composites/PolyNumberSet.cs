@@ -32,11 +32,11 @@ public class PolyNumberSet
 		_polynumbers = (PolyNumber[])values.Clone();
 	}
 
-	public void AddValues(params double[] values)
+	public void AddValue(params double[] values)
 	{
-		if(values.Length == _polynumbers.Length)
+		if(values.Length == Dimensions)
 		{
-			for (int i = 0; i < values.Length; i++)
+			for (int i = 0; i < Dimensions; i++)
 			{
 				_polynumbers[i].AddValue(values[i]);
 			}
@@ -45,8 +45,22 @@ public class PolyNumberSet
 		{
 			throw new ArgumentException("Values count must match underlying Polynumber array.");
 		}
-	}
-	public double[][] GetIndexedValues()
+    }
+    public void RemoveLastValue()
+    {
+        if (Count > 0)
+        {
+            for (int i = 0; i < Dimensions; i++)
+            {
+                _polynumbers[i].RemoveLastPosition();
+            }
+        }
+        else
+        {
+            throw new ArgumentException("PolyNumber must have values in order to remove them.");
+        }
+    }
+    public double[][] GetIndexedValues()
 	{
 		var len = Count;
 		var result = new double[len][];

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Input;
+using Avalonia.Media;
 using InklingAi.ViewModels;
 using InkPad.Adapters;
 using SkiaSharp;
@@ -20,9 +21,11 @@ public class PaintableImage : BaseImage
         _canDrag = false;
         this.LayoutUpdated += OnLayoutUpdated;
     }
+
+
     protected void OnLayoutUpdated(object? sender, EventArgs e)
     {
-        _curPath = new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height);
+        CreateNewPath();
     }
 
     #region Mouse Events
@@ -46,9 +49,14 @@ public class PaintableImage : BaseImage
         if (_curPath.Count > 1)
         {
             _paths.Add(_curPath);
-            _curPath = new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height);
+            CreateNewPath();
             InvalidateVisual();
         }
+    }
+    private void CreateNewPath()
+    {
+        _curPath = new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height,
+            DrawingData.BrushSize, DrawingData.Transparency, DrawingData.CurrentColor, DrawingData.Feather);
     }
     //public void OnMouseMove(Panel? sender, MouseEventArgs e)
     //{
@@ -173,58 +181,47 @@ public class PaintableImage : BaseImage
     //{
     //	ReprocessRequested?.Invoke();
     //}
+    protected override void OnDrop(object? sender, DragEventArgs e) { }
     #endregion
 
 
-    protected override void OnDrop(object? sender, DragEventArgs e) { }
-    private SKPaint _drawingPaint = new SKPaint
+    private SKPaint _highlight = new SKPaint
     {
         Style = SKPaintStyle.Stroke,
-        Color = new SKColor(0, 250, 40, 150),
+        Color = new SKColor(0, 0, 0, 150),
+        StrokeWidth = 3,
         StrokeCap = SKStrokeCap.Round,
         StrokeJoin = SKStrokeJoin.Round,
         StrokeMiter = 3.0f,
-        IsAntialias = true,
-    };
-    private SKPaint _strokePaint = new SKPaint
-    {
-        Style = SKPaintStyle.Stroke,
-        Color = new SKColor(255, 90, 0, 150),
-        StrokeCap = SKStrokeCap.Round,
-        StrokeJoin = SKStrokeJoin.Round,
-        StrokeMiter = 3.0f,
-        IsAntialias = true,
-    };
-    private SKPaint _fillPaint = new SKPaint
-    {
-        Style = SKPaintStyle.Fill,
-        Color = new SKColor(155, 190, 0, 100),
         IsAntialias = true,
     };
 
     protected override void RenderSkia(SKCanvas canvas)
     {
-        _strokePaint.StrokeWidth = DrawingData.BrushSize;
-        _strokePaint.Color = new SKColor((uint)((DrawingData.Transparency << 24) + DrawingData.CurrentColor));
+        //_strokePaint.StrokeWidth = DrawingData.BrushSize;
+        //_strokePaint.Color = new SKColor((uint)((DrawingData.Transparency << 24) + DrawingData.CurrentColor));
 
-        _drawingPaint.StrokeWidth = _strokePaint.StrokeWidth;
-        _drawingPaint.Color = _strokePaint.Color;
+        //_drawingPaint.StrokeWidth = _strokePaint.StrokeWidth;
+        //_drawingPaint.Color = _strokePaint.Color;
         //canvas.Clear(SKColors.Transparent);
         foreach (var path in _paths)
         {
-            DrawShape(canvas, path.PathOutline(_strokePaint));
+            DrawShape(canvas, path);
         }
 
         if (_curPath != null)
         {
-            DrawShape(canvas, _curPath.PathOutline(_strokePaint), _drawingPaint);
+            DrawShape(canvas, _curPath, true);
         }
     }
-    private void DrawShape(SKCanvas canvas, SKPath outline, SKPaint? strokePaint = null)
+    private void DrawShape(SKCanvas canvas, SkPolylineAdapter line, bool strokePaint = false)
     {
-        strokePaint = strokePaint ?? _strokePaint;
-        canvas.DrawPath(outline, _fillPaint);
-        canvas.DrawPath(outline, strokePaint);
+        if(strokePaint)
+        {
+            _highlight.StrokeWidth = line.BrushSize + 2;
+            canvas.DrawPath(line.PathOutline, _highlight);
+        }
+        canvas.DrawPath(line.PathOutline, line.Paint);
     }
 
 }

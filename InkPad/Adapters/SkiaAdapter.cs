@@ -151,7 +151,7 @@ namespace InkPad.Adapters
 			}
 		}
 
-		public void Reset()
+		public virtual void Reset()
 		{
 			_polyset.Reset();
 		}

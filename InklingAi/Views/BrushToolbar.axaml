@@ -23,7 +23,7 @@
       <Svg Path="/Assets/drawTransparent.svg" Stretch="Uniform"/>
     </Button>
     <NumericUpDown Grid.Column="3" Value="{Binding DrawingData.Transparency}"
-                   Minimum="0" Maximum="255" Increment="2" AllowSpin="True"/>
+                   Minimum="0" Maximum="255" Increment="10" AllowSpin="True"/>
     
     <Button Grid.Column="4" Classes="image" Margin="20,0,0,0"
 				CommandParameter="Feather">

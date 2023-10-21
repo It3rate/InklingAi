@@ -37,7 +37,7 @@ public class PolyFocal : Focal
     {
         _positions.AddRange(positions);
     }
-    public void RemovePosition()
+    public void RemoveLastPosition()
     {
         if (_positions.Count > 2)
         {
