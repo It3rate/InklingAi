@@ -14,7 +14,7 @@ namespace InkPad.CommandEngine
     public interface ITask
     {
 	    int Id { get; }
-	    ICommand Command { get; }
+	    IBrainCommand Command { get; }
         TaskTimer Timer { get; }
         bool IsValid { get; }
 	    void RunTask();

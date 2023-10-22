@@ -10,7 +10,7 @@ namespace InkPad.Commands.Core
     using System.Threading.Tasks;
     using InkPad.Tasks.Core;
 
-    public class CreateWorkspaceCommand : CommandBase
+    public class CreateWorkspaceCommand : BrainCommandBase
     {
         private CreateWorkspaceTask WorkspaceTask;
         public new Workspace Workspace => WorkspaceTask?.CreatedWorkspace;

@@ -1,121 +1,112 @@
-﻿using Nums.CoreConcepts.Time;
-using Nums.Primitives;
+﻿namespace InkPad.CommandEngine;
 
-namespace InkPad.CommandEngine
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Nums.CoreConcepts.Time;
+
+public abstract class CommandBase : ICommand
 {
-    using InkPad.Agents;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    public int Id { get; }
+    public List<ITask> Tasks { get; } = new List<ITask>();
+    protected int _taskIndex = 0;
 
-    public abstract class CommandBase : ICommand
+    public virtual ICommandStack Stack { get; set; }
+
+    public virtual bool AppendElements()
     {
-	    public int Id { get; }
-	    public IAgent Agent { get; set; } // Agent is set by the command stack.
+        throw new NotImplementedException();
+    }
+    public virtual bool RemoveElements()
+    {
+        throw new NotImplementedException();
+    }
+    public virtual bool IsMergableWith(ICommand command)
+    {
+        throw new NotImplementedException();
+    }
+    public virtual bool TryMergeWith(ICommand command) => false;
 
-	    public Brain Brain => Agent.Brain;
-	    public Workspace Workspace => Agent.Workspace;
+    public MillisecondNumber LiveTimeSpan { get; set; } = MillisecondNumber.Zero;
 
-	    public List<ITask> Tasks { get; } = new List<ITask>();
-        protected int _taskIndex = 0;
+    public long DurationMS => LiveTimeSpan.DurationMS;
+    public long DefaultDelay { get; set; }
+    public long DefaultDuration { get; set; }
 
-        public virtual ICommandStack Stack { get; set; }
+    public virtual int RepeatCount { get; }
+    public virtual int RepeatIndex { get; }
 
-	    public virtual bool AppendElements()
-	    {
-		    throw new NotImplementedException();
-	    }
-	    public virtual bool RemoveElements()
-	    {
-		    throw new NotImplementedException();
-	    }
-	    public virtual bool IsMergableWith(ICommand command)
-	    {
-		    throw new NotImplementedException();
-	    }
-	    public virtual bool TryMergeWith(ICommand command) => false;
+    public virtual bool IsActive { get; protected set; }
+    public virtual bool IsContinuous => false;
+    public virtual bool CanUndo => true;
+    public virtual bool IsRetainedCommand => true;
 
-        public MillisecondNumber LiveTimeSpan { get; set; } = MillisecondNumber.Zero;
-        
-	    public long DurationMS => LiveTimeSpan.DurationMS;
-	    public long DefaultDelay { get; set; }
-	    public long DefaultDuration { get; set; }
+    public virtual bool IsRepeatable() => false;
+    public virtual bool IsComplete() => true;
+    public virtual bool Evaluate() => true;
 
-        public virtual int RepeatCount { get; }
-	    public virtual int RepeatIndex { get; }
-
-	    public virtual bool IsActive { get; protected set; }
-	    public virtual bool IsContinuous => false;
-	    public virtual bool CanUndo => true;
-	    public virtual bool IsRetainedCommand => true;
-
-        public virtual bool IsRepeatable() => false;
-	    public virtual bool IsComplete() => true;
-	    public virtual bool Evaluate() => true;
-
-        public virtual void Execute()
+    public virtual void Execute()
+    {
+        // remember selection state
+        // stamp times
+        // run tasks
+        // select new element
+        //foreach (var task in Tasks)
+        //{
+        // task.RunTask();
+        //}
+    }
+    public virtual void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime)
+    {
+    }
+    public virtual void Unexecute()
+    {
+        while (_taskIndex > 0)
         {
-	        // remember selection state
-	        // stamp times
-	        // run tasks
-	        // select new element
-	        //foreach (var task in Tasks)
-	        //{
-	        // task.RunTask();
-	        //}
+            _taskIndex--;
+            Tasks[_taskIndex].UnRunTask();
         }
-        public virtual void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime)
-        {
-        }
-        public virtual void Unexecute()
-        {
-	        while (_taskIndex > 0)
-	        {
-		        _taskIndex--;
-		        Tasks[_taskIndex].UnRunTask();
-	        }
-            Tasks.Clear();
-        }
-        public virtual void Completed() { }
+        Tasks.Clear();
+    }
+    public virtual void Completed() { }
 
-        public void AddTask(ITask task)
+    public void AddTask(ITask task)
+    {
+        Tasks.Add(task);
+    }
+    public void AddTasks(params ITask[] tasks)
+    {
+        foreach (var task in tasks)
         {
-	        Tasks.Add(task);
+            AddTask(task);
         }
-        public void AddTasks(params ITask[] tasks)
+    }
+    public void AddTaskAndRun(ITask task)
+    {
+        AddTask(task);
+        RunToEnd();
+    }
+    public void AddTasksAndRun(params ITask[] tasks)
+    {
+        foreach (var task in tasks)
         {
-	        foreach (var task in tasks)
-	        {
-		        AddTask(task);
-	        }
+            AddTask(task);
         }
-        public void AddTaskAndRun(ITask task)
+        RunToEnd();
+    }
+    protected void RunToEnd()
+    {
+        while (_taskIndex < Tasks.Count)
         {
-	        AddTask(task);
-	        RunToEnd();
+            Tasks[_taskIndex].RunTask();
+            _taskIndex++;
         }
-        public void AddTasksAndRun(params ITask[] tasks)
-        {
-	        foreach (var task in tasks)
-	        {
-		        AddTask(task);
-	        }
-	        RunToEnd();
-        }
-        protected void RunToEnd()
-        {
-	        while (_taskIndex < Tasks.Count)
-	        {
-		        Tasks[_taskIndex].RunTask();
-		        _taskIndex++;
-	        }
-        }
+    }
 
-        public virtual ICommand Duplicate()
-        {
-	        return null;
-        }
+    public virtual ICommand Duplicate()
+    {
+        return null;
     }
 }

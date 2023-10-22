@@ -11,7 +11,7 @@ namespace InkPad.Commands.Core
     using System.Threading.Tasks;
     using InkPad.Tasks.Core;
 
-    public class CreateTraitCommand : CommandBase
+    public class CreateTraitCommand : BrainCommandBase
     {
         private CreateTraitTask TraitTask;
         public Trait Trait => TraitTask?.Trait;

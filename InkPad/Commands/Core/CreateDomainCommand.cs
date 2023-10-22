@@ -12,7 +12,7 @@ namespace InkPad.Commands.Core
     using System.Threading.Tasks;
     using InkPad.Tasks.Core;
 
-    public class CreateDomainCommand : CommandBase
+    public class CreateDomainCommand : BrainCommandBase
     {
         public Domain Domain => DomainTask?.TaskDomain;
 

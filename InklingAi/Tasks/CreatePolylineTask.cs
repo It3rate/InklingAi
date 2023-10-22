@@ -11,7 +11,7 @@ public class CreatePolylineTask : ICreateTask
 {
     public int Id => throw new NotImplementedException();
 
-    public ICommand Command => throw new NotImplementedException();
+    public IBrainCommand Command => throw new NotImplementedException();
 
     public TaskTimer Timer => throw new NotImplementedException();
 

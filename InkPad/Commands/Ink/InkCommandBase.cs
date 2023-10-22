@@ -10,7 +10,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public abstract class InkCommandBase : CommandBase
+    public abstract class InkCommandBase : BrainCommandBase
     {
         public int CommandKey { get; }
         public Pad Pad { get; }

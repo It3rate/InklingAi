@@ -12,8 +12,8 @@ using SkiaSharp;
 
 public class PaintableImage : BaseImage
 {
-    private List<SkPolylineAdapter> _paths { get; } = new List<SkPolylineAdapter>();
-    private SkPolylineAdapter _curPath;
+    private List<SkPolyline> _paths { get; } = new List<SkPolyline>();
+    private SkPolyline _curPath;
     private UIRenderUtils _renderUtil = new UIRenderUtils();
 
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
@@ -58,9 +58,9 @@ public class PaintableImage : BaseImage
             InvalidateVisual();
         }
     }
-    private SkPolylineAdapter CreateNewPath()
+    private SkPolyline CreateNewPath()
     {
-        return new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height,
+        return new SkPolyline((int)Bounds.Width, (int)Bounds.Height,
             DrawingData.BrushSize, DrawingData.SelColor.ToUInt32(), DrawingData.Feather);
     }
     //public void OnMouseMove(Panel? sender, MouseEventArgs e)
@@ -218,7 +218,7 @@ public class PaintableImage : BaseImage
             _renderUtil.RenderHoverBrush(canvas, DrawingData);
 		}
     }
-    private void DrawShape(SKCanvas canvas, SkPolylineAdapter line, bool strokePaint = false)
+    private void DrawShape(SKCanvas canvas, SkPolyline line, bool strokePaint = false)
     {
         if(strokePaint)
         {

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace InkPad.Adapters;
 
-public class SkPolylineAdapter : SkiaAdapter
+public class SkPolyline : SkiaAdapter
 {
 	public float BrushSize
     {
@@ -39,7 +39,7 @@ public class SkPolylineAdapter : SkiaAdapter
     }
     public float Feather { get; set; } = 0f;
 
-    public SkPolylineAdapter(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null)
+    public SkPolyline(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null)
     {
         var trait = PositionTrait.Instance;
         var xDomain = new Domain(trait, "xAxis", Focal.UnitFocal, new Focal(0, width));

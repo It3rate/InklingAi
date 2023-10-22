@@ -12,12 +12,12 @@ namespace InkPad.Commands.Core
     using System.Threading.Tasks;
     using InkPad.Tasks.Core;
 
-    public interface ICreateNumberCommand : ICommand
+    public interface ICreateNumberCommand : IBrainCommand
     {
         Domain Domain { get; }
         Number Number { get; }
     }
-    public class CreateNumberCommand : CommandBase, ICreateNumberCommand
+    public class CreateNumberCommand : BrainCommandBase, ICreateNumberCommand
     {
         public Domain Domain { get; }
         public Number Number { get; private set; }

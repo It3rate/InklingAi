@@ -1,26 +1,15 @@
-﻿
-namespace InkPad.CommandEngine;
+﻿namespace InkPad.CommandEngine;
 
-using InkPad.Agents;
-using InkPad.Elements;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Nums.CoreConcepts.Time;
-using Nums.Primitives;
 
-// selection range - segment, first, all, not, direction
-// motion range
-// motion type (ideally as a range) prepend, postpend, scale, or, and, not...
-// repeat range
-// duration range
-// termination range & bool
-//WorkspaceKind WorkspaceKind { get; }
-// Commands happen over time, can be repeatable, appendable, and can be evaluated to check for termination.
-// Commands are more or less formulas.
 public interface ICommand
 {
     int Id { get; }
-    IAgent Agent { get; set; }
-    Brain Brain { get; }
-    Workspace Workspace { get; }
     ICommandStack Stack { get; set; }
 
     // todo: rather than time commands, all commands will be formulas that exit when their stop condition is met.
@@ -64,10 +53,4 @@ public interface ICommand
     // event EventHandler OnCompleted;
 
     ICommand Duplicate();
-}
-
-public interface IDraggableCommand : ICommand
-{
-    IPoint DraggablePoint { get; }
-    bool HasDraggablePoint { get; }
 }

@@ -17,8 +17,8 @@ namespace InkPad.CommandEngine
 		int RedoSize { get; }
 		bool CanRepeat { get; }
 
-		void Do(ICommand command);
-		ICommand PreviousCommand();
+		void Do(IBrainCommand command);
+		IBrainCommand PreviousCommand();
 		void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime);
 
         bool Undo();
@@ -37,14 +37,14 @@ namespace InkPad.CommandEngine
 	    public Workspace Workspace => Agent.Workspace;
 
         private int _stackIndex = 0;
-		private readonly List<ICommand> _stack = new List<ICommand>(4096);
+		private readonly List<IBrainCommand> _stack = new List<IBrainCommand>(4096);
 
-		private readonly List<ICommand> _toAdd = new List<ICommand>();
-		private readonly List<ICommand> _toAddAfterDelay = new List<ICommand>();
-        private readonly List<ICommand> _liveCommands = new List<ICommand>();
-		private readonly List<ICommand> _toCommit = new List<ICommand>(); // changes
-		private readonly List<ICommand> _toDelete = new List<ICommand>(); // commands that natrually end
-		private readonly List<ICommand> _toTerminate = new List<ICommand>(); // commands that didn't naturally finish
+		private readonly List<IBrainCommand> _toAdd = new List<IBrainCommand>();
+		private readonly List<IBrainCommand> _toAddAfterDelay = new List<IBrainCommand>();
+        private readonly List<IBrainCommand> _liveCommands = new List<IBrainCommand>();
+		private readonly List<IBrainCommand> _toCommit = new List<IBrainCommand>(); // changes
+		private readonly List<IBrainCommand> _toDelete = new List<IBrainCommand>(); // commands that natrually end
+		private readonly List<IBrainCommand> _toTerminate = new List<IBrainCommand>(); // commands that didn't naturally finish
 
 		public readonly MillisecondNumber LastTime = MillisecondNumber.Zero;
 
@@ -58,7 +58,7 @@ namespace InkPad.CommandEngine
 			Agent = agent;
 		}
 
-		public void Do(ICommand command)
+		public void Do(IBrainCommand command)
 		{
 			command.Stack = this;
 			command.Agent = Agent;
@@ -125,7 +125,7 @@ namespace InkPad.CommandEngine
 	        }
         }
 
-        private void AddStackCommand(ICommand command)
+        private void AddStackCommand(IBrainCommand command)
         {
 	        RemoveRedoCommands();
             bool merged = AttemptToMerge(command);
@@ -141,7 +141,7 @@ namespace InkPad.CommandEngine
 		        command.Execute();
 	        }
         }
-        private void AddLiveCommand(ICommand command)
+        private void AddLiveCommand(IBrainCommand command)
         {
 	        if (command.IsContinuous)
 	        {
@@ -158,7 +158,7 @@ namespace InkPad.CommandEngine
 		        _stack.RemoveRange(_stackIndex, RedoSize);
 	        }
         }
-        private bool AttemptToMerge(ICommand command) =>  PreviousCommand()?.TryMergeWith(command) ?? false;
+        private bool AttemptToMerge(IBrainCommand command) =>  PreviousCommand()?.TryMergeWith(command) ?? false;
         private bool UpdateLiveCommands(MillisecondNumber currentTime, MillisecondNumber deltaTime)
         {
 	        bool result = false;
@@ -201,7 +201,7 @@ namespace InkPad.CommandEngine
 	        return result;
         }
 
-        public ICommand PreviousCommand() => CanUndo ? _stack[_stackIndex - 1] : default;
+        public IBrainCommand PreviousCommand() => CanUndo ? _stack[_stackIndex - 1] : default;
 
 		public bool Undo()
 		{
@@ -280,12 +280,12 @@ namespace InkPad.CommandEngine
 
 		public bool CanRepeat => true;
 
-		public List<ICommand> GetRepeatable()
+		public List<IBrainCommand> GetRepeatable()
 		{
 			return null;
 		}
 
-		private void AddAndExecuteCommand(ICommand command)
+		private void AddAndExecuteCommand(IBrainCommand command)
 		{
 			command.Agent = Agent;
 			RemoveRedoCommands();
