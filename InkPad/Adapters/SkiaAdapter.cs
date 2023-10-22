@@ -65,7 +65,7 @@ namespace InkPad.Adapters
 			if (orgPoints != null && orgPoints.Length > 1)
 			{
 				var points = DouglasPeuckerReduction(orgPoints);
-                Trace.WriteLine("reduced: " + (orgPoints.Length - points.Length) + " / " + orgPoints.Length);
+                //Trace.WriteLine("reduced: " + (orgPoints.Length - points.Length) + " / " + orgPoints.Length);
                 var first = points[0];
 				path.MoveTo(first);
 

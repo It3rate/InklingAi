@@ -57,14 +57,16 @@ public abstract class BaseImage : UserControl
         PointerPressed += OnImagePointerPressed;
         PointerMoved += OnImagePointerMoved;
         PointerReleased += OnImagePointerReleased;
+		PointerEntered += OnPointerEntered;
+		PointerExited += OnPointerExited;
 
-        AddHandler(DragDrop.DropEvent, OnDrop);
+		AddHandler(DragDrop.DropEvent, OnDrop);
         AddHandler(DragDrop.DragOverEvent, OnDragOver);
 
         AttachedToVisualTree += OnLoaded;
     }
 
-    protected virtual void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
+	protected virtual void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
     {
         var mvm = MainViewModel.GetRootDataContext(this);
         if (mvm != null)
@@ -100,37 +102,47 @@ public abstract class BaseImage : UserControl
 	#region Mouse Events
 	protected Point? _startPosition;
 	protected Point _currentPosition;
-	protected bool _isMouseInside = true;
+	public bool IsMouseInside { get; protected set; }
 	protected int _minDragDistance = 8;
 	protected bool _canDrag = true;
 
 	protected virtual void OnMouseDown(Point currentPosition) { }
-	protected virtual void OnMouseMoved(Point currentPosition, Point diff) { }
+	protected virtual void OnMouseMove(Point currentPosition) { }
+	protected virtual void OnMouseDownDrag(Point currentPosition, Point diff) { }
 	protected virtual void OnMouseUp(Point currentPosition, Point diff) { }
 	protected virtual void OnDragOver(object? sender, DragEventArgs e) { }
 	protected virtual void OnDrop(object? sender, DragEventArgs e) { }
 
+    protected bool IsMouseDown => _startPosition.HasValue;
+
 	protected void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        _startPosition = e.GetPosition(this);
-        OnMouseDown((Point)_startPosition);
+	{
+		_currentPosition = e.GetPosition(this);
+		_startPosition = _currentPosition;
+
+		OnMouseDown((Point)_startPosition);
     }
 	protected void OnImagePointerMoved(object? sender, PointerEventArgs e)
 	{
-		if (!_startPosition.HasValue)
-            return;
-
+        IsMouseInside = true;
 		_currentPosition = e.GetPosition(this);
-        var diff = _currentPosition - _startPosition.Value;
-
-        if (_canDrag && (Math.Abs(diff.X) > _minDragDistance || Math.Abs(diff.Y) > _minDragDistance))
+        if (_startPosition.HasValue)
         {
-            _ = DoDrag(sender, e);
+            var diff = _currentPosition - _startPosition.Value;
+
+            if (_canDrag && (Math.Abs(diff.X) > _minDragDistance || Math.Abs(diff.Y) > _minDragDistance))
+            {
+                _ = DoDrag(sender, e);
+            }
+            else
+            {
+                OnMouseDownDrag(_currentPosition, diff);
+            }
         }
         else
-		{
-			OnMouseMoved(_currentPosition, diff);
-		}
+        {
+            OnMouseMove(_currentPosition);
+        }
     }
 	protected void OnImagePointerReleased(object? sender, PointerReleasedEventArgs e)
 	{
@@ -141,8 +153,19 @@ public abstract class BaseImage : UserControl
             OnMouseUp(_currentPosition, diff);
         }
         _startPosition = null;
-    }
-    private async Task DoDrag(object? sender, PointerEventArgs e)
+	}
+	private void OnPointerEntered(object? sender, PointerEventArgs e)
+	{
+		IsMouseInside = true;
+		InvalidateVisual();
+	}
+	private void OnPointerExited(object? sender, PointerEventArgs e)
+	{
+		IsMouseInside = false;
+		InvalidateVisual();
+	}
+
+	private async Task DoDrag(object? sender, PointerEventArgs e)
     {
         var dragData = new DataObject();
         dragData.Set(DataFormats.Files, _imageDataList);

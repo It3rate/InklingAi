@@ -1,5 +1,9 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Markup.Xaml;
+using AvaloniaColorPicker;
 using InklingAi.ViewModels;
 
 namespace InklingAi.Views;

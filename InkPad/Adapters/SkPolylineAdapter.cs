@@ -1,4 +1,5 @@
-﻿using Nums.Composites;
+﻿using InklingAi.Views;
+using Nums.Composites;
 using Nums.CoreConcepts.CoreTraits;
 using Nums.Primitives;
 using SkiaSharp;
@@ -13,13 +14,7 @@ namespace InkPad.Adapters;
 
 public class SkPolylineAdapter : SkiaAdapter
 {
-    private bool _brushDirty = true;
-    private bool _pathDirty = true;
-    private int _lastRenderPointCount = 0;
-    public SKPath? _lastPath;
-
-    private float _brushSize = 20f;
-    public float BrushSize
+	public float BrushSize
     {
         get => _brushSize; 
         set
@@ -32,9 +27,6 @@ public class SkPolylineAdapter : SkiaAdapter
             }
         }
     }
-
-
-    public uint _colorValue { get; set; }
     public uint ColorValue { get => _colorValue; 
         set
         {
@@ -47,29 +39,6 @@ public class SkPolylineAdapter : SkiaAdapter
     }
     public float Feather { get; set; } = 0f;
 
-    SKPaint _paint;
-    public SKPaint Paint
-    {
-        get
-        {
-            if (_brushDirty)
-            {
-                _paint?.Dispose();
-                _paint = new SKPaint()
-                {
-                    Style = SKPaintStyle.Stroke,
-                    Color = new SKColor(ColorValue),
-                    StrokeWidth = BrushSize,
-                    StrokeCap = SKStrokeCap.Round,
-                    StrokeJoin = SKStrokeJoin.Round,
-                    StrokeMiter = 3.0f,
-                    IsAntialias = true,
-                };
-                _brushDirty = false;
-            }
-            return _paint;
-        }
-    }
     public SkPolylineAdapter(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null)
     {
         var trait = PositionTrait.Instance;
@@ -93,7 +62,10 @@ public class SkPolylineAdapter : SkiaAdapter
         }
     }
 
-
+    public bool IsPointInside(SKPoint point)
+    {
+        return false;
+    }
     public void AddPoint(double x, double y)
     {
         _polyset.AddValue(x, y);
@@ -104,6 +76,33 @@ public class SkPolylineAdapter : SkiaAdapter
         _polyset.RemoveLastValue();
     }
 
+    public SKPaint Paint
+    {
+        get
+        {
+            if (_brushDirty)
+            {
+                _paint?.Dispose();
+                _paint = SKRenderUtils.CreatePen(ColorValue, BrushSize);
+                _brushDirty = false;
+            }
+            return _paint;
+        }
+    }
+    public SKPath PathOutline
+    {
+        get
+        {
+            if (_pathDirty || _path == null)
+            {
+                var path = ToOptimizedCurve(false);
+                _path = Paint.GetFillPath(path);
+                _pathDirty = false;
+            }
+            return _path;
+        }
+    }
+
     public override void Reset()
     {
         base.Reset();
@@ -111,18 +110,15 @@ public class SkPolylineAdapter : SkiaAdapter
         _pathDirty = true;
     }
 
-    public SKPath PathOutline
-    {
-        get
-        {
-            if (_pathDirty || _lastPath == null || Count != _lastRenderPointCount)
-            {
-                _lastRenderPointCount = Count;
-                var path = ToOptimizedCurve(false);
-                _lastPath = Paint.GetFillPath(path);
-                _pathDirty = false;
-            }
-            return _lastPath;
-        }
-    }
+	#region private fields
+	private SKPath? _path;
+    private SKPaint _paint = new SKPaint();
+
+    private float _brushSize = 20f;
+	private uint _colorValue;
+
+	private bool _brushDirty = true;
+    private bool _pathDirty = true;
+	#endregion
+
 }

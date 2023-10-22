@@ -11,7 +11,7 @@
     <vm:ColorConverter x:Key="ColorConverter" />
   </UserControl.Resources>
 
-  <Grid ColumnDefinitions="Auto, 56, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+  <Grid x:Name="BrushToolbarGrid" ColumnDefinitions="Auto, 56, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
     <Button Grid.Column="0" Classes="image" CommandParameter="BrushSize">
       <Svg Path="/Assets/drawBrushSize.svg" Stretch="Uniform"/>
     </Button>
@@ -36,8 +36,8 @@
       <Svg Path="/Assets/drawColor.svg" Stretch="Uniform"/>
     </Button>
 	  
-	<colorpicker:ColorButton  Grid.Column="7" Width="50" Height="30" 
-			Color="{Binding DrawingData.SelColor, Mode=TwoWay}" />
+	<!--<colorpicker:ColorButton  Grid.Column="7" Width="50" Height="30" 
+			Color="{Binding DrawingData.SelColor, Mode=TwoWay}" />-->
 	  
 	<Button Grid.Column="8" Classes="image" CommandParameter="Dropper">
       <Svg Path="/Assets/drawDropper.svg" Stretch="Uniform"/>

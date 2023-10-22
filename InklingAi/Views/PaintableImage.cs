@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Skia;
 using InklingAi.ViewModels;
 using InkPad.Adapters;
 using SkiaSharp;
@@ -12,25 +13,26 @@ using SkiaSharp;
 public class PaintableImage : BaseImage
 {
     private List<SkPolylineAdapter> _paths { get; } = new List<SkPolylineAdapter>();
-    private SkPolylineAdapter? _curPath;
+    private SkPolylineAdapter _curPath;
+    private UIRenderUtils _renderUtil = new UIRenderUtils();
+
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
     public DrawingData DrawingData => DrawingData.Instance;
 
     public PaintableImage()
     {
         _canDrag = false;
-        this.LayoutUpdated += OnLayoutUpdated;
-		CreateNewPath();
+		_curPath = CreateNewPath();
 	}
-
-
-    protected void OnLayoutUpdated(object? sender, EventArgs e)
-    {
-    }
 
     #region Mouse Events
 
-    protected override void OnMouseDown(Point currentPosition)
+    protected override void OnMouseMove(Point currentPosition)
+    {
+        DrawingData.CurrentPosition = currentPosition.ToSKPoint();
+		InvalidateVisual();
+	}
+	protected override void OnMouseDown(Point currentPosition)
 	{
 		_curPath.ColorValue = DrawingData.SelColor.ToUInt32();
 		_curPath.BrushSize = DrawingData.BrushSize;
@@ -38,7 +40,7 @@ public class PaintableImage : BaseImage
 		_curPath.Reset();
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
     }
-    protected override void OnMouseMoved(Point currentPosition, Point diff)
+    protected override void OnMouseDownDrag(Point currentPosition, Point diff)
     {
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
         if (_curPath.Count > 1)
@@ -52,13 +54,13 @@ public class PaintableImage : BaseImage
         if (_curPath.Count > 1)
         {
             _paths.Add(_curPath);
-            CreateNewPath();
+			_curPath = CreateNewPath();
             InvalidateVisual();
         }
     }
-    private void CreateNewPath()
+    private SkPolylineAdapter CreateNewPath()
     {
-        _curPath = new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height,
+        return new SkPolylineAdapter((int)Bounds.Width, (int)Bounds.Height,
             DrawingData.BrushSize, DrawingData.SelColor.ToUInt32(), DrawingData.Feather);
     }
     //public void OnMouseMove(Panel? sender, MouseEventArgs e)
@@ -210,6 +212,11 @@ public class PaintableImage : BaseImage
         {
             DrawShape(canvas, _curPath, true);
         }
+
+        if (IsMouseInside && !IsMouseDown)
+        {
+            _renderUtil.RenderHoverBrush(canvas, DrawingData);
+		}
     }
     private void DrawShape(SKCanvas canvas, SkPolylineAdapter line, bool strokePaint = false)
     {

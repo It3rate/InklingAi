@@ -11,6 +11,9 @@
     public class DrawingData : ViewModelBase
 	{
         public static DrawingData Instance { get; } = new DrawingData();
+
+        public SKPoint CurrentPosition { get; set; }
+
         public BrushMode BrushMode { get; set; } = BrushMode.None;
         public DrawMode DrawMode { get; set; } = DrawMode.Arrow;
         public float BrushSize { get; set; } = 20f;
@@ -33,11 +36,11 @@
             get => _selColor;
             set
 			{
-				SetProperty(ref _selColor, value);
-                if (_transparency != _selColor.A)
-                {
-                    Transparency = _selColor.A;
-                }
+				SetProperty(ref _selColor, new Color(_transparency, value.R, value.G, value.B));
+                //if (_transparency != _selColor.A)
+                //{
+                //    Transparency = _selColor.A;
+                //}
             }
         }
         public Color CurrentGray { get; set; } = Colors.Gray;
