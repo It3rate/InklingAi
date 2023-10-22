@@ -1,8 +1,8 @@
 ﻿namespace InkPad.Commands.Ink;
 
-using InkPad.Commands.Tasks;
 using InkPad.Elements;
 using InkPad.Pads;
+using InkPad.Tasks.Ink;
 using System;
 using System.Collections.Generic;
 using System.Linq;

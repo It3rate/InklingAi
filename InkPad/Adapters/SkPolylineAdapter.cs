@@ -1,4 +1,4 @@
-﻿using InklingAi.Views;
+﻿using InkPad.Renderer;
 using Nums.Composites;
 using Nums.CoreConcepts.CoreTraits;
 using Nums.Primitives;
@@ -112,7 +112,7 @@ public class SkPolylineAdapter : SkiaAdapter
 
 	#region private fields
 	private SKPath? _path;
-    private SKPaint _paint = new SKPaint();
+    private SKPaint _paint = new();
 
     private float _brushSize = 20f;
 	private uint _colorValue;

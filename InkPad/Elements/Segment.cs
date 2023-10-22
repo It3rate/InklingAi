@@ -145,7 +145,7 @@
             left.Key == right.Key && left.TraitKind == right.TraitKind && left.StartKey == right.StartKey && left.EndKey == right.EndKey;
         public static bool operator !=(Segment left, Segment right) =>
             left.Key != right.Key || left.TraitKind != right.TraitKind || left.StartKey != right.StartKey || left.EndKey != right.EndKey;
-        public override bool Equals(object obj) => obj is Segment value && this == value;
+        public override bool Equals(object? obj) => obj is Segment value && this == value;
         public override int GetHashCode() => Key * 17 + (int)TraitKind * 23 + StartKey * 29 + EndKey * 31;
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Nums.Primitives;
 
-namespace Nums.CoreConcepts.Time
+namespace Nums.CoreConcepts.CoreTraits
 {
     public class TimeTrait : Trait
     {
-        public static TimeTrait Instance {get;} = new TimeTrait();
+        public static TimeTrait Instance { get; } = new TimeTrait();
         private TimeTrait() : base("Time") { }
     }
 }

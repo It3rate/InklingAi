@@ -1,4 +1,4 @@
-﻿namespace Nums.Primitives
+﻿namespace Nums.Composites
 {
     using System;
     using System.Collections.Generic;

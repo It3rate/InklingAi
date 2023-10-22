@@ -1,17 +1,18 @@
-﻿using Nums.Utils;
+﻿using Nums.Primitives;
+using Nums.Utils;
 
-namespace Nums.Primitives
+namespace Nums.Composites
 {
     public class Network
     {
-	    public MathElementKind Kind => MathElementKind.Network;
+        public MathElementKind Kind => MathElementKind.Network;
         public int Id { get; }
         public Brain Brain { get; }
 
         public Network(Brain brain)
         {
-	        Brain = brain;
-	        Id = Brain.NextNetworkId();
+            Brain = brain;
+            Id = Brain.NextNetworkId();
         }
     }
 }

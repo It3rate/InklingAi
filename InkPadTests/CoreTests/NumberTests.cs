@@ -1,5 +1,4 @@
-﻿
-namespace NumbersTests;
+﻿namespace InkPadTests.CoreTests;
 
 using Nums.Utils;
 using System;

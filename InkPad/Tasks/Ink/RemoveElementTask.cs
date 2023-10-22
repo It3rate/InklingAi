@@ -1,5 +1,6 @@
-﻿namespace InkPad.Commands.Tasks;
+﻿namespace InkPad.Tasks.Ink;
 
+using InkPad.CommandEngine;
 using InkPad.Elements;
 using InkPad.Pads;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 public class RemoveElementTask : EditTask, IChangeTask
 {
     public List<int> ElementKeys { get; }
-    private IElement _removedElement;
+    private IElement? _removedElement;
     private IEnumerable<IConstraint> _removedConstraints = new List<IConstraint>();
 
     public RemoveElementTask(PadKind padKind, IElement element) : base(padKind)
@@ -33,7 +34,10 @@ public class RemoveElementTask : EditTask, IChangeTask
 
     public override void UnRunTask()
     {
-        Pad.AddElement(_removedElement);
+        if (_removedElement != null)
+        {
+            Pad.AddElement(_removedElement);
+        }
         Pad.AddConstraints(_removedConstraints);
     }
 }

@@ -13,13 +13,13 @@ namespace InkPad.Tasks.Core
     public interface ICreateNumberTask : ICreateTask
     {
         Domain Domain { get; }
-        Number Number { get; }
+        Number? Number { get; }
     }
 
     public class CreateNumberByFocalIdTask : TaskBase, ICreateNumberTask
     {
         public Domain Domain { get; }
-        public Number Number { get; private set; }
+        public Number? Number { get; private set; }
         public IFocal Focal { get; }
 
         public override bool IsValid => true;
@@ -31,10 +31,7 @@ namespace InkPad.Tasks.Core
         }
         public override void RunTask()
         {
-            if (Number == null)
-            {
-                Number = Domain.CreateNumber(Focal);
-            }
+            Number ??= Domain.CreateNumber(Focal);
         }
 
         public override void UnRunTask()
@@ -44,7 +41,7 @@ namespace InkPad.Tasks.Core
     public class CreateNumberByRangeTask : TaskBase, ICreateNumberTask
     {
         public Domain Domain { get; }
-        public Number Number { get; private set; }
+        public Number? Number { get; private set; }
 
         public Seg NumRange { get; }
 
@@ -57,10 +54,7 @@ namespace InkPad.Tasks.Core
         }
         public override void RunTask()
         {
-            if (Number == null)
-            {
-                Number = Domain.CreateNumber(NumRange);
-            }
+            Number ??= Domain.CreateNumber(NumRange);
         }
 
         public override void UnRunTask()
@@ -70,7 +64,7 @@ namespace InkPad.Tasks.Core
     public class CreateNumberByPositionsTask : TaskBase, ICreateNumberTask
     {
         public Domain Domain { get; }
-        public Number Number { get; private set; }
+        public Number? Number { get; private set; }
 
         public long StartPosition { get; set; }
         public long EndPosition { get; set; }
@@ -85,10 +79,7 @@ namespace InkPad.Tasks.Core
         }
         public override void RunTask()
         {
-            if (Number == null)
-            {
-                Number = Domain.CreateNumber(StartPosition, EndPosition);
-            }
+            Number ??= Domain.CreateNumber(StartPosition, EndPosition);
         }
 
         public override void UnRunTask()

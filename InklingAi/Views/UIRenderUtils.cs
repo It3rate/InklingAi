@@ -1,4 +1,5 @@
 ﻿using InklingAi.ViewModels;
+using InkPad.Renderer;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InklingAi.Views
 {
-	public class UIRenderUtils
+    public class UIRenderUtils
 	{
 		private SKPaint _brushOutine = SKRenderUtils.CreatePen(0xFFDDDD00, 1);
 

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NumbersTests.CoreTests.FocalBoolTests
+namespace InkPadTests.CoreTests.FocalBoolTests
 {
-    
+
     public class FocalNandTests
     {
         [Fact]
@@ -27,8 +27,8 @@ namespace NumbersTests.CoreTests.FocalBoolTests
             IFocal q = new Focal(15, 25);
             IFocal[] result = Focal.Nand(p, q);
             Assert.Equal(2, result.Length);
-            Assert.Contains( new Focal(long.MinValue, 15), result);
-            Assert.Contains( new Focal(20, long.MaxValue), result);
+            Assert.Contains(new Focal(long.MinValue, 15), result);
+            Assert.Contains(new Focal(20, long.MaxValue), result);
         }
         [Fact]
         public void OverlapTestOrder1()

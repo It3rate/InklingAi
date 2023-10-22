@@ -1,4 +1,4 @@
-﻿namespace InkPad.Commands.Tasks;
+﻿namespace InkPad.Tasks.Ink;
 
 using InkPad.Agents;
 using InkPad.Pads;

@@ -196,7 +196,6 @@
                 var negPrompt = lines[2].Substring(negPromptTag.Length);
                 result = new StableDiffusionConfig(prompt, stylePrompt, negPrompt);
 
-                var parseIndex = 0;
                 var settings = lines[3].Split(",");
                 count = 0;
                 foreach (var setting in settings)

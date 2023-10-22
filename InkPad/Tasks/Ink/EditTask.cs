@@ -1,4 +1,4 @@
-﻿namespace InkPad.Commands.Tasks;
+﻿namespace InkPad.Tasks.Ink;
 
 using InkPad.CommandEngine;
 using InkPad.Elements;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 public abstract class EditTask : TaskBase
 {
     //public int Key { get; }
-    public List<int> PreviousSelection = new List<int>();
+    public List<int> PreviousSelection = new();
     //public SelectionKind BasedOn { get; protected set; }
     public override bool IsValid => true;
 
@@ -43,20 +43,6 @@ public abstract class EditTask : TaskBase
         PreviousSelection.AddRange(Selected.ElementKeys);
     }
 }
-public interface IPointTask : ITask
-{
-    int PointKey { get; }
-    IPoint IPoint { get; }
-}
-public interface ICreateTask
-{
-}
-public interface IChangeTask
-{
-}
-
-
-
 public class GroupPointsTask : EditTask, ICreateTask
 {
     public List<int> FromKeys { get; }
@@ -70,7 +56,7 @@ public class GroupPointsTask : EditTask, ICreateTask
 public class UngroupPointsTask : EditTask
 {
     public int FromKey { get; }
-    public List<int> ToKeys { get; }
+    public List<int> ToKeys { get; } = new List<int>();
     public UngroupPointsTask(PadKind padKind, int fromKey) : base(padKind)
     {
         FromKey = fromKey;

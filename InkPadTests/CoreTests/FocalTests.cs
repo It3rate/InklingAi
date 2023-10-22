@@ -2,7 +2,7 @@
 using Nums.Primitives;
 using Nums.Utils;
 
-namespace NumbersTests
+namespace InkPadTests.CoreTests
 {
 
     public class FocalTests : IDisposable

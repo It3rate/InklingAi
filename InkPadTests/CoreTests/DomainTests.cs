@@ -1,4 +1,4 @@
-﻿namespace NumbersTests;
+﻿namespace InkPadTests.CoreTests;
 
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,8 @@ using Nums.Utils;
 
 public class DomainTests : IDisposable
 {
-	private Brain _brain;
-	private Trait _trait;
+    private Brain _brain;
+    private Trait _trait;
     private Focal _unitFocal;
     private Focal _maxMin;
     private Domain _domain;
@@ -18,8 +18,8 @@ public class DomainTests : IDisposable
         _brain = Brain.ActiveBrain;
         _trait = Trait.CreateIn(_brain, "domain tests");
         _unitFocal = new Focal(-4, 6);
-	        _maxMin = new Focal(-54, 46);
-	        _domain = new Domain(_trait, "domainTest", _unitFocal, _maxMin);
+        _maxMin = new Focal(-54, 46);
+        _domain = new Domain(_trait, "domainTest", _unitFocal, _maxMin);
     }
 
     public void Dispose()
@@ -28,16 +28,16 @@ public class DomainTests : IDisposable
     }
 
     [Fact]
-	    public void CoreDomainTests()
-	    {
-		    Assert.Equal(MathElementKind.Domain, _domain.Kind);
+    public void CoreDomainTests()
+    {
+        Assert.Equal(MathElementKind.Domain, _domain.Kind);
         Assert.Equal(100, _domain.MinMaxFocal.DirectedLength);
         Assert.Equal(10, _domain.BasisFocal.DirectedLength);
         Assert.Equal(_domain.BasisFocal, _unitFocal);
         Assert.Equal(_domain.MinMaxFocal, _maxMin);
 
 
-			var len = _domain.MinMaxNum.Length;
+        var len = _domain.MinMaxNum.Length;
         Assert.Equal(10.0, len, MathUtils.Tolerance);
 
         var f0 = new Focal(10, 20);
@@ -53,31 +53,31 @@ public class DomainTests : IDisposable
 
     }
 
-	    [Fact]
-	    public void DomainValueTests()
+    [Fact]
+    public void DomainValueTests()
     {
-            _unitFocal = new Focal(0, 10);
+        _unitFocal = new Focal(0, 10);
 
-	        var num = _domain.CreateNumber(new Focal(30, 40));
-	        var r = num.Value;
-	        var ffr = _domain.CreateFocalFromRange(r);
+        var num = _domain.CreateNumber(new Focal(30, 40));
+        var r = num.Value;
+        var ffr = _domain.CreateFocalFromRange(r);
         Assert.Equal(ffr, num.Focal);
 
-        num = _domain.CreateNumber(new Focal( -30, 1));
+        num = _domain.CreateNumber(new Focal(-30, 1));
         r = num.Value;
         ffr = _domain.CreateFocalFromRange(r);
         Assert.Equal(ffr, num.Focal);
 
-     //   _unitFocal.Reset(10, -10);
-	        //var testFocal = Focal.CreateByValues(0, 6);
+        //   _unitFocal.Reset(10, -10);
+        //var testFocal = Focal.CreateByValues(0, 6);
 
-     //   num = _domain.CreateNumber(Focal.CreateByValues(30, 40));
-	        //r = num.Value;
-	        //_domain.SetValueOf(testFocal, r);
+        //   num = _domain.CreateNumber(Focal.CreateByValues(30, 40));
+        //r = num.Value;
+        //_domain.SetValueOf(testFocal, r);
 
-     //   Assert.Equal(num.Focal.StartTickPosition, testFocal.StartTickPosition);
-     //   Assert.Equal(num.Focal.EndTickPosition, testFocal.EndTickPosition);
-     //   ffr = _domain.CreateFocalFromRange(r);
-     //   Assert.Equal(ffr, num.Focal);
+        //   Assert.Equal(num.Focal.StartTickPosition, testFocal.StartTickPosition);
+        //   Assert.Equal(num.Focal.EndTickPosition, testFocal.EndTickPosition);
+        //   ffr = _domain.CreateFocalFromRange(r);
+        //   Assert.Equal(ffr, num.Focal);
     }
 }

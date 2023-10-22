@@ -1,9 +1,9 @@
-﻿using InkPad.Commands;
-using Nums.Primitives;
+﻿using Nums.Primitives;
 
 namespace InkPad.CommandEngine
 {
     using InkPad.Agents;
+    using InkPad.Elements;
     using InkPad.Pads;
     using System;
     using System.Collections.Generic;
@@ -25,7 +25,17 @@ namespace InkPad.CommandEngine
         //void OnAddedToCommand(ICommand command);
     }
 
-    public interface ICreateTask
+    public interface ICreateTask : ITask
     {
     }
+    public interface IChangeTask : ITask
+    {
+    }
+    public interface IPointTask : ITask
+    {
+        int PointKey { get; }
+        IPoint IPoint { get; }
+    }
+
+
 }

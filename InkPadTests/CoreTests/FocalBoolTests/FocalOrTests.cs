@@ -1,6 +1,6 @@
 ﻿using Nums.Primitives;
 
-namespace NumbersTests.CoreTests.FocalBoolTests
+namespace InkPadTests.CoreTests.FocalBoolTests
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace NumbersTests.CoreTests.FocalBoolTests
     using System.Text;
     using System.Threading.Tasks;
 
-    
+
     public class FocalOrTests
     {
         [Fact]

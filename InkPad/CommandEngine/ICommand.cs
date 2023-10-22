@@ -1,8 +1,7 @@
 ﻿
-namespace InkPad.Commands;
+namespace InkPad.CommandEngine;
 
 using InkPad.Agents;
-using InkPad.CommandEngine;
 using InkPad.Elements;
 using Nums.CoreConcepts.Time;
 using Nums.Primitives;

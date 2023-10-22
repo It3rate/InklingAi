@@ -82,6 +82,6 @@ public class RefPoint : PointBase
     //}
     public static bool operator ==(RefPoint left, IPoint right) => left.Key == right.Key && (right is RefPoint value && left.TargetKey == value.TargetKey);
     public static bool operator !=(RefPoint left, IPoint right) => left.Key != right.Key || (right is RefPoint value && left.TargetKey != value.TargetKey);
-    public override bool Equals(object obj) => obj is RefPoint value && this == value;
+    public override bool Equals(object? obj) => obj is RefPoint value && this == value;
     public override int GetHashCode() => PadKind.GetHashCode() * 31 + Key.GetHashCode() * 37 + TargetKey.GetHashCode() * 39;
 }

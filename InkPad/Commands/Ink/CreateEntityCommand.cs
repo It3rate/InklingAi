@@ -1,8 +1,8 @@
 ﻿namespace InkPad.Commands.Ink;
 
-using InkPad.Commands.Tasks;
 using InkPad.Elements;
 using InkPad.Pads;
+using InkPad.Tasks.Ink;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 public class CreateEntityCommand : EditCommand
 {
-    public CreateEntityTask EntityTask { get; private set; }
-    public Entity Entity => EntityTask.Entity;
-    public int EntityKey => EntityTask.EntityKey;
+    public CreateEntityTask? EntityTask { get; private set; }
+    public Entity? Entity => EntityTask?.Entity;
+    public int? EntityKey => EntityTask?.EntityKey;
 
     public CreateEntityCommand(Pad pad) : base(pad) { }
 
@@ -24,10 +24,7 @@ public class CreateEntityCommand : EditCommand
     public override void Execute()
     {
         base.Execute();
-        if (EntityTask == null)
-        {
-            EntityTask = new CreateEntityTask(Pad.PadKind);
-        }
+        EntityTask ??= new CreateEntityTask(Pad.PadKind);
         AddTaskAndRun(EntityTask);
     }
 

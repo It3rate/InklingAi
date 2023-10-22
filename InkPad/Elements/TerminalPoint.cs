@@ -80,6 +80,6 @@ public class TerminalPoint : PointBase
 
     public static bool operator ==(TerminalPoint left, TerminalPoint right) => left.Key == right.Key && left.Position == right.Position;
     public static bool operator !=(TerminalPoint left, TerminalPoint right) => left.Key != right.Key || left.Position != right.Position;
-    public override bool Equals(object obj) => obj is TerminalPoint value && this == value;
+    public override bool Equals(object? obj) => obj is TerminalPoint value && this == value;
     public override int GetHashCode() => Key * 17 + Position.GetHashCode();
 }

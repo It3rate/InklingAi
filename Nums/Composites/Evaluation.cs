@@ -1,11 +1,11 @@
-﻿namespace Nums.Primitives
+﻿namespace Nums.Composites
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Nums.Composites;
+    using Nums.Primitives;
 
     [Flags]
     public enum EvalFlag
@@ -46,13 +46,13 @@
         public Number Target { get; }
         public NumberSet Result { get; }
         public FilterOperator FilterOperator { get; }
-        public EvalFlag TestFlags { get; } = (EvalFlag) 0x7FFFFFFF;
+        public EvalFlag TestFlags { get; } = (EvalFlag)0x7FFFFFFF;
         public EvalFlag ResultFlags { get; private set; }
 
         public Evaluation(Number source, Number target, FilterOperator filterOperator)
         {
-	        Source = source;
-	        Target = target;
+            Source = source;
+            Target = target;
             FilterOperator = filterOperator;
             Result = new NumberSet(Source.Domain);
         }

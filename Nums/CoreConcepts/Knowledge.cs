@@ -1,4 +1,5 @@
-﻿using Nums.CoreConcepts.Time;
+﻿using Nums.CoreConcepts.CoreTraits;
+using Nums.CoreConcepts.Time;
 using Nums.Primitives;
 
 namespace Nums.CoreConcepts

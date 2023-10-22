@@ -1,8 +1,9 @@
-﻿using Nums.Primitives;
+﻿using Nums.CoreConcepts.CoreTraits;
+using Nums.Primitives;
 
 namespace Nums.CoreConcepts.Time
 {
-	public class MillisecondTimeDomain : Domain
+    public class MillisecondTimeDomain : Domain
     {
 	    public static MillisecondTimeDomain Instance { get; } = new MillisecondTimeDomain();
 

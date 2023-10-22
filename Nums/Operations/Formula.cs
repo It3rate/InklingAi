@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Nums.Operations;
+using Nums.Primitives;
 using Nums.Utils;
 
-namespace Nums.Primitives
+namespace Nums.Operations
 {
     public class Formula : IMathElement
     {
@@ -20,7 +20,7 @@ namespace Nums.Primitives
         //   public Number Evaluator { get; } // evaluation range, needs eval op
         public Stack<Transform> TransformStack { get; } = new Stack<Transform>();
 
-        public bool CanRepeat() { return true;}
+        public bool CanRepeat() { return true; }
 
         public void ApplyStart() { }
         public void ApplyEnd() { }
@@ -28,8 +28,8 @@ namespace Nums.Primitives
 
         public Formula(Brain brain)
         {
-	        Brain = brain;
-	        Id = Brain.NextFormulaId();
+            Brain = brain;
+            Id = Brain.NextFormulaId();
         }
 
         public override bool Equals(object? obj) => obj is Formula other && Equals(other);

@@ -1,4 +1,4 @@
-﻿namespace InklingAi.Tests.OnnxTests
+﻿namespace InklingAiTests.Onnx
 {
     using System;
     using System.Collections.Generic;
@@ -43,7 +43,7 @@
                 Assert.NotNull(inTensor);
                 var pInResult = new Float16[4 * 64 * 64];
                 deviceInVar.CopyToHost(pInResult);
-                Assert.Equal((1.5f).ToFloat16(), pInResult[3]);
+                Assert.Equal(1.5f.ToFloat16(), pInResult[3]);
 
                 Assert.NotNull(outTensor);
                 var pOutResult = new byte[512 * 512 * 4];
@@ -55,21 +55,21 @@
                 //Assert.Equal(originalData.ToArray(), inTensor.GetTensorDataAsSpan<Float16>().ToArray());
 
                 string modelPath = IOUtils.SDOnnxFolder + @"vae_decoder\model.onnx";
-                byte[] modelData = File.ReadAllBytes(modelPath); 
+                byte[] modelData = File.ReadAllBytes(modelPath);
                 CudaDeviceVariable<byte> deviceModel = new CudaDeviceVariable<byte>(modelData.Length);
                 deviceModel.CopyToDevice(modelData);
-                
+
 
                 var sessionOptions = new SessionOptions();
                 sessionOptions.EnableMemoryPattern = false;
                 sessionOptions.ExecutionMode = ExecutionMode.ORT_PARALLEL;
                 sessionOptions.GraphOptimizationLevel = GraphOptimizationLevel.ORT_ENABLE_ALL;
                 var opt = new OrtCUDAProviderOptions();
-                var dict = new Dictionary<string, string>() { {"cudnn_conv_algo_search", "DEFAULT"} };
+                var dict = new Dictionary<string, string>() { { "cudnn_conv_algo_search", "DEFAULT" } };
                 opt.UpdateOptions(dict);
                 sessionOptions.AppendExecutionProvider_CUDA(opt);
 
-                var session = new InferenceSession(modelPath, sessionOptions);         
+                var session = new InferenceSession(modelPath, sessionOptions);
                 //var decoder = new VaeDecoder();
 
                 var inputNames = new List<string> { "latent_sample" }.AsReadOnly();
@@ -85,7 +85,7 @@
                 deviceVar.CopyToHost(result);
                 //var outData = outputValues[0].Value.GetTensorDataAsSpan<byte>().ToArray();
                 Assert.True(result.Length == 512 * 512 * 4);
-                
+
             }
             finally
             {
