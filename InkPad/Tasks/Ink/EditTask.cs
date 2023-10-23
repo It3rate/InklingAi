@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public abstract class EditTask : TaskBase
+public abstract class EditTask : BrainTaskBase
 {
     //public int Key { get; }
     public List<int> PreviousSelection = new();

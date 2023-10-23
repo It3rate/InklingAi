@@ -3,7 +3,8 @@
 namespace InkPad.CommandEngine
 {
     using InkPad.Agents;
-    using InkPad.Elements;
+	using InkPad.Commands;
+	using InkPad.Elements;
     using InkPad.Pads;
     using System;
     using System.Collections.Generic;

@@ -9,8 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using InkPad.CommandEngine;
+using InkPad.Commands;
 
-public abstract class TaskBase : ITask
+public abstract class BrainTaskBase : ITask
 {
     public int Id { get; }
     public IAgent TaskAgent { get; set; }
@@ -32,7 +33,7 @@ public abstract class TaskBase : ITask
     public abstract bool IsValid { get; }
     public virtual void Initialize() { }
 
-    protected TaskBase(PadKind padKind)
+    protected BrainTaskBase(PadKind padKind)
     {
         Pad = Agent.Current.PadFor(padKind);
         TaskKey = TaskCounter++;

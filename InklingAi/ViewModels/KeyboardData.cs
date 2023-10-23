@@ -15,10 +15,6 @@ public class KeyboardData
 	public static KeyboardData Instance = new KeyboardData();
 
 	private HashSet<Key> _downKeys { get; } = new HashSet<Key>();
-	private KeyboardData() 
-	{
-	}
-
 	public int Count(Key key) => _downKeys.Count();
 	public bool IsDown(Key key) => _downKeys.Contains(key);
 
@@ -26,23 +22,48 @@ public class KeyboardData
 	public bool IsControlDown => _downKeys.Contains(Key.LeftCtrl) || _downKeys.Contains(Key.RightCtrl);
 	public bool IsAltDown => _downKeys.Contains(Key.LeftAlt) || _downKeys.Contains(Key.RightAlt);
 
+	private KeyboardData() 
+	{
+	}
+
+	public void Cut()
+	{
+	}
+	public void Copy()
+	{
+	}
+	public void Paste()
+	{
+	}
+	public void Undo()
+	{
+		Engine.Instance.Stack.Undo();
+	}
+	public void Redo()
+	{
+		Engine.Instance.Stack.Redo();
+	}
+
 	public void OnKeyDown(KeyEventArgs e)
 	{
 		_downKeys.Add(e.Key);
-		switch (e.Key)
+		if (IsControlDown && IsShiftDown)
 		{
-			case Key.Y:
-				if (IsControlDown)
-				{
-					Engine.Instance.Stack.Redo();
-				}
-				break;
-			case Key.Z:
-				if (IsControlDown)
-				{
-					Engine.Instance.Stack.Undo();
-				}
-				break;
+			switch (e.Key)
+			{
+				case Key.Z: Redo(); break;
+			}
+		}
+		else if (IsControlDown)
+		{
+			switch (e.Key)
+			{
+				case Key.C: Copy(); break;
+				case Key.V: Paste(); break;
+				case Key.X: Cut(); break;
+				case Key.Y: Redo(); break;
+				case Key.Z: Undo(); break;
+			}
 		}
     }
 
