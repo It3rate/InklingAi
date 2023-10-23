@@ -29,14 +29,16 @@ public class PaintableImage : BaseImage
     public void AddPath(SkPolyline path)
     {
         _paths.Add(path);
-    }
+		InvalidateVisual();
+	}
     public void RemoveLastPath()
     {
         if (_paths.Count > 0)
         {
             _paths.RemoveAt(_paths.Count - 1);
             _curPath.Reset();
-        }
+			InvalidateVisual();
+		}
     }
 
     #region Mouse Events
@@ -72,7 +74,7 @@ public class PaintableImage : BaseImage
             Engine.Instance.Stack.Do(cmd);
 
             _curPath = CreateNewPath();
-            InvalidateVisual();
+            //InvalidateVisual();
         }
     }
     private SkPolyline CreateNewPath()

@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Input;
+using InklingAi.CommandEngine;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +29,21 @@ public class KeyboardData
 	public void OnKeyDown(KeyEventArgs e)
 	{
 		_downKeys.Add(e.Key);
+		switch (e.Key)
+		{
+			case Key.Y:
+				if (IsControlDown)
+				{
+					Engine.Instance.Stack.Redo();
+				}
+				break;
+			case Key.Z:
+				if (IsControlDown)
+				{
+					Engine.Instance.Stack.Undo();
+				}
+				break;
+		}
     }
 
 	public void OnKeyUp(KeyEventArgs e)
