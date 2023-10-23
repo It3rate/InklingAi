@@ -23,24 +23,62 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
 	private Color _prevSelColor { get; set; }
 
 	public override bool IsValid => true;
+	bool _firstRunSkip = false;
 
-	public ChangeBrushParamsTask(DrawingData drawingData, float brushSize, float feather, Color selColor)
+	public ChangeBrushParamsTask(DrawingData drawingData, float brushSize, float feather, Color selColor, bool isPreviousValues)
 	{
 		DrawingData = drawingData;
-		BrushSize = brushSize;
-		Feather = feather;
-		SelColor = selColor;
+		if (isPreviousValues)
+		{
+			_firstRunSkip = true;
+			_prevBrushSize = brushSize;
+			_prevFeather = feather;
+			_prevSelColor = selColor;
+		}
+		else
+		{
+			_firstRunSkip = false;
+			BrushSize = brushSize;
+			Feather = feather;
+			SelColor = selColor;
+		}
+	}
+	public ChangeBrushParamsTask(DrawingData drawingData, Color oldSelColor)
+	{
+		_firstRunSkip = true;
+		DrawingData = drawingData;
+		_prevBrushSize = drawingData.BrushSize;
+		_prevFeather = drawingData.Feather;
+		_prevSelColor = oldSelColor;
+		BrushSize = drawingData.BrushSize;
+		Feather = drawingData.Feather;
+		SelColor = drawingData.SelColor;
+	}
+	public ChangeBrushParamsTask(DrawingData drawingData, float oldBrushSize)
+	{
+		_firstRunSkip = true;
+		DrawingData = drawingData;
+		_prevBrushSize = oldBrushSize;
+		_prevFeather = drawingData.Feather;
+		_prevSelColor = drawingData.SelColor;
+		BrushSize = drawingData.BrushSize;
+		Feather = drawingData.Feather;
+		SelColor = drawingData.SelColor;
 	}
 
 	public override void RunTask()
 	{
-		_prevBrushSize = DrawingData.BrushSize;
-		_prevFeather = DrawingData.Feather;
-		_prevSelColor = DrawingData.SelColor;
+		if (!_firstRunSkip)
+		{
+			_prevBrushSize = DrawingData.BrushSize;
+			_prevFeather = DrawingData.Feather;
+			_prevSelColor = DrawingData.SelColor;
 
-		DrawingData.BrushSize = BrushSize;
-		DrawingData.Feather = Feather;
-		DrawingData.SelColor = SelColor;
+			DrawingData.BrushSize = BrushSize;
+			DrawingData.Feather = Feather;
+			DrawingData.SelColor = SelColor;
+		}
+		_firstRunSkip = false;
 	}
 
 	public override void UnRunTask()

@@ -1,19 +1,34 @@
 namespace InklingAi.Views;
 
+using System;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 using AvaloniaColorPicker;
+using DynamicData;
+using InklingAi.CommandEngine;
+using InklingAi.Commands;
+using InklingAi.Tasks;
+using InklingAi.ViewModels;
 
-    public partial class BrushToolbar : UserControl
+public partial class BrushToolbar : UserControl
+{
+	public bool GenCommandsOnChange = false;
+    public BrushToolbar()
     {
-        public BrushToolbar()
-        {
-            InitializeComponent();
+        InitializeComponent();
 		_colBtn = GetColorPicker();
+		Loaded += BrushToolbar_Loaded;
+	}
+
+	private void BrushToolbar_Loaded(object? sender, RoutedEventArgs e)
+	{
+		GenCommandsOnChange = true;
 	}
 
 	private ColorButton<InklingColorPickerWindow> _colBtn;
@@ -28,16 +43,77 @@ using AvaloniaColorPicker;
 		cb.Bind(ColorButton<InklingColorPickerWindow>.ColorProperty, binding);
 		Grid.SetRow(cb, 1);
 		Grid.SetColumn(cb, 7);
-		//cb.PointerPressed += OnPointerPressed;
 		var btg = this.FindControl<Grid>("BrushToolbarGrid");
 		btg?.Children.Add(cb);
 
-		//cb.PropertyChanged += colBtn_PropertyChanged;
+		//cb.PointerPressed += OnPointerPressed;
+		cb.PropertyChanged += OnPropertyChanged;
 		return cb;
 	}
 
-        //private void colBtn_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e) { }
-        //private void OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e) { }
+	private void OnValueSpinned(object? sender, SpinEventArgs change)
+	{
+		if (GenCommandsOnChange)
+		{
+			if (sender == nudBrushSize)
+			{
+				//ChangeBrushSizeCommand(change.);
+			}
+			else if (sender == nudFeather)
+			{
+				Trace.WriteLine("nudFeather");
+				//DrawingData.Instance.BrushSize = 
+			}
+			else if (sender == nudTransparent) // taken care of by color
+			{
+			}
+		}
+	}
+
+     private void OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs change)
+	{
+		base.OnPropertyChanged(change);
+		if (GenCommandsOnChange && (sender == _colBtn || sender == nudTransparent))
+		{
+			var prop = change.Property;
+			switch (prop.Name)
+			{
+				case nameof(_colBtn.Color):
+					if (change.OldValue is Color col && change.OldValue != change.NewValue)
+					{
+						ChangeColorCommand(col);
+					}
+					break;
+			}
+		}
+	}
+
+	private void ChangeBrushSizeCommand(float oldBrushSize)
+	{
+		var task = new ChangeBrushParamsTask(DrawingData.Instance, oldBrushSize);
+		RunCommand(task);
+	}
+	private void ChangeColorCommand(Color oldColor)
+	{
+		var task = new ChangeBrushParamsTask(DrawingData.Instance, oldColor);
+		RunCommand(task);
+	}
+	private void RunCommand(ChangeBrushParamsTask task)
+	{
+		var cmd = new ChangeBrushParamsCommand(task, this);
+		Engine.Instance.Stack.Do(cmd);
+	}
+
+    private void OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) 
+	{
+		if(sender is NumericUpDown nud)
+		{
+			switch (nud.Name)
+			{
+				case "brushSize": DrawingData.Instance.BrushSize = (float)((float?)nud.Value); break;
+			}
+		}
+    }
 
 
 	//private async void OnColorPicker(object sender, RoutedEventArgs e)
