@@ -1,7 +1,8 @@
 ﻿
-namespace InkPad.CommandEngine;
+namespace InkPad.CommandEngine.BrainEnging;
 
 using InkPad.Agents;
+using InkPad.CommandEngine;
 using InkPad.Elements;
 using Nums.CoreConcepts.Time;
 using Nums.Primitives;

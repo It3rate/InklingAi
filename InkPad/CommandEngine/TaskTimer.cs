@@ -23,9 +23,9 @@ namespace InkPad.CommandEngine
         public double DurationValue => TimeSpan.DurationSeconds;
 
 
-        public event TimedEventHandler StartTimedEvent;
-        public event TimedEventHandler StepTimedEvent;
-        public event TimedEventHandler EndTimedEvent;
+        public event TimedEventHandler? StartTimedEvent;
+        public event TimedEventHandler? StepTimedEvent;
+        public event TimedEventHandler? EndTimedEvent;
 
         public TaskTimer(MillisecondNumber delayDuration)
         {

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InkPad.CommandEngine;
 
-public class CreatePolylineCommand
+public class CreateSKPolylineCommand : CommandBase
 {
 }

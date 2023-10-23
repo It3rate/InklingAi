@@ -1,5 +1,4 @@
-﻿using InkPad.CommandEngine;
-using Nums.CoreConcepts.Time;
+﻿using Nums.CoreConcepts.Time;
 using Nums.Primitives;
 
 namespace InkPad.Commands.Core
@@ -9,6 +8,7 @@ namespace InkPad.Commands.Core
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using InkPad.CommandEngine.BrainEnging;
     using InkPad.Tasks.Core;
 
     public class CreateTraitCommand : BrainCommandBase

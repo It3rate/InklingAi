@@ -19,7 +19,7 @@ public abstract class TaskBase : ITask
 
     private static int TaskCounter = 1;
 
-    public IBrainCommand Command { get; }
+    public ICommand Command { get; }
     public Pad Pad { get; }
     public PadKind PadKind => Pad.PadKind;
     public SelectionSet Begin => Agent.Current.Data.Begin;

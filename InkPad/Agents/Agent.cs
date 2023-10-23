@@ -1,5 +1,6 @@
 ﻿namespace InkPad.Agents;
 using InkPad.CommandEngine;
+using InkPad.CommandEngine.BrainEnging;
 using InkPad.Commands;
 using InkPad.Commands.Ink;
 using InkPad.Elements;
@@ -61,7 +62,7 @@ public class Agent : IAgent
         AddPad(PadKind.Working);
         AddPad(PadKind.Input);
         Data = new UIData(this);
-        _editCommands = new CommandStack(this);
+        _editCommands = new BrainCommandStack(this);
 
         if(renderer != null)
         {

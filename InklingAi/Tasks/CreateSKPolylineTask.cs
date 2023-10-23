@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using InkPad.CommandEngine;
 
-public class CreatePolylineTask : ICreateTask
+public class CreateSKPolylineTask : ICreateTask
 {
     public int Id => throw new NotImplementedException();
 
-    public IBrainCommand Command => throw new NotImplementedException();
+    public ICommand Command => throw new NotImplementedException();
 
     public TaskTimer Timer => throw new NotImplementedException();
 

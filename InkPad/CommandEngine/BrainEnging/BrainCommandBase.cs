@@ -1,4 +1,4 @@
-﻿namespace InkPad.CommandEngine;
+﻿namespace InkPad.CommandEngine.BrainEnging;
 
 using InkPad.Agents;
 using Nums.Primitives;

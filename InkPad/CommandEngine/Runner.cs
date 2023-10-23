@@ -6,6 +6,7 @@ using Nums.Primitives;
 using Nums.Utils;
 using Timer = System.Timers.Timer;
 using InkPad.Agents;
+using System.Data;
 
 namespace InkPad.CommandEngine
 {
@@ -20,9 +21,6 @@ namespace InkPad.CommandEngine
         public static Runner CurrentRunner;
         public static Runner GetRunnerById(int id) => CurrentRunner;
 
-        public INumAgent Agent { get; set; }
-        public Brain Brain => Agent.Brain;
-        public Workspace Workspace => Agent.Workspace;
 
         private readonly SKCanvas _display;
 
@@ -40,9 +38,8 @@ namespace InkPad.CommandEngine
         public long CurrentTimeMs => (long)_currentTime.TotalMilliseconds;
 
 
-        public Runner(INumAgent agent, SKCanvas display)
+        public Runner(SKCanvas display)
         {
-            Agent = agent;
             _display = display;
             CurrentRunner = this;
             Reset();
@@ -63,7 +60,7 @@ namespace InkPad.CommandEngine
                 CurrentMS.EndTick = (long)_currentTime.TotalMilliseconds;
                 DeltaMS.EndTick = (long)(CurrentMS.EndTick - _lastTime.TotalMilliseconds);
 
-                Agent.Update(CurrentMS, DeltaMS);
+                Update();
                 //_display.Invalidate();
 
                 _lastTime = _currentTime;
@@ -71,6 +68,9 @@ namespace InkPad.CommandEngine
             }
 
             _isBusy = false;
+        }
+        protected virtual void Update()
+        {
         }
 
         public void ActivateComposite(int id)
