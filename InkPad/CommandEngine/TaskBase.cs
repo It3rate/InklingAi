@@ -28,5 +28,7 @@ namespace InkPad.CommandEngine
         public virtual void RunTask() { }
         public virtual void UnRunTask() { }
 
+        public virtual bool MergeDataFrom(TaskBase task) { return false; }
+
     }
 }

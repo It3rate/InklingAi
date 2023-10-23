@@ -37,7 +37,17 @@ public class ChangeBrushParamsCommand : CommandBase
 		_target.GenCommandsOnChange = true;
 	}
 
-	public override void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime)
+    public override bool TryMergeWith(ICommand newCommand)
+    {
+        var result = false;
+        if(newCommand is ChangeBrushParamsCommand newCmd)
+        {
+            result = ChangeTask.MergeDataFrom(newCmd.ChangeTask);
+        }
+        return result;
+    }
+
+    public override void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime)
 	{
 	}
 

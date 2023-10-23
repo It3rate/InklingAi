@@ -70,14 +70,15 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
 	{
 		if (!_firstRunSkip)
 		{
-			_prevBrushSize = DrawingData.BrushSize;
-			_prevFeather = DrawingData.Feather;
-			_prevSelColor = DrawingData.SelColor;
+			//_prevBrushSize = DrawingData.BrushSize;
+			//_prevFeather = DrawingData.Feather;
+			//_prevSelColor = DrawingData.SelColor;
 
 			DrawingData.BrushSize = BrushSize;
 			DrawingData.Feather = Feather;
 			DrawingData.SelColor = SelColor;
-		}
+            DrawingData.Transparency = SelColor.A;
+        }
 		_firstRunSkip = false;
 	}
 
@@ -86,6 +87,20 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
 		DrawingData.BrushSize = _prevBrushSize;
 		DrawingData.Feather = _prevFeather;
 		DrawingData.SelColor = _prevSelColor;
+        DrawingData.Transparency = _prevSelColor.A;
 	}
+
+    public override bool MergeDataFrom(TaskBase newTask)
+    {
+        var result = false;
+        if(newTask is ChangeBrushParamsTask newCbp)
+        {
+            BrushSize = newCbp.BrushSize;
+            Feather = newCbp.Feather;
+            SelColor = newCbp.SelColor;
+            result = true;
+        }
+        return result;
+    }
 }
 
