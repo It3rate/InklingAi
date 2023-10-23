@@ -19,10 +19,10 @@ public class ButtonSet : UserControl
         set => SetValue(CommandProperty, value);
     }
 
-    private List<Button> _buttons = new();
-    private List<Svg> _images = new();
-    private Dictionary<Svg, string> _onStates = new();
-    private Dictionary<Svg, string> _offStates = new();
+    protected List<Button> _buttons = new();
+    protected List<Svg> _images = new();
+    protected Dictionary<Svg, string> _onStates = new();
+    protected Dictionary<Svg, string> _offStates = new();
 
     public ButtonSet()
     {

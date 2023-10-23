@@ -2,6 +2,7 @@
 
 using Nums.Primitives;
 using System;
+using System.Drawing;
 using System.Linq;
 
 public class PolyNumberSet
@@ -30,9 +31,9 @@ public class PolyNumberSet
 			throw new ArgumentException("Values count must be greater than one and have the same count.");
 		}
 		_polynumbers = (PolyNumber[])values.Clone();
-	}
+    }
 
-	public void AddValue(params double[] values)
+    public void AddValue(params double[] values)
 	{
 		if(values.Length == Dimensions)
 		{

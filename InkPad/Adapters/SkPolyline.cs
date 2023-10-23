@@ -12,7 +12,12 @@ using System.Threading.Tasks;
 
 namespace InkPad.Adapters;
 
-public class SkPolyline : SkiaAdapter
+public interface ISelectableEntity
+{
+    bool IsPointInside(SKPoint point);
+    SKRect? Bounds { get; }
+}
+public class SkPolyline : SkiaAdapter, ISelectableEntity
 {
     #region private fields
     private SKPath? _path;
@@ -74,10 +79,18 @@ public class SkPolyline : SkiaAdapter
         var polyNumberY = new PolyNumber(yDomain, new PolyFocal());
         return new PolyNumberSet(polyNumberX, polyNumberY);
     }
-
+    public SKRect? Bounds
+    {
+        get
+        {
+            var result = PathOutline.Bounds;
+            result.Inflate(BrushSize / 2, BrushSize / 2);
+            return result;
+        }
+    }
     public bool IsPointInside(SKPoint point)
     {
-        return false;
+        return PathOutline.Contains(point.X, point.Y);
     }
     public void AddPoint(double x, double y)
     {

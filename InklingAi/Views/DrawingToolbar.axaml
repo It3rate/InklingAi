@@ -7,23 +7,23 @@
              x:Class="InklingAi.Views.DrawingToolbar">
 
   <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
-    <Button Grid.Row="0" Classes="image"
+    <Button Grid.Row="0" Classes="image" Name="btArrow" Click="OnClick"
 				CommandParameter="Arrow">
       <Svg Path="/Assets/drawArrow.svg" Stretch="Uniform"/>
     </Button>
-    <Button Grid.Row="4" Classes="image"
+    <Button Grid.Row="4" Classes="image" Name="btErase" Click="OnClick"
 				CommandParameter="Erase">
       <Svg Path="/Assets/drawErase.svg" Stretch="Uniform"/>
     </Button>
-    <Button Grid.Row="6" Classes="image"
+    <Button Grid.Row="6" Classes="image" Name="btPaint" Click="OnClick"
 				CommandParameter="Paint">
       <Svg Path="/Assets/drawPaint.svg" Stretch="Uniform"/>
     </Button>
-    <Button Grid.Row="7" Classes="image"
+    <Button Grid.Row="7" Classes="image" Name="btPen" Click="OnClick"
 				CommandParameter="Pen">
       <Svg Path="/Assets/drawPen.svg" Stretch="Uniform"/>
     </Button>
-    <Button Grid.Row="8" Classes="image"
+    <Button Grid.Row="8" Classes="image" Name="btResize" Click="OnClick"
 				CommandParameter="Resize">
       <Svg Path="/Assets/drawResize.svg" Stretch="Uniform"/>
     </Button>

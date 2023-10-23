@@ -14,6 +14,7 @@ using SkiaSharp;
 
 public class PaintableImage : BaseImage
 {
+    public SkPolyline? SelectedPath { get; set; } 
     private List<SkPolyline> _paths { get; } = new List<SkPolyline>();
     private SkPolyline _curPath;
     private UIRenderUtils _renderUtil = new UIRenderUtils();
@@ -29,6 +30,8 @@ public class PaintableImage : BaseImage
     public void AddPath(SkPolyline path)
     {
         _paths.Add(path);
+        SelectedPath = path;
+
 		InvalidateVisual();
 	}
     public void RemoveLastPath()
@@ -236,6 +239,11 @@ public class PaintableImage : BaseImage
         {
             _renderUtil.RenderHoverBrush(canvas, DrawingData);
 		}
+
+        if(SelectedPath != null)
+        {
+            _renderUtil.RenderSelectionFrame(canvas, SelectedPath);
+        }
     }
     private void DrawShape(SKCanvas canvas, SkPolyline line, bool strokePaint = false)
     {
