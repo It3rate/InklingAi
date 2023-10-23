@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Skia;
+using InklingAi.CommandEngine;
 using InklingAi.Commands;
 using InklingAi.ViewModels;
 using InkPad.Adapters;
@@ -66,8 +67,9 @@ public class PaintableImage : BaseImage
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
         if (_curPath.Count > 1)
         {
-            _paths.Add(_curPath); // addpath command
+            //_paths.Add(_curPath); // addpath command
             var cmd = new CreateSKPolylineCommand(_curPath, this);
+            Engine.Instance.Stack.Do(cmd);
 
             _curPath = CreateNewPath();
             InvalidateVisual();

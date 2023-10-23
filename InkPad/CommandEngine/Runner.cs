@@ -18,9 +18,6 @@ namespace InkPad.CommandEngine
 
     public class Runner : IRunner
     {
-        public static Runner CurrentRunner;
-        public static Runner GetRunnerById(int id) => CurrentRunner;
-
         private bool _isPaused;
         private static DateTime _pauseTime;
         private static TimeSpan _delayTime = new TimeSpan(0);
@@ -37,7 +34,6 @@ namespace InkPad.CommandEngine
 
         public Runner()
         {
-            CurrentRunner = this;
             Reset();
         }
 
