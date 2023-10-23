@@ -15,14 +15,20 @@ namespace InkPad.Adapters
 {
 	public abstract class SkiaAdapter
 	{
-		protected PolyNumberSet _polyset;
+		protected PolyNumberSet Polyset { get; }
 
-		public int Count => _polyset.Count;
+        protected SkiaAdapter(int width, int height) 
+        {
+            Polyset = CreatePolyset(width, height);
+        }
+        protected abstract PolyNumberSet CreatePolyset(int width, int height);
+
+        public int Count => Polyset.Count;
 
 		public SKPoint MakePoint(double[] values) => new SKPoint((float)values[0], (float)values[1]);
 		public SKPoint[] ToPoints()
 		{
-			var pts = _polyset.GetIndexedValues();
+			var pts = Polyset.GetIndexedValues();
 			var result = new SKPoint[pts.Length];
 
 			for (int i = 0; i < pts.Length; i++)
@@ -35,7 +41,7 @@ namespace InkPad.Adapters
 		public SKPath ToQuadCurves(bool closePath = true)
 		{
 			var result = new SKPath();
-			var pts = _polyset.GetIndexedValues();
+			var pts = Polyset.GetIndexedValues();
 
 			result.MoveTo(MakePoint(pts[0]));
 			for (int i = 1; i < pts.Length; i++)
@@ -153,7 +159,7 @@ namespace InkPad.Adapters
 
 		public virtual void Reset()
 		{
-			_polyset.Reset();
+			Polyset.Reset();
 		}
 	}
 }

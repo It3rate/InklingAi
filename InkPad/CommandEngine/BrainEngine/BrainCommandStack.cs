@@ -4,7 +4,7 @@ using InkPad.Agents;
 using Nums.CoreConcepts.Time;
 using Nums.Primitives;
 
-namespace InkPad.CommandEngine.BrainEnging
+namespace InkPad.CommandEngine.BrainEngine
 {
     public interface IBrainCommandStack : ICommandStack
     {

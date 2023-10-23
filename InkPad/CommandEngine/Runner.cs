@@ -21,9 +21,6 @@ namespace InkPad.CommandEngine
         public static Runner CurrentRunner;
         public static Runner GetRunnerById(int id) => CurrentRunner;
 
-
-        private readonly SKCanvas _display;
-
         private bool _isPaused;
         private static DateTime _pauseTime;
         private static TimeSpan _delayTime = new TimeSpan(0);
@@ -38,9 +35,8 @@ namespace InkPad.CommandEngine
         public long CurrentTimeMs => (long)_currentTime.TotalMilliseconds;
 
 
-        public Runner(SKCanvas display)
+        public Runner()
         {
-            _display = display;
             CurrentRunner = this;
             Reset();
         }

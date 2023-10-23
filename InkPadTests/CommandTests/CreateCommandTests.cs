@@ -1,5 +1,6 @@
 ﻿using InkPad.Agents;
 using InkPad.CommandEngine;
+using InkPad.CommandEngine.BrainEngine;
 using InkPad.Commands;
 using InkPad.Commands.Core;
 using Nums.CoreConcepts.Time;
@@ -21,7 +22,7 @@ namespace InkPadTests.CommandTests
             _brain = Brain.ActiveBrain;
             _workspace = new Workspace(_brain);
             _agent = new Agent(null);// _workspace);
-            _stack = new CommandStack(_agent);
+            _stack = new BrainCommandStack(_agent);
             _trait = Trait.CreateIn(_brain, "create command tests");
         }
 

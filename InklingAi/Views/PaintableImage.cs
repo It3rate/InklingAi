@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Skia;
+using InklingAi.Commands;
 using InklingAi.ViewModels;
 using InkPad.Adapters;
 using SkiaSharp;
@@ -23,7 +24,19 @@ public class PaintableImage : BaseImage
     {
         _canDrag = false;
 		_curPath = CreateNewPath();
-	}
+    }
+    public void AddPath(SkPolyline path)
+    {
+        _paths.Add(path);
+    }
+    public void RemoveLastPath()
+    {
+        if (_paths.Count > 0)
+        {
+            _paths.RemoveAt(_paths.Count - 1);
+            _curPath.Reset();
+        }
+    }
 
     #region Mouse Events
 
@@ -53,8 +66,10 @@ public class PaintableImage : BaseImage
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
         if (_curPath.Count > 1)
         {
-            _paths.Add(_curPath);
-			_curPath = CreateNewPath();
+            _paths.Add(_curPath); // addpath command
+            var cmd = new CreateSKPolylineCommand(_curPath, this);
+
+            _curPath = CreateNewPath();
             InvalidateVisual();
         }
     }

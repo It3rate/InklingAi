@@ -1,6 +1,6 @@
 ﻿namespace InkPad.Agents;
 using InkPad.CommandEngine;
-using InkPad.CommandEngine.BrainEnging;
+using InkPad.CommandEngine.BrainEngine;
 using InkPad.Commands;
 using InkPad.Commands.Ink;
 using InkPad.Elements;

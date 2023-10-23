@@ -5,25 +5,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InklingAi.Views;
+using InkPad.Adapters;
 using InkPad.CommandEngine;
+using Nums.Primitives;
 
-public class CreateSKPolylineTask : ICreateTask
+public class CreateSKPolylineTask : TaskBase, ICreateTask
 {
-    public int Id => throw new NotImplementedException();
+    public SkPolyline CreatedPolyline { get; }
+    public PaintableImage Target { get; } // will be selected element etc
 
-    public ICommand Command => throw new NotImplementedException();
-
-    public TaskTimer Timer => throw new NotImplementedException();
-
-    public bool IsValid => throw new NotImplementedException();
-
-    public void RunTask()
+    public override bool IsValid => true;
+    public CreateSKPolylineTask(SkPolyline polyline, PaintableImage target)
     {
-        throw new NotImplementedException();
+        CreatedPolyline = polyline;
+        Target = target;
+    }
+    public override void RunTask()
+    {
+        Target.AddPath(CreatedPolyline);
     }
 
-    public void UnRunTask()
+    public override void UnRunTask()
     {
-        throw new NotImplementedException();
+        Target.RemoveLastPath();
     }
 }

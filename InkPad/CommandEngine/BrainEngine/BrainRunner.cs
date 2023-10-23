@@ -1,4 +1,4 @@
-﻿namespace InkPad.CommandEngine.BrainEnging
+﻿namespace InkPad.CommandEngine.BrainEngine
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,7 @@
         public INumAgent Agent { get; set; }
         public Brain Brain => Agent.Brain;
         public Workspace Workspace => Agent.Workspace;
-        public BrainRunner(INumAgent agent, SKCanvas display) : base(display)
+        public BrainRunner(INumAgent agent) : base()
         {
             Agent = agent;
         }

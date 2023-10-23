@@ -14,7 +14,18 @@ namespace InkPad.Adapters;
 
 public class SkPolyline : SkiaAdapter
 {
-	public float BrushSize
+    #region private fields
+    private SKPath? _path;
+    private SKPaint _paint = new();
+
+    private float _brushSize = 20f;
+    private uint _colorValue;
+
+    private bool _brushDirty = true;
+    private bool _pathDirty = true;
+    #endregion
+
+    public float BrushSize
     {
         get => _brushSize; 
         set
@@ -39,15 +50,8 @@ public class SkPolyline : SkiaAdapter
     }
     public float Feather { get; set; } = 0f;
 
-    public SkPolyline(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null)
+    public SkPolyline(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null) : base(width, height)
     {
-        var trait = PositionTrait.Instance;
-        var xDomain = new Domain(trait, "xAxis", Focal.UnitFocal, new Focal(0, width));
-        var yDomain = new Domain(trait, "yAxis", Focal.UnitFocal, new Focal(0, height));
-        var polyNumberX = new PolyNumber(xDomain, new PolyFocal());
-        var polyNumberY = new PolyNumber(yDomain, new PolyFocal());
-        _polyset = new PolyNumberSet(polyNumberX, polyNumberY);
-
         if (brushSize != null)
         {
             BrushSize = brushSize.Value;
@@ -61,6 +65,15 @@ public class SkPolyline : SkiaAdapter
             Feather = feather.Value;
         }
     }
+    protected override PolyNumberSet CreatePolyset(int width, int height)
+    {
+        var trait = PositionTrait.Instance;
+        var xDomain = new Domain(trait, "xAxis", Focal.UnitFocal, new Focal(0, width));
+        var yDomain = new Domain(trait, "yAxis", Focal.UnitFocal, new Focal(0, height));
+        var polyNumberX = new PolyNumber(xDomain, new PolyFocal());
+        var polyNumberY = new PolyNumber(yDomain, new PolyFocal());
+        return new PolyNumberSet(polyNumberX, polyNumberY);
+    }
 
     public bool IsPointInside(SKPoint point)
     {
@@ -68,12 +81,12 @@ public class SkPolyline : SkiaAdapter
     }
     public void AddPoint(double x, double y)
     {
-        _polyset.AddValue(x, y);
+        Polyset.AddValue(x, y);
         _pathDirty = true;
     }
     public void RemovePoint()
     {
-        _polyset.RemoveLastValue();
+        Polyset.RemoveLastValue();
     }
 
     public SKPaint Paint
@@ -110,15 +123,5 @@ public class SkPolyline : SkiaAdapter
         _pathDirty = true;
     }
 
-	#region private fields
-	private SKPath? _path;
-    private SKPaint _paint = new();
-
-    private float _brushSize = 20f;
-	private uint _colorValue;
-
-	private bool _brushDirty = true;
-    private bool _pathDirty = true;
-	#endregion
 
 }

@@ -14,18 +14,17 @@ namespace InkPad.CommandEngine
     {
         private static int _idCounter = 1;
         public int Id { get; }
-
         public ICommand? Command { get; }
         public TaskTimer Timer { get; }
-
         public abstract bool IsValid { get; }
-        public virtual void Initialize() { }
 
         protected TaskBase()
         {
 	        Id = _idCounter++;
             Timer = new TaskTimer(new MillisecondNumber(0));
         }
+        public virtual void Initialize() { }
+
         public virtual void RunTask() { }
         public virtual void UnRunTask() { }
 
