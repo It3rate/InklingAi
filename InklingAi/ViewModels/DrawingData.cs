@@ -66,7 +66,7 @@
         Arrow,
         Paint,
         Erase,
-        Line,
+        Pen,
         Shape,
         Mask,
         EraseMask,
@@ -79,6 +79,5 @@
         Shadow,
         Contour,
         Envelope,
-
     }
 }

@@ -14,14 +14,14 @@ using SkiaSharp;
 
 public class PaintableImage : BaseImage
 {
+    public DrawingData DrawingData => DrawingData.Instance;
+    public DrawState CurrentDrawState { get; set; } = DrawState.Black;
     public SkPolyline? SelectedEntity { get; set; } 
     private List<SkPolyline> _paths { get; } = new List<SkPolyline>();
     private SkPolyline _curPath;
     private UIRenderUtils _renderUtil = new UIRenderUtils();
     private SelectionHandles _selectionHandles;
 
-    public DrawState CurrentDrawState { get; set; } = DrawState.Black;
-    public DrawingData DrawingData => DrawingData.Instance;
 
     public PaintableImage()
     {
@@ -48,11 +48,6 @@ public class PaintableImage : BaseImage
 
     #region Mouse Events
 
-    protected override void OnMouseMove(Point currentPosition)
-    {
-        DrawingData.CurrentPosition = currentPosition.ToSKPoint();
-		InvalidateVisual();
-	}
 	protected override void OnMouseDown(Point currentPosition)
 	{
 		_curPath.ColorValue = DrawingData.SelColor.ToUInt32();
@@ -61,6 +56,11 @@ public class PaintableImage : BaseImage
 		_curPath.Reset();
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
     }
+    protected override void OnMouseMove(Point currentPosition)
+    {
+        DrawingData.CurrentPosition = currentPosition.ToSKPoint();
+		InvalidateVisual();
+	}
     protected override void OnMouseDownDrag(Point currentPosition, Point diff)
     {
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
@@ -72,7 +72,7 @@ public class PaintableImage : BaseImage
     protected override void OnMouseUp(Point currentPosition, Point diff)
     {
         _curPath.AddPoint(currentPosition.X, currentPosition.Y);
-        if (_curPath.Count > 1)
+        if (_curPath.Count > 2)
         {
             //_paths.Add(_curPath); // addpath command
             var cmd = new CreateSKPolylineCommand(_curPath, this);
@@ -80,6 +80,10 @@ public class PaintableImage : BaseImage
 
             _curPath = CreateNewPath();
             //InvalidateVisual();
+        }
+        else
+        {
+            SelectedEntity = null;
         }
     }
     private SkPolyline CreateNewPath()

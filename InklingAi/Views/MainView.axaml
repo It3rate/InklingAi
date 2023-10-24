@@ -47,13 +47,14 @@
             
             <controls:DrawingToolbar
               Grid.Row="2" Grid.Column="0"
+              PaintableImage="{Binding #mainPaintableImage}"
               Background="#303033" Margin="0,0,4,0" />
 
             <Border Grid.Row="2" Grid.Column="2"  
                     Name="_border" Classes="image">	
             <Grid>
 								<controls:CompositeImage ImageDataItems="{Binding InfluenceData.ActiveItems}"/>
-								<controls:PaintableImage/>
+								<controls:PaintableImage x:Name="mainPaintableImage"/>
 							</Grid>
 					</Border>
               
