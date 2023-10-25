@@ -19,9 +19,28 @@ namespace InklingAi.Views
         public static SKPaint SelectionPen = SKRenderUtils.CreatePen(0xAA99DDFF, 1);
         public static SKPaint SelectionBrush = SKRenderUtils.CreateBrush(0xAA5588BB);
 
+        public static SKPaint _highlight = new SKPaint
+        {
+            Style = SKPaintStyle.Stroke,
+            Color = new SKColor(0, 0, 0, 50),
+            StrokeWidth = 10,
+            StrokeCap = SKStrokeCap.Round,
+            StrokeJoin = SKStrokeJoin.Round,
+            StrokeMiter = 3.0f,
+            IsAntialias = true,
+        };
+
         public void RenderHoverBrush(SKCanvas canvas, DrawingData data)
 		{
-			canvas.DrawCircle(data.CurrentPosition.X, data.CurrentPosition.Y, data.BrushSize, BrushOutinePen);
-		}
-	}
+			canvas.DrawCircle(data.CurrentPosition.X, data.CurrentPosition.Y, data.BrushSize/2, BrushOutinePen);
+        }
+        public void DrawShape(SKCanvas canvas, SkPolyline line, bool strokePaint = false)
+        {
+            if (strokePaint)
+            {
+                canvas.DrawPath(line.PathOutline, _highlight);
+            }
+            canvas.DrawPath(line.Path, line.Paint);
+        }
+    }
 }

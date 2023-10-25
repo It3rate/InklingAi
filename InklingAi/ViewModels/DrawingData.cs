@@ -15,7 +15,7 @@
         public SKPoint CurrentPosition { get; set; }
 
         public BrushMode BrushMode { get; set; } = BrushMode.None;
-        public DrawMode DrawMode { get; set; } = DrawMode.Arrow;
+        public DrawMode DrawMode { get; set; } = DrawMode.Paint;
         public float BrushSize { get; set; } = 20f;
         public float Feather { get; set; } = 0f;
         public SKPoint ClonePoint { get; set; } = SKPoint.Empty;

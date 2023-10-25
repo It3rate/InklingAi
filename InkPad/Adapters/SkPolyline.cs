@@ -14,12 +14,15 @@ namespace InkPad.Adapters;
 
 public interface ISelectableEntity
 {
+    public static int EntityCounter = 1;
+    int Id { get; }
     bool IsPointInside(SKPoint point);
     SKRect? Bounds { get; }
 }
 public class SkPolyline : SkiaAdapter, ISelectableEntity
 {
     #region private fields
+    public int Id { get; }
     private SKPath? _path;
     private SKPaint _paint = new();
 
@@ -57,6 +60,8 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
 
     public SkPolyline(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null) : base(width, height)
     {
+        Id = ISelectableEntity.EntityCounter++;
+
         if (brushSize != null)
         {
             BrushSize = brushSize.Value;
@@ -83,7 +88,7 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
     {
         get
         {
-            var result = PathOutline.Bounds;
+            var result = Path.Bounds;
             result.Inflate(BrushSize / 2, BrushSize / 2);
             return result;
         }
@@ -115,14 +120,23 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
             return _paint;
         }
     }
+    private SKPath? _optimizedPath;
+    public SKPath? Path
+    {
+        get
+        {
+            _ = PathOutline;
+            return _optimizedPath;
+        }
+    }
     public SKPath PathOutline
     {
         get
         {
             if (_pathDirty || _path == null)
             {
-                var path = ToOptimizedCurve(false);
-                _path = Paint.GetFillPath(path);
+                _optimizedPath = ToOptimizedCurve(false);
+                _path = Paint.GetFillPath(_optimizedPath);
                 _pathDirty = false;
             }
             return _path;

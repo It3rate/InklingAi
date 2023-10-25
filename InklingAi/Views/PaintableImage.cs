@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -50,40 +51,65 @@ public class PaintableImage : BaseImage
 
 	protected override void OnMouseDown(Point currentPosition)
 	{
-		_curPath.ColorValue = DrawingData.SelColor.ToUInt32();
-		_curPath.BrushSize = DrawingData.BrushSize;
-		_curPath.Feather = DrawingData.Feather;
-		_curPath.Reset();
-        _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+        if (DrawingData.DrawMode == DrawMode.Arrow)
+        {
+            CheckForSelection(currentPosition);
+        }
+        else
+        {
+            _curPath.ColorValue = DrawingData.SelColor.ToUInt32();
+            _curPath.BrushSize = DrawingData.BrushSize;
+            _curPath.Feather = DrawingData.Feather;
+            _curPath.Reset();
+            _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+        }
     }
     protected override void OnMouseMove(Point currentPosition)
     {
         DrawingData.CurrentPosition = currentPosition.ToSKPoint();
-		InvalidateVisual();
+        if (DrawingData.DrawMode == DrawMode.Arrow)
+        {
+        }
+        else
+        {
+            InvalidateVisual();
+        }
 	}
     protected override void OnMouseDownDrag(Point currentPosition, Point diff)
     {
-        _curPath.AddPoint(currentPosition.X, currentPosition.Y);
-        if (_curPath.Count > 1)
+        if (DrawingData.DrawMode == DrawMode.Arrow)
         {
-            InvalidateVisual();
+        }
+        else
+        {
+            _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+            if (_curPath.Count > 1)
+            {
+                InvalidateVisual();
+            }
         }
     }
     protected override void OnMouseUp(Point currentPosition, Point diff)
     {
-        _curPath.AddPoint(currentPosition.X, currentPosition.Y);
-        if (_curPath.Count > 2)
+        if (DrawingData.DrawMode == DrawMode.Arrow)
         {
-            //_paths.Add(_curPath); // addpath command
-            var cmd = new CreateSKPolylineCommand(_curPath, this);
-            Engine.Instance.Stack.Do(cmd);
-
-            _curPath = CreateNewPath();
-            //InvalidateVisual();
         }
         else
         {
-            SelectedEntity = null;
+            _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+            if (_curPath.Count > 2)
+            {
+                //_paths.Add(_curPath); // addpath command
+                var cmd = new CreateSKPolylineCommand(_curPath, this);
+                Engine.Instance.Stack.Do(cmd);
+
+                _curPath = CreateNewPath();
+                //InvalidateVisual();
+            }
+            else
+            {
+                SelectedEntity = null;
+            }
         }
     }
     private SkPolyline CreateNewPath()
@@ -216,46 +242,49 @@ public class PaintableImage : BaseImage
     //}
     protected override void OnDrop(object? sender, DragEventArgs e) { }
     #endregion
-
-
-    private SKPaint _highlight = new SKPaint
+    private void CheckForSelection(Point point)
     {
-        Style = SKPaintStyle.Stroke,
-        Color = new SKColor(0, 0, 0, 150),
-        StrokeWidth = 3,
-        StrokeCap = SKStrokeCap.Round,
-        StrokeJoin = SKStrokeJoin.Round,
-        StrokeMiter = 3.0f,
-        IsAntialias = true,
-    };
+        var skpt = new SKPoint((float)point.X, (float)point.Y);
+        SkPolyline? sel = null;
+        foreach (var path in _paths) 
+        { 
+            if(path.IsPointInside(skpt))
+            {
+                sel = path;
+                break;
+            }
+        }
+        if(sel != SelectedEntity)
+        {
+            SelectedEntity = sel;
+            InvalidateVisual();
+        }
+    }
+
 
     protected override void RenderSkia(SKCanvas canvas)
     {
         for (int i = 0; i < _paths.Count; i++) // Note: foreach can have collection modified issues
         {
-            DrawShape(canvas, _paths[i]);
+            _renderUtil.DrawShape(canvas, _paths[i]);
         }
 
-        if (_curPath != null)
+        if (DrawingData.DrawMode == DrawMode.Arrow)
         {
-            DrawShape(canvas, _curPath, true);
         }
-
-        if (IsMouseInside && !IsMouseDown)
+        else
         {
-            _renderUtil.RenderHoverBrush(canvas, DrawingData);
-		}
+            if (_curPath != null)
+            {
+                _renderUtil.DrawShape(canvas, _curPath, true);
+            }
 
+            if (IsMouseInside && !IsMouseDown)
+            {
+                _renderUtil.RenderHoverBrush(canvas, DrawingData);
+		    }
+        }
         _selectionHandles.RenderSkia(canvas);
-    }
-    private void DrawShape(SKCanvas canvas, SkPolyline line, bool strokePaint = false)
-    {
-        if(strokePaint)
-        {
-            _highlight.StrokeWidth = line.BrushSize + 2;
-            canvas.DrawPath(line.PathOutline, _highlight);
-        }
-        canvas.DrawPath(line.PathOutline, line.Paint);
     }
 
 }
