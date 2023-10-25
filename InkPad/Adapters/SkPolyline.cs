@@ -12,13 +12,6 @@ using System.Threading.Tasks;
 
 namespace InkPad.Adapters;
 
-public interface ISelectableEntity
-{
-    public static int EntityCounter = 1;
-    int Id { get; }
-    bool IsPointInside(SKPoint point);
-    SKRect? Bounds { get; }
-}
 public class SkPolyline : SkiaAdapter, ISelectableEntity
 {
     #region private fields
@@ -57,6 +50,8 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
         }
     }
     public float Feather { get; set; } = 0f;
+
+    public SKMatrix Matrix { get; set; } = SKMatrix.Identity;
 
     public SkPolyline(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null) : base(width, height)
     {
@@ -142,7 +137,6 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
             return _path;
         }
     }
-
     public override void Reset()
     {
         base.Reset();

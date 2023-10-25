@@ -17,7 +17,20 @@ public class PaintableImage : BaseImage
 {
     public DrawingData DrawingData => DrawingData.Instance;
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
-    public SkPolyline? SelectedEntity { get; set; } 
+
+    ISelectableEntity? _selectedEntity;
+    public ISelectableEntity? SelectedEntity
+    {
+        get => _selectedEntity;
+        set
+        {
+            if (_selectedEntity != value)
+            {
+                _selectedEntity = value;
+                InvalidateVisual();
+            }
+        }
+    }
     private List<SkPolyline> _paths { get; } = new List<SkPolyline>();
     private SkPolyline _curPath;
     private UIRenderUtils _renderUtil = new UIRenderUtils();
@@ -30,14 +43,14 @@ public class PaintableImage : BaseImage
 		_curPath = CreateNewPath();
         _selectionHandles = new SelectionHandles(this);
     }
-    public void AddPath(SkPolyline path)
+    public void AddElement(SkPolyline path)
     {
         _paths.Add(path);
         SelectedEntity = path;
 
 		InvalidateVisual();
 	}
-    public void RemoveLastPath()
+    public void RemoveLastElement()
     {
         if (_paths.Count > 0)
         {
@@ -46,10 +59,29 @@ public class PaintableImage : BaseImage
 			InvalidateVisual();
 		}
     }
+    public int RemoveElement(ISelectableEntity element)
+    {
+        int result = -1;
+        if (element is SkPolyline path && _paths.Contains(path))
+        {
+            result = _paths.IndexOf(path);
+            _paths.RemoveAt(result);
+            InvalidateVisual();
+        }
+        return result;
+    }
+    public void AddElementAt(int index, ISelectableEntity element)
+    {
+        if (index <= _paths.Count && element is SkPolyline path)
+        {
+            _paths.Insert(index, path);
+            InvalidateVisual();
+        }
+    }
 
     #region Mouse Events
 
-	protected override void OnMouseDown(Point currentPosition)
+    protected override void OnMouseDown(Point currentPosition)
 	{
         if (DrawingData.DrawMode == DrawMode.Arrow)
         {
