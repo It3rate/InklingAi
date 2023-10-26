@@ -79,7 +79,7 @@
             if(_imageDataList.Count > 0)
             {
                 _imageDataList[0].ProcessedImage = imageData?.ProcessedImage;
-                MainViewModel.GetRootDataContext(this)?.InfluenceData.ResetActiveItems();
+                InklingModel.GetRootDataContext(this)?.InfluenceData.ResetActiveItems();
                 InvalidateMeasure();
                 InvalidateVisual();
             }

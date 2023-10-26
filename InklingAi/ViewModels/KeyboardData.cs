@@ -14,6 +14,7 @@ public class KeyboardData
 {
 	public static KeyboardData Instance = new KeyboardData();
 
+	private Engine _engine;
 	private HashSet<Key> _downKeys { get; } = new HashSet<Key>();
 	public int Count(Key key) => _downKeys.Count();
 	public bool IsDown(Key key) => _downKeys.Contains(key);
@@ -22,8 +23,9 @@ public class KeyboardData
 	public bool IsControlDown => _downKeys.Contains(Key.LeftCtrl) || _downKeys.Contains(Key.RightCtrl);
 	public bool IsAltDown => _downKeys.Contains(Key.LeftAlt) || _downKeys.Contains(Key.RightAlt);
 
-	private KeyboardData() 
+	private KeyboardData()
 	{
+		_engine = Engine.Instance;
 	}
 
 	public void Cut()
@@ -37,11 +39,14 @@ public class KeyboardData
 	}
 	public void Undo()
 	{
-		Engine.Instance.Stack.Undo();
+		_engine.Stack.Undo();
 	}
 	public void Redo()
 	{
-		Engine.Instance.Stack.Redo();
+		_engine.Stack.Redo();
+	}
+	public void Delete()
+	{
 	}
 
 	public void OnKeyDown(KeyEventArgs e)
@@ -63,6 +68,7 @@ public class KeyboardData
 				case Key.X: Cut(); break;
 				case Key.Y: Redo(); break;
 				case Key.Z: Undo(); break;
+				case Key.Delete: Delete(); break;
 			}
 		}
     }

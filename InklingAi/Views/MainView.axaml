@@ -4,14 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
-		         xmlns:controls="using:InklingAi.Views"
+             x:DataType="vm:InklingModel"
+		     xmlns:controls="using:InklingAi.Views"
              xmlns:svg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Svg.Skia"
              x:Class="InklingAi.Views.MainView"
-             x:DataType="vm:MainViewModel"
              x:CompileBindings="True">
 	
-  <Design.DataContext>
-    <vm:MainViewModel />
+  <Design.DataContext> 
+	  <vm:InklingModel/>
   </Design.DataContext>
 	
 	<Grid RowDefinitions="Auto,*,Auto">
@@ -43,20 +43,21 @@
             
             <controls:BrushToolbar
               Grid.Row="1" Grid.Column="1"
-              Background="#303033" Margin="0,0,0,4" />
+			  PaintableImage="{Binding #_mainPaintableImage}"
+			  Background="#303033" Margin="0,0,0,4" />
             
             <controls:DrawingToolbar
               Grid.Row="2" Grid.Column="0"
-              PaintableImage="{Binding #mainPaintableImage}"
-              Background="#303033" Margin="0,0,4,0" />
+			  PaintableImage="{Binding #_mainPaintableImage}"
+			  Background="#303033" Margin="0,0,4,0" />
 
             <Border Grid.Row="2" Grid.Column="2"  
                     Name="_border" Classes="image">	
-            <Grid>
-								<controls:CompositeImage ImageDataItems="{Binding InfluenceData.ActiveItems}"/>
-								<controls:PaintableImage x:Name="mainPaintableImage"/>
-							</Grid>
-					</Border>
+				<Grid>
+					<controls:CompositeImage ImageDataItems="{Binding InfluenceData.ActiveItems}"/>
+					<controls:PaintableImage Name="_mainPaintableImage"/>
+				</Grid>
+			</Border>
               
             
           </Grid>

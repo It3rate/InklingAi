@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Input;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Skia;
 using InklingAi.CommandEngine;
@@ -15,8 +16,13 @@ using SkiaSharp;
 
 public class PaintableImage : BaseImage
 {
-    public DrawingData DrawingData => DrawingData.Instance;
-    public DrawState CurrentDrawState { get; set; } = DrawState.Black;
+	private InklingModel _model => InklingModel.Instance;
+	private Engine _engine => _model.Engine;
+	private KeyboardData _keyboardData => _model.KeyboardData;
+
+	public DrawingData DrawingData { get; set; } = new DrawingData();
+
+	public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
     ISelectableEntity? _selectedEntity;
     public ISelectableEntity? SelectedEntity
@@ -36,14 +42,14 @@ public class PaintableImage : BaseImage
     private UIRenderUtils _renderUtil = new UIRenderUtils();
     private SelectionHandles _selectionHandles;
 
-
-    public PaintableImage()
+	public PaintableImage()
     {
-        _canDrag = false;
+		_canDrag = false;
 		_curPath = CreateNewPath();
         _selectionHandles = new SelectionHandles(this);
     }
-    public void AddElement(SkPolyline path)
+
+	public void AddElement(SkPolyline path)
     {
         _paths.Add(path);
         SelectedEntity = path;
@@ -80,7 +86,6 @@ public class PaintableImage : BaseImage
     }
 
     #region Mouse Events
-
     protected override void OnMouseDown(Point currentPosition)
 	{
         if (DrawingData.DrawMode == DrawMode.Arrow)
@@ -133,7 +138,7 @@ public class PaintableImage : BaseImage
             {
                 //_paths.Add(_curPath); // addpath command
                 var cmd = new CreateSKPolylineCommand(_curPath, this);
-                Engine.Instance.Stack.Do(cmd);
+                _engine.Stack.Do(cmd);
 
                 _curPath = CreateNewPath();
                 //InvalidateVisual();
@@ -223,31 +228,6 @@ public class PaintableImage : BaseImage
     //	_isResizeCursor = false;
     //	_isResizeTransparent = false;
     //}
-    //public void OnMouseEnter(EventArgs e)
-    //{
-    //	_isMouseInside = true;
-    //}
-    //public void OnDragOver(DragEventArgs drgevent)
-    //{
-    //	_lastPoint = InputPb.PointToClient(new System.Drawing.Point(drgevent.X, drgevent.Y)).CvPoint();
-    //	Invalidate(true);
-    //}
-    //public void OnMouseLeave(EventArgs e)
-    //{
-    //	_isMouseInside = false;
-    //}
-    //public void OnDragEnter(DragEventArgs e)
-    //{
-    //	_isMouseInside = true;
-    //}
-    //public void OnDragLeave(EventArgs e)
-    //{
-    //	_isMouseInside = false;
-    //}
-    //public void OnDragDrop(DragEventArgs e)
-    //{
-    //	IsPanning = false;
-    //}
     //public void OnMouseWheel(MouseEventArgs e)
     //{
     //	if (CurrentDrawState == DrawState.Resize && InputPb != null)
@@ -264,17 +244,16 @@ public class PaintableImage : BaseImage
     //		}
     //	}
     //}
-    private bool IsShiftDown() => KeyboardData.Instance.IsShiftDown;
-    private bool IsControlDown() => KeyboardData.Instance.IsControlDown;
-
-    //private System.Timers.Timer _reprocessTimer = new System.Timers.Timer(500);
-    //private void _reprocessTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
-    //{
-    //	ReprocessRequested?.Invoke();
-    //}
     protected override void OnDrop(object? sender, DragEventArgs e) { }
-    #endregion
-    private void CheckForSelection(Point point)
+	#endregion
+
+	#region Keyboard Events
+	private bool IsShiftDown() => _keyboardData.IsShiftDown;
+	private bool IsControlDown() => _keyboardData.IsControlDown;
+	private bool IsKeyDown(Key key) => _keyboardData.IsDown(key);
+	#endregion
+
+	private void CheckForSelection(Point point)
     {
         var skpt = new SKPoint((float)point.X, (float)point.Y);
         SkPolyline? sel = null;

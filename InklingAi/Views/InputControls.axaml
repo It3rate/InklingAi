@@ -8,7 +8,7 @@
              x:Class="InklingAi.Views.InputControls">
 
 	<Design.DataContext>
-		<vm:MainViewModel />
+		<vm:InklingModel />
 	</Design.DataContext>
 
 	<Grid RowDefinitions="Auto,*" Margin="4">

@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using AvaloniaColorPicker;
@@ -18,10 +19,21 @@ using InklingAi.ViewModels;
 
 public partial class BrushToolbar : UserControl
 {
+
+	public static readonly StyledProperty<PaintableImage> PaintableImageProperty =
+		AvaloniaProperty.Register<BrushToolbar, PaintableImage>(nameof(PaintableImage));
+	public PaintableImage PaintableImage
+	{
+		get => GetValue(PaintableImageProperty);
+		set => SetValue(PaintableImageProperty, value);
+	}
+
+	public DrawingData DrawingData => PaintableImage.DrawingData;
+
 	public bool GenCommandsOnChange = false;
-    public BrushToolbar()
+	public BrushToolbar()
     {
-        InitializeComponent();
+		InitializeComponent();
 		_colBtn = GetColorPicker();
 		Loaded += BrushToolbar_Loaded;
 	}
@@ -34,12 +46,20 @@ public partial class BrushToolbar : UserControl
 	private ColorButton<InklingColorPickerWindow> _colBtn;
 	private ColorButton<InklingColorPickerWindow> GetColorPicker()
 	{
-            var cb = new ColorButton<InklingColorPickerWindow>
-            {
-                Width = 50,
-                Height = 30
-            };
-            var binding = new Binding("DrawingData.SelColor", BindingMode.TwoWay);
+		var cb = new ColorButton<InklingColorPickerWindow>
+		{
+			Width = 50,
+			Height = 30
+		};
+		var binding = new Binding("PaintableImage.DrawingData.SelColor")
+		{
+			Mode = BindingMode.TwoWay,
+			RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
+			{
+				AncestorType = typeof(UserControl),
+				AncestorLevel = 1
+			}
+		};
 		cb.Bind(ColorButton<InklingColorPickerWindow>.ColorProperty, binding);
 		Grid.SetRow(cb, 1);
 		Grid.SetColumn(cb, 7);
@@ -90,12 +110,12 @@ public partial class BrushToolbar : UserControl
 
 	private void ChangeBrushSizeCommand(float oldBrushSize)
 	{
-		var task = new ChangeBrushParamsTask(DrawingData.Instance, oldBrushSize);
+		var task = new ChangeBrushParamsTask(PaintableImage.DrawingData, oldBrushSize);
 		RunCommand(task);
 	}
 	private void ChangeColorCommand(Color oldColor)
 	{
-		var task = new ChangeBrushParamsTask(DrawingData.Instance, oldColor);
+		var task = new ChangeBrushParamsTask(PaintableImage.DrawingData, oldColor);
 		RunCommand(task);
 	}
 	private void RunCommand(ChangeBrushParamsTask task)
@@ -106,11 +126,11 @@ public partial class BrushToolbar : UserControl
 
     private void OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e) 
 	{
-		if(sender is NumericUpDown nud)
+		if(sender is NumericUpDown numericUpDown)
 		{
-			switch (nud.Name)
+			switch (numericUpDown.Name)
 			{
-				case "brushSize": DrawingData.Instance.BrushSize = (float)((float?)nud.Value); break;
+				case "brushSize": PaintableImage.DrawingData.BrushSize = (float)(numericUpDown.Value ?? 20); break;
 			}
 		}
     }

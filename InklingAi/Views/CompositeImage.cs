@@ -34,7 +34,7 @@
         {
             base.OnLoaded(sender, e);
 
-            var mvm = MainViewModel.GetRootDataContext(this);
+            var mvm = InklingModel.GetRootDataContext(this);
             if (mvm != null)
             {
                 var binding = new Binding("InfluenceData.ActiveItems")

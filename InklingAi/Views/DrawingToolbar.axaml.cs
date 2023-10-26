@@ -9,9 +9,9 @@ namespace InklingAi.Views
     {
         private Dictionary<Button, DrawMode> _buttonModes;
 
-        public static readonly StyledProperty<PaintableImage?> PaintableImageProperty =
-            AvaloniaProperty.Register<DrawingToolbar, PaintableImage?>(nameof(PaintableImage));
-        public PaintableImage? PaintableImage
+        public static readonly StyledProperty<PaintableImage> PaintableImageProperty =
+            AvaloniaProperty.Register<DrawingToolbar, PaintableImage>(nameof(PaintableImage));
+        public PaintableImage PaintableImage
         {
             get => GetValue(PaintableImageProperty);
             set => SetValue(PaintableImageProperty, value);

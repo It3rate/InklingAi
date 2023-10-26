@@ -10,8 +10,6 @@
 
     public class DrawingData : ViewModelBase
 	{
-        public static DrawingData Instance { get; } = new DrawingData();
-
         public SKPoint CurrentPosition { get; set; }
 
         public BrushMode BrushMode { get; set; } = BrushMode.None;
@@ -45,8 +43,7 @@
         }
         public Color CurrentGray { get; set; } = Colors.Gray;
 
-
-		private DrawingData() { }
+		public DrawingData() { }
     }
 
     public enum BrushMode

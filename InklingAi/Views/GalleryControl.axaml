@@ -6,10 +6,10 @@
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
              xmlns:controls="clr-namespace:InklingAi.Views"
              x:Class="InklingAi.Views.GalleryControl"
-             x:DataType="vm:MainViewModel" >
+             x:DataType="vm:InklingModel" >
 
 	<Design.DataContext>
-		<vm:MainViewModel />
+		<vm:InklingModel />
 	</Design.DataContext>
 
 	<UserControl.Styles>

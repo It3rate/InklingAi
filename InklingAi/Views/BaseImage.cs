@@ -22,6 +22,7 @@ using InklingAi.Utils;
 using Avalonia.Threading;
 using System.Diagnostics;
 using Avalonia.Controls.Shapes;
+using Avalonia.Markup.Xaml;
 
 public abstract class BaseImage : UserControl
 {
@@ -50,7 +51,7 @@ public abstract class BaseImage : UserControl
 
     public BaseImage()
     {
-        renderingLogic = new RenderingLogic();
+		renderingLogic = new RenderingLogic();
         renderingLogic.RenderCall += RenderSkia;
 
         SetValue(DragDrop.AllowDropProperty, true);
@@ -64,11 +65,11 @@ public abstract class BaseImage : UserControl
         AddHandler(DragDrop.DragOverEvent, OnDragOver);
 
         AttachedToVisualTree += OnLoaded;
-    }
+	}
 
 	protected virtual void OnLoaded(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        var mvm = MainViewModel.GetRootDataContext(this);
+        var mvm = InklingModel.GetRootDataContext(this);
         if (mvm != null)
         {
             var binding = new Binding("SDConfig.AspectSize")

@@ -26,7 +26,7 @@ namespace InklingAi.Views
         private void OnExpanded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             ItemData.IsActive = true;
-            var mvm = MainViewModel.GetRootDataContext(this);
+            var mvm = InklingModel.GetRootDataContext(this);
             if (mvm != null)
             {
                 mvm.InfluenceData.ResetActiveItems();
@@ -35,7 +35,7 @@ namespace InklingAi.Views
         private void OnCollapsed(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             ItemData.IsActive = false;
-            var mvm = MainViewModel.GetRootDataContext(this);
+            var mvm = InklingModel.GetRootDataContext(this);
             if(mvm != null)
             {
                 mvm.InfluenceData.ResetActiveItems();

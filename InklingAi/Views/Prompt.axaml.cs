@@ -43,7 +43,7 @@ namespace InklingAi.Views
         {
             if(sender is ToggleButton tb && tb?.IsChecked == false)
             {
-                var root = MainViewModel.GetRootDataContext(this);
+                var root = InklingModel.GetRootDataContext(this);
                 root?.RandomizeSeed();
             }
         }
