@@ -13,7 +13,7 @@ using Nums.Primitives;
 public class CreateSKPolylineTask : TaskBase, ICreateTask
 {
     public SkPolyline CreatedPolyline { get; }
-    public ISelectableEntity? PreviousSelection { get; private set; }
+    public ISelectableEntity[] PreviousSelection { get; private set; }
     public PaintableImage Target { get; } // will be selected element etc
 
     public override bool IsValid => true;
@@ -24,13 +24,13 @@ public class CreateSKPolylineTask : TaskBase, ICreateTask
     }
     public override void RunTask()
     {
-        PreviousSelection = Target.SelectedEntity;
+        PreviousSelection = Target.Selection.ToArray();
         Target.AddElement(CreatedPolyline);
     }
 
     public override void UnRunTask()
     {
         Target.RemoveLastElement();
-        Target.SelectedEntity = PreviousSelection;
+        Target.Selection.Set(PreviousSelection);
     }
 }

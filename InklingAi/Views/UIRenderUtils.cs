@@ -34,7 +34,7 @@ namespace InklingAi.Views
 		{
 			canvas.DrawCircle(data.CurrentPosition.X, data.CurrentPosition.Y, data.BrushSize/2, BrushOutinePen);
         }
-        public void DrawShape(SKCanvas canvas, SkPolyline line, bool strokePaint = false)
+        public void DrawShape(SKCanvas canvas, ISelectableEntity line, bool strokePaint = false)
         {
             if (strokePaint)
             {

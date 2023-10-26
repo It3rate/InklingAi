@@ -12,8 +12,10 @@
         public static int EntityCounter = 1;
         int Id { get; }
         bool IsPointInside(SKPoint point);
-        SKRect? Bounds { get; }
+        SKRect Bounds { get; }
         SKMatrix Matrix { get; set; }
+        public SKPaint Paint { get; }
+        public SKPath? Path { get; }
+        public SKPath PathOutline { get; }
     }
-
 }

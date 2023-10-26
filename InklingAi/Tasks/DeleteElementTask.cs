@@ -12,25 +12,32 @@ using InkPad.CommandEngine;
 
 public class DeleteElementTask : TaskBase
 {
-    public ISelectableEntity ElementToDelete { get; private set; }
-    public int DeletionIndex { get; private set; } = -1;
+    public List<ISelectableEntity> ElementsToDelete { get; } = new();
+    public List<int> DeletionIndexes { get; } = new ();
     public PaintableImage Target { get; }
     public override bool IsValid => true;
-    public DeleteElementTask(PaintableImage target)
+    public DeleteElementTask(PaintableImage target, params ISelectableEntity[] elementsToDelete)
     {
-        ElementToDelete = target.SelectedEntity ?? throw new ArgumentNullException(nameof(target.SelectedEntity), "ElementToDelete cannot be null.");
         Target = target;
+        ElementsToDelete.AddRange(elementsToDelete);
     }
     public override void RunTask()
     {
-        Target.RemoveLastElement();
+        foreach (var element in ElementsToDelete)
+        {
+            DeletionIndexes.Add(Target.RemoveElement(element));
+        }
     }
 
     public override void UnRunTask()
     {
-        if (DeletionIndex > -1)
+        var revElements = ElementsToDelete.ToArray();
+        revElements.Reverse();
+        var revIndexes = DeletionIndexes.ToArray();
+        revIndexes.Reverse();
+        for (var i = 0; i < revElements.Length; i++)
         {
-            Target.AddElementAt(DeletionIndex, ElementToDelete);
+            Target.AddElementAt(revIndexes[i], revElements[i]);
         }
     }
     public override bool MergeDataFrom(TaskBase newTask)

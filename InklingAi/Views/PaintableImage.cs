@@ -24,38 +24,31 @@ public class PaintableImage : BaseImage
 
 	public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
-    ISelectableEntity? _selectedEntity;
-    public ISelectableEntity? SelectedEntity
-    {
-        get => _selectedEntity;
-        set
-        {
-            if (_selectedEntity != value)
-            {
-                _selectedEntity = value;
-                InvalidateVisual();
-            }
-        }
-    }
-    private List<SkPolyline> _paths { get; } = new List<SkPolyline>();
+    public Selection Selection { get; }
+    private List<ISelectableEntity> _paths { get; } = new List<ISelectableEntity>();
     private SkPolyline _curPath;
     private UIRenderUtils _renderUtil = new UIRenderUtils();
     private SelectionHandles _selectionHandles;
 
 	public PaintableImage()
     {
+        Selection = new Selection(this);
 		_canDrag = false;
 		_curPath = CreateNewPath();
         _selectionHandles = new SelectionHandles(this);
     }
 
-	public void AddElement(SkPolyline path)
+    public int IndexOfElement(ISelectableEntity element)
+    {
+        return _paths.IndexOf(element);
+    }
+    public void AddElement(ISelectableEntity path)
     {
         _paths.Add(path);
-        SelectedEntity = path;
+        Selection.Set(path);
 
-		InvalidateVisual();
-	}
+        InvalidateVisual();
+    }
     public void RemoveLastElement()
     {
         if (_paths.Count > 0)
@@ -68,9 +61,9 @@ public class PaintableImage : BaseImage
     public int RemoveElement(ISelectableEntity element)
     {
         int result = -1;
-        if (element is SkPolyline path && _paths.Contains(path))
+        if (_paths.Contains(element))
         {
-            result = _paths.IndexOf(path);
+            result = _paths.IndexOf(element);
             _paths.RemoveAt(result);
             InvalidateVisual();
         }
@@ -78,9 +71,9 @@ public class PaintableImage : BaseImage
     }
     public void AddElementAt(int index, ISelectableEntity element)
     {
-        if (index <= _paths.Count && element is SkPolyline path)
+        if (index <= _paths.Count)
         {
-            _paths.Insert(index, path);
+            _paths.Insert(index, element);
             InvalidateVisual();
         }
     }
@@ -145,7 +138,7 @@ public class PaintableImage : BaseImage
             }
             else
             {
-                SelectedEntity = null;
+                Selection.Clear();
             }
         }
     }
@@ -256,7 +249,7 @@ public class PaintableImage : BaseImage
 	private void CheckForSelection(Point point)
     {
         var skpt = new SKPoint((float)point.X, (float)point.Y);
-        SkPolyline? sel = null;
+        ISelectableEntity? sel = null;
         foreach (var path in _paths) 
         { 
             if(path.IsPointInside(skpt))
@@ -265,9 +258,11 @@ public class PaintableImage : BaseImage
                 break;
             }
         }
-        if(sel != SelectedEntity)
+
+        if(sel != Selection)
         {
-            SelectedEntity = sel;
+            SelectElementCommand cmd = new SelectElementCommand(this, sel);
+            _engine.Stack.Do(cmd);
             InvalidateVisual();
         }
     }

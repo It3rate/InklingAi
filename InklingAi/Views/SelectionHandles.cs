@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using InklingAi.ViewModels;
     using InkPad.Adapters;
     using InkPad.Utils;
     using SkiaSharp;
@@ -12,7 +13,7 @@
     public class SelectionHandles
     {
         public PaintableImage Paintable { get; }
-        ISelectableEntity? Selection => Paintable.SelectedEntity;
+        Selection Selection => Paintable.Selection;
         TransformKind TransformKind { get; set; } = TransformKind.Scale;
 
         public SelectionHandles(PaintableImage paintable)

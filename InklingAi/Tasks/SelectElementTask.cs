@@ -11,24 +11,24 @@ using InkPad.CommandEngine;
 
 public class SelectElementTask : TaskBase
 {
-    public ISelectableEntity NewSelection { get; private set; }
-    public ISelectableEntity? PreviousSelection { get; private set; }
+    public List<ISelectableEntity> NewSelection { get; private set; } = new();
+    public List<ISelectableEntity> PreviousSelection { get; private set; } = new();
     public PaintableImage Target { get; }
     public override bool IsValid => true;
-    public SelectElementTask(ISelectableEntity newSelection, PaintableImage target)
+    public SelectElementTask(PaintableImage target, params ISelectableEntity[] newSelection)
     {
-        NewSelection = newSelection;
+        NewSelection = newSelection.ToList();
         Target = target;
     }
     public override void RunTask()
     {
-        PreviousSelection = Target.SelectedEntity;
-        Target.SelectedEntity = NewSelection;
+        PreviousSelection = Target.Selection.ToList();
+        Target.Selection.SetWith(NewSelection);
     }
 
     public override void UnRunTask()
     {
-        Target.SelectedEntity = PreviousSelection;
+        Target.Selection.SetWith(PreviousSelection);
     }
     public override bool MergeDataFrom(TaskBase newTask)
     {

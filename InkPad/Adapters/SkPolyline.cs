@@ -16,7 +16,7 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
 {
     #region private fields
     public int Id { get; }
-    private SKPath? _path;
+    private SKPath _path = new SKPath();
     private SKPaint _paint = new();
 
     private float _brushSize = 20f;
@@ -79,7 +79,7 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
         var polyNumberY = new PolyNumber(yDomain, new PolyFocal());
         return new PolyNumberSet(polyNumberX, polyNumberY);
     }
-    public SKRect? Bounds
+    public SKRect Bounds
     {
         get
         {
@@ -108,15 +108,15 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
         {
             if (_brushDirty)
             {
-                _paint?.Dispose();
+                _paint.Dispose();
                 _paint = SKRenderUtils.CreatePen(ColorValue, BrushSize);
                 _brushDirty = false;
             }
             return _paint;
         }
     }
-    private SKPath? _optimizedPath;
-    public SKPath? Path
+    private SKPath _optimizedPath;
+    public SKPath Path
     {
         get
         {
@@ -128,7 +128,7 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
     {
         get
         {
-            if (_pathDirty || _path == null)
+            if (_pathDirty || _path.PointCount == 0)
             {
                 _optimizedPath = ToOptimizedCurve(false);
                 _path = Paint.GetFillPath(_optimizedPath);
