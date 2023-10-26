@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using InklingAi.ViewModels;
+using InklingAi.Views;
 using InkPad.CommandEngine;
 
 public class Engine
@@ -16,6 +17,7 @@ public class Engine
     public Runner Runner { get; } = new();
 
     public KeyboardData KeyboardData => KeyboardData.Instance;
+    public PaintableImage? FocusedCommandTarget { get; set; }
 
     private Engine(){}
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nums.CoreConcepts.Time;
 
-public interface ICommand
+public interface IStackCommand
 {
     int Id { get; }
     ICommandStack Stack { get; set; }
@@ -20,8 +20,8 @@ public interface ICommand
 
     bool AppendElements();
     bool RemoveElements();
-    bool IsMergableWith(ICommand command);
-    bool TryMergeWith(ICommand command);
+    bool IsMergableWith(IStackCommand command);
+    bool TryMergeWith(IStackCommand command);
 
     int RepeatCount { get; } // Number - this will be Number once default traits are in.
     int RepeatIndex { get; } // Number - this will be Number once default traits are in.
@@ -52,5 +52,5 @@ public interface ICommand
     // event EventHandler OnUnexecute;
     // event EventHandler OnCompleted;
 
-    ICommand Duplicate();
+    IStackCommand Duplicate();
 }

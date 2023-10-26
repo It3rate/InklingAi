@@ -29,7 +29,7 @@ public class Agent : IAgent
 
     public UIData Data;
     private CommandStack _editCommands;
-    //public CommandStack<ICommand> Stack => _editCommands;
+    //public CommandStack<IStackCommand> Stack => _editCommands;
 
     private Entity _activeEntity;
     private EditCommand _activeCommand;

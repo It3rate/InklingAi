@@ -17,8 +17,8 @@
         int RedoSize { get; }
         bool CanRepeat { get; }
 
-        void Do(ICommand command);
-        ICommand? PreviousCommand();
+        void Do(IStackCommand command);
+        IStackCommand? PreviousCommand();
         void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime);
 
         bool Undo();

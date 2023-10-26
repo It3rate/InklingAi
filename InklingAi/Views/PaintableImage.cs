@@ -32,6 +32,8 @@ public class PaintableImage : BaseImage
 
 	public PaintableImage()
     {
+        _engine.FocusedCommandTarget = this; // todo: there will be multiple instances of this eventually
+
         Selection = new Selection(this);
 		_canDrag = false;
 		_curPath = CreateNewPath();
@@ -262,6 +264,15 @@ public class PaintableImage : BaseImage
         if(sel != Selection)
         {
             SelectElementCommand cmd = new SelectElementCommand(this, sel);
+            _engine.Stack.Do(cmd);
+            InvalidateVisual();
+        }
+    }
+    public void DeleteSelected()
+    {
+        if(Selection.Count > 0)
+        {
+            var cmd = new DeleteSelectedElementsCommand(this);
             _engine.Stack.Do(cmd);
             InvalidateVisual();
         }

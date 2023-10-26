@@ -14,7 +14,7 @@ namespace InkPad.CommandEngine
     {
         private static int _idCounter = 1;
         public int Id { get; }
-        public ICommand? Command { get; }
+        public IStackCommand? Command { get; }
         public TaskTimer Timer { get; }
         public abstract bool IsValid { get; }
 

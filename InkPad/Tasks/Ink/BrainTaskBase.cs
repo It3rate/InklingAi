@@ -20,7 +20,7 @@ public abstract class BrainTaskBase : ITask
 
     private static int TaskCounter = 1;
 
-    public ICommand Command { get; }
+    public IStackCommand Command { get; }
     public Pad Pad { get; }
     public PadKind PadKind => Pad.PadKind;
     public SelectionSet Begin => Agent.Current.Data.Begin;

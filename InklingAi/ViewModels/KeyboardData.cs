@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Input;
 using InklingAi.CommandEngine;
+using InklingAi.Commands;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,8 +15,10 @@ public class KeyboardData
 {
 	public static KeyboardData Instance = new KeyboardData();
 
-	private Engine _engine;
-	private HashSet<Key> _downKeys { get; } = new HashSet<Key>();
+    private InklingModel _model => InklingModel.Instance;
+    private Engine _engine => _model.Engine;
+
+    private HashSet<Key> _downKeys { get; } = new HashSet<Key>();
 	public int Count(Key key) => _downKeys.Count();
 	public bool IsDown(Key key) => _downKeys.Contains(key);
 
@@ -25,7 +28,6 @@ public class KeyboardData
 
 	private KeyboardData()
 	{
-		_engine = Engine.Instance;
 	}
 
 	public void Cut()
@@ -47,30 +49,38 @@ public class KeyboardData
 	}
 	public void Delete()
 	{
-	}
+        _engine.FocusedCommandTarget?.DeleteSelected();
+    }
 
-	public void OnKeyDown(KeyEventArgs e)
-	{
-		_downKeys.Add(e.Key);
-		if (IsControlDown && IsShiftDown)
-		{
-			switch (e.Key)
-			{
-				case Key.Z: Redo(); break;
-			}
-		}
-		else if (IsControlDown)
-		{
-			switch (e.Key)
-			{
-				case Key.C: Copy(); break;
-				case Key.V: Paste(); break;
-				case Key.X: Cut(); break;
-				case Key.Y: Redo(); break;
-				case Key.Z: Undo(); break;
-				case Key.Delete: Delete(); break;
-			}
-		}
+    public void OnKeyDown(KeyEventArgs e)
+    {
+        _downKeys.Add(e.Key);
+        if (IsControlDown && IsShiftDown)
+        {
+            switch (e.Key)
+            {
+                case Key.Z: Redo(); break;
+            }
+        }
+        else if (IsControlDown)
+        {
+            switch (e.Key)
+            {
+                case Key.C: Copy(); break;
+                case Key.V: Paste(); break;
+                case Key.X: Cut(); break;
+                case Key.Y: Redo(); break;
+                case Key.Z: Undo(); break;
+            }
+        }
+        else
+        {
+            switch (e.Key)
+            {
+                case Key.Delete: Delete(); break;
+                case Key.Back: Delete(); break;
+            }
+        }
     }
 
 	public void OnKeyUp(KeyEventArgs e)

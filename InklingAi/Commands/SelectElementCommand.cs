@@ -44,7 +44,7 @@ public class SelectElementCommand : CommandBase
     public override void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime)
     {
     }
-    public override bool TryMergeWith(ICommand newCommand)
+    public override bool TryMergeWith(IStackCommand newCommand)
     {
         return false;
     }

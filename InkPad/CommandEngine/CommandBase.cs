@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Nums.CoreConcepts.Time;
 
-public abstract class CommandBase : ICommand
+public abstract class CommandBase : IStackCommand, ICommand
 {
     public int Id { get; }
     public List<ITask> Tasks { get; } = new List<ITask>();
@@ -23,11 +24,11 @@ public abstract class CommandBase : ICommand
     {
         throw new NotImplementedException();
     }
-    public virtual bool IsMergableWith(ICommand command)
+    public virtual bool IsMergableWith(IStackCommand command)
     {
         throw new NotImplementedException();
     }
-    public virtual bool TryMergeWith(ICommand command) => false;
+    public virtual bool TryMergeWith(IStackCommand command) => false;
 
     public MillisecondNumber LiveTimeSpan { get; set; } = MillisecondNumber.Zero;
 
@@ -105,8 +106,27 @@ public abstract class CommandBase : ICommand
         }
     }
 
-    public virtual ICommand Duplicate()
+    public virtual IStackCommand Duplicate()
     {
         return null;
     }
+
+
+    #region ICommand
+
+    public event EventHandler? CanExecuteChanged;
+    public void NotifyCanExecuteChanged()
+    {
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
+    public virtual bool CanExecute(object? parameter)
+    {
+        return true;
+    }
+
+    public virtual void Execute(object? parameter)
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
 }

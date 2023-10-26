@@ -30,27 +30,53 @@ public partial class InklingModel : ViewModelBase
 	public KeyboardData KeyboardData => KeyboardData.Instance;
 	public Engine Engine => Engine.Instance;
 
-	public InklingModel() // this needs to be public for design time access in MainView.
+    public InklingModel() // this needs to be public for design time access in MainView.
     {
         GalleryData.LoadNextPage();
         InfluenceData.LoadInputControls();
-        ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
-        GenerateCommand = new RelayCommand(OnGenerate);
         sdController = new StableDiffusionController();
         sdController.OnUpdateStep += OnGenerateUpdate;
+
+        ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
+        GenerateCommand = new RelayCommand(OnGenerate);
+        DeleteCommand = new RelayCommand(OnDelete);
     }
 
-    private void OnGenerateUpdate(int currentIndex, SkiaSharp.SKBitmap? img)
-    {
-    }
-
+    #region Commands
     public ICommand GenerateCommand { get; }
+    public ICommand DeleteCommand { get; }
+    public ICommand ChangeAspectSizeCommand { get; }
+
     public void OnGenerate()
     {
         RandomizeSeed();
         var path = sdController.Generate(SDConfig);
         GalleryData.LoadNextPage(0);
     }
+    public void OnDelete()
+    {
+    }
+
+    public double AspectRatio => SDConfig.AspectSize.Width / SDConfig.AspectSize.Height;
+    private void ChangeAspectSize(string? aspect)
+    {
+        if (aspect == "Portrait")
+            SDConfig.AspectSize = new IntSize(512, 640);
+        else if (aspect == "Square")
+            SDConfig.AspectSize = new IntSize(512, 512);
+        else if (aspect == "Landscape")
+            SDConfig.AspectSize = new IntSize(640, 512);
+    }
+    #endregion
+
+
+
+
+
+    private void OnGenerateUpdate(int currentIndex, SkiaSharp.SKBitmap? img)
+    {
+    }
+
 
     public StableDiffusionConfig SDConfig
     {
@@ -64,24 +90,6 @@ public partial class InklingModel : ViewModelBase
             }
         }
     }
-
-
-
-
-
-    public double AspectRatio => SDConfig.AspectSize.Width / SDConfig.AspectSize.Height;
-
-    public ICommand ChangeAspectSizeCommand { get; }
-    private void ChangeAspectSize(string? aspect)
-    {
-        if (aspect == "Portrait")
-            SDConfig.AspectSize = new IntSize(512, 640);
-        else if (aspect == "Square")
-            SDConfig.AspectSize = new IntSize(512, 512);
-        else if (aspect == "Landscape")
-            SDConfig.AspectSize = new IntSize(640, 512);
-    }
-
 
     private Random _random = new Random();
     public void RandomizeSeed()

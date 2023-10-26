@@ -30,17 +30,22 @@ public class DeleteSelectedElementsCommand : CommandBase
             DeleteTask = new DeleteElementTask(_target, _target.Selection.ToArray());
         }
         AddTaskAndRun(DeleteTask);
+        _target.Selection.Clear();
     }
 
     public override void Unexecute()
     {
         base.Unexecute();
+        if (DeleteTask != null)
+        {
+            _target.Selection.SetWith(DeleteTask.ElementsToDelete);
+        }
     }
 
     public override void Update(MillisecondNumber currentTime, MillisecondNumber deltaTime)
     {
     }
-    public override bool TryMergeWith(ICommand newCommand)
+    public override bool TryMergeWith(IStackCommand newCommand)
     {
         return false;
     }

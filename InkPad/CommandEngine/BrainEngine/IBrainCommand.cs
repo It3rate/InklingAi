@@ -16,7 +16,7 @@ using Nums.Primitives;
 //WorkspaceKind WorkspaceKind { get; }
 // Commands happen over time, can be repeatable, appendable, and can be evaluated to check for termination.
 // Commands are more or less formulas.
-public interface IBrainCommand : ICommand
+public interface IBrainCommand : IStackCommand
 {
     IAgent Agent { get; set; }
     Brain Brain { get; }

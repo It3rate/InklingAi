@@ -37,7 +37,7 @@ public class ChangeBrushParamsCommand : CommandBase
 		_target.GenCommandsOnChange = true;
 	}
 
-    public override bool TryMergeWith(ICommand newCommand)
+    public override bool TryMergeWith(IStackCommand newCommand)
     {
         var result = false;
         if(newCommand is ChangeBrushParamsCommand newCmd)

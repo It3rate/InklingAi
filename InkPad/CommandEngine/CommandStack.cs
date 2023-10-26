@@ -12,14 +12,14 @@
     public class CommandStack : ICommandStack
     {
         private int _stackIndex = 0;
-        private readonly List<ICommand> _stack = new List<ICommand>(4096);
+        private readonly List<IStackCommand> _stack = new List<IStackCommand>(4096);
 
-        private readonly List<ICommand> _toAdd = new List<ICommand>();
-        private readonly List<ICommand> _toAddAfterDelay = new List<ICommand>();
-        private readonly List<ICommand> _liveCommands = new List<ICommand>();
-        private readonly List<ICommand> _toCommit = new List<ICommand>(); // changes
-        private readonly List<ICommand> _toDelete = new List<ICommand>(); // commands that natrually end
-        private readonly List<ICommand> _toTerminate = new List<ICommand>(); // commands that didn't naturally finish
+        private readonly List<IStackCommand> _toAdd = new List<IStackCommand>();
+        private readonly List<IStackCommand> _toAddAfterDelay = new List<IStackCommand>();
+        private readonly List<IStackCommand> _liveCommands = new List<IStackCommand>();
+        private readonly List<IStackCommand> _toCommit = new List<IStackCommand>(); // changes
+        private readonly List<IStackCommand> _toDelete = new List<IStackCommand>(); // commands that natrually end
+        private readonly List<IStackCommand> _toTerminate = new List<IStackCommand>(); // commands that didn't naturally finish
 
         public readonly MillisecondNumber LastTime = MillisecondNumber.Zero;
 
@@ -32,7 +32,7 @@
         {
         }
 
-        public virtual void Do(ICommand command)
+        public virtual void Do(IStackCommand command)
         {
             command.Stack = this;
             if (command.LiveTimeSpan == null)
@@ -94,7 +94,7 @@
                 }
             }
         }
-        protected void AddStackCommand(ICommand command)
+        protected void AddStackCommand(IStackCommand command)
         {
             RemoveRedoCommands();
             bool merged = AttemptToMerge(command);
@@ -110,7 +110,7 @@
                 command.Execute();
             }
         }
-        protected void AddLiveCommand(ICommand command)
+        protected void AddLiveCommand(IStackCommand command)
         {
             if (command.IsContinuous)
             {
@@ -125,7 +125,7 @@
                 _stack.RemoveRange(_stackIndex, RedoSize);
             }
         }
-        protected bool AttemptToMerge(ICommand command) => PreviousCommand()?.TryMergeWith(command) ?? false;
+        protected bool AttemptToMerge(IStackCommand command) => PreviousCommand()?.TryMergeWith(command) ?? false;
         protected bool UpdateLiveCommands(MillisecondNumber currentTime, MillisecondNumber deltaTime)
         {
             bool result = false;
@@ -166,7 +166,7 @@
             }
             return result;
         }
-        public ICommand? PreviousCommand() => CanUndo ? _stack[_stackIndex - 1] : null;
+        public IStackCommand? PreviousCommand() => CanUndo ? _stack[_stackIndex - 1] : null;
 
         public bool Undo()
         {
@@ -236,11 +236,11 @@
             _stackIndex = 0;
         }
         public bool CanRepeat => true;
-        public List<ICommand> GetRepeatable()
+        public List<IStackCommand> GetRepeatable()
         {
             return null;
         }
-        protected void AddAndExecuteCommand(ICommand command)
+        protected void AddAndExecuteCommand(IStackCommand command)
         {
             RemoveRedoCommands();
             _stackIndex++;

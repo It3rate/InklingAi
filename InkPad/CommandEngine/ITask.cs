@@ -15,7 +15,7 @@ namespace InkPad.CommandEngine
     public interface ITask
     {
 	    int Id { get; }
-	    ICommand? Command { get; }
+	    IStackCommand? Command { get; }
         TaskTimer Timer { get; }
         bool IsValid { get; }
 	    void RunTask();
@@ -23,7 +23,7 @@ namespace InkPad.CommandEngine
         //Pad Pad { get; }
         //PadKind PadKind { get; }
 
-        //void OnAddedToCommand(ICommand command);
+        //void OnAddedToCommand(IStackCommand command);
     }
 
     public interface ICreateTask : ITask
