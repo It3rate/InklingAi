@@ -20,7 +20,12 @@ public class TransformElementCommand : CommandBase
         TransformTask = new TransformElementTask(_target, dx, dy);
     }
 
-    public override void Execute()
+	public TransformElementCommand(PaintableImage target, float rotate)
+	{
+		_target = target;
+		TransformTask = new TransformElementTask(_target, rotate);
+	}
+	public override void Execute()
     {
         base.Execute();
         AddTaskAndRun(TransformTask);

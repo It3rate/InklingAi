@@ -21,12 +21,19 @@ public class TransformElementTask : TaskBase
     public List<SKMatrix> PreviousMatricies { get; } = new();
     public PaintableImage Target { get; }
     public override bool IsValid => true;
-    public TransformElementTask(PaintableImage target, float dx, float dy)
-    {
-        Target = target;
-        NewMatrix = SKMatrix.CreateTranslation(dx, dy);
-    }
-    public override void RunTask()
+	public TransformElementTask(PaintableImage target, float dx, float dy)
+	{
+		Target = target;
+		NewMatrix = SKMatrix.CreateTranslation(dx, dy);
+	}
+	public TransformElementTask(PaintableImage target, float rotate)
+	{
+		Target = target;
+		var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
+        var bnds = selected.Bounds;
+		NewMatrix = SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), bnds.MidX, bnds.MidY);
+	}
+	public override void RunTask()
     {
         var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
         PreviousSelection.Clear();

@@ -50,13 +50,17 @@ public class KeyboardData
     public void Delete()
     {
         _engine.FocusedCommandTarget?.DeleteSelected();
-    }
-    public void Move(SelectionTransformKind transformKind)
-    {
-        _engine.FocusedCommandTarget?.Move(transformKind, IsControlDown, IsShiftDown);
-    }
+	}
+	public void Move(SelectionTransformKind transformKind)
+	{
+		_engine.FocusedCommandTarget?.Move(transformKind, IsControlDown, IsShiftDown);
+	}
+	public void Rotate(SelectionTransformKind transformKind)
+	{
+		_engine.FocusedCommandTarget?.Rotate(transformKind, IsControlDown, IsShiftDown);
+	}
 
-    public void OnKeyDown(KeyEventArgs e)
+	public void OnKeyDown(KeyEventArgs e)
     {
         _downKeys.Add(e.Key);
         if (IsControlDown && IsShiftDown)
@@ -79,7 +83,9 @@ public class KeyboardData
                 case Key.Right: Move(SelectionTransformKind.MoveRight); break;
                 case Key.Up: Move(SelectionTransformKind.MoveUp); break;
                 case Key.Down: Move(SelectionTransformKind.MoveDown); break;
-            }
+				case Key.OemComma: Rotate(SelectionTransformKind.RotateLeft); break;
+				case Key.OemPeriod: Rotate(SelectionTransformKind.RotateRight); break;
+			}
         }
         else if (IsShiftDown)
         {
@@ -89,7 +95,9 @@ public class KeyboardData
                 case Key.Right: Move(SelectionTransformKind.MoveRight); break;
                 case Key.Up: Move(SelectionTransformKind.MoveUp); break;
                 case Key.Down: Move(SelectionTransformKind.MoveDown); break;
-            }
+				case Key.OemComma: Rotate(SelectionTransformKind.RotateLeft); break;
+				case Key.OemPeriod: Rotate(SelectionTransformKind.RotateRight); break;
+			}
         }
         else
         {
@@ -101,7 +109,9 @@ public class KeyboardData
                 case Key.Right: Move(SelectionTransformKind.MoveRight); break;
                 case Key.Up: Move(SelectionTransformKind.MoveUp); break;
                 case Key.Down: Move(SelectionTransformKind.MoveDown); break;
-            }
+				case Key.OemComma: Rotate(SelectionTransformKind.RotateLeft); break;
+				case Key.OemPeriod: Rotate(SelectionTransformKind.RotateRight); break;
+			}
         }
     }
 

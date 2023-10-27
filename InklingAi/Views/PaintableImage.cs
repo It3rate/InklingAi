@@ -276,19 +276,27 @@ public class PaintableImage : BaseImage
             _engine.Stack.Do(cmd);
             InvalidateVisual();
         }
-    }
-    public void Move(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
-    {
-        var amount = isControlDown ? 1f : isShiftDown ? 32f : 4f;
-        var dx = transformKind == SelectionTransformKind.MoveLeft ? -amount : transformKind == SelectionTransformKind.MoveRight ? amount : 0;
-        var dy = transformKind == SelectionTransformKind.MoveUp ? -amount : transformKind == SelectionTransformKind.MoveDown ? amount : 0;
-        var cmd = new TransformElementCommand(this, dx, dy);
-        _engine.Stack.Do(cmd);
-        InvalidateVisual();
-    }
+	}
+	public void Move(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
+	{
+		var amount = isControlDown ? 1f : isShiftDown ? 32f : 4f;
+		var dx = transformKind == SelectionTransformKind.MoveLeft ? -amount : transformKind == SelectionTransformKind.MoveRight ? amount : 0;
+		var dy = transformKind == SelectionTransformKind.MoveUp ? -amount : transformKind == SelectionTransformKind.MoveDown ? amount : 0;
+		var cmd = new TransformElementCommand(this, dx, dy);
+		_engine.Stack.Do(cmd);
+		InvalidateVisual();
+	}
+	public void Rotate(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
+	{
+		var amount = isControlDown ? 1f : isShiftDown ? 15f : 45f;
+		var rot = transformKind == SelectionTransformKind.RotateLeft ? -amount : transformKind == SelectionTransformKind.RotateRight ? amount : 0;
+		var cmd = new TransformElementCommand(this, rot);
+		_engine.Stack.Do(cmd);
+		InvalidateVisual();
+	}
 
 
-    protected override void RenderSkia(SKCanvas canvas)
+	protected override void RenderSkia(SKCanvas canvas)
     {
         for (int i = 0; i < _paths.Count; i++) // Note: foreach can have collection modified issues
         {
