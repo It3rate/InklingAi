@@ -1,4 +1,5 @@
 ﻿using InkPad.Renderer;
+using InkPad.Utils;
 using Nums.Composites;
 using Nums.CoreConcepts.CoreTraits;
 using Nums.Primitives;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InkPad.Adapters;
 
-public class SkPolyline : SkiaAdapter, ISelectableEntity
+public class SkPolyline : SkiaAdapter, ISelectableElement
 {
     #region private fields
     public int Id { get; }
@@ -23,7 +24,6 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
     private uint _colorValue;
 
     private bool _brushDirty = true;
-    private bool _pathDirty = true;
     #endregion
 
     public float BrushSize
@@ -51,11 +51,10 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
     }
     public float Feather { get; set; } = 0f;
 
-    public SKMatrix Matrix { get; set; } = SKMatrix.Identity;
 
     public SkPolyline(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null) : base(width, height)
     {
-        Id = ISelectableEntity.EntityCounter++;
+        Id = ISelectableElement.EntityCounter++;
 
         if (brushSize != null)
         {
@@ -88,6 +87,7 @@ public class SkPolyline : SkiaAdapter, ISelectableEntity
             return result;
         }
     }
+
     public bool IsPointInside(SKPoint point)
     {
         return PathOutline.Contains(point.X, point.Y);

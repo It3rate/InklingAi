@@ -12,11 +12,11 @@ using InkPad.CommandEngine;
 
 public class DeleteElementTask : TaskBase
 {
-    public List<ISelectableEntity> ElementsToDelete { get; } = new();
+    public List<ISelectableElement> ElementsToDelete { get; } = new();
     public List<int> DeletionIndexes { get; } = new ();
     public PaintableImage Target { get; }
     public override bool IsValid => true;
-    public DeleteElementTask(PaintableImage target, params ISelectableEntity[] elementsToDelete)
+    public DeleteElementTask(PaintableImage target, params ISelectableElement[] elementsToDelete)
     {
         Target = target;
         ElementsToDelete.AddRange(elementsToDelete);

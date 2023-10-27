@@ -11,16 +11,16 @@ using InklingAi.Views;
 using InkPad.Adapters;
 using SkiaSharp;
 
-public class Selection : IEnumerable<ISelectableEntity>
+public class Selection : IEnumerable<ISelectableElement>
 {
-    private readonly List<ISelectableEntity> _internalList = new();
-    private PaintableImage _target;
+    private readonly List<ISelectableElement> _internalList = new();
+    protected PaintableImage _target;
     public Selection(PaintableImage target) 
     {
         _target = target;
     }
 
-    public void Set(params ISelectableEntity[]? items)
+    public void Set(params ISelectableElement[]? items)
     {
         _internalList.Clear();
         if (items != null)
@@ -29,13 +29,13 @@ public class Selection : IEnumerable<ISelectableEntity>
         }
         _target.InvalidateVisual();
     }
-    public void SetWith(List<ISelectableEntity> items)
+    public void SetWith(List<ISelectableElement> items)
     {
         _internalList.Clear();
         AddRange(items);
         _target.InvalidateVisual();
     }
-    public void Add(ISelectableEntity item)
+    public void Add(ISelectableElement item)
     {
         if (item != null)
         {
@@ -43,13 +43,13 @@ public class Selection : IEnumerable<ISelectableEntity>
             _target.InvalidateVisual();
         }
     }
-    public void AddRange(IEnumerable<ISelectableEntity> items)
+    public void AddRange(IEnumerable<ISelectableElement> items)
     {
         _internalList.AddRange(items.Where(item => item != null));
         _target.InvalidateVisual();
     }
 
-    public bool Remove(ISelectableEntity item)
+    public bool Remove(ISelectableElement item)
     {
         var result = false;
         if (_internalList.Contains(item))
@@ -59,7 +59,7 @@ public class Selection : IEnumerable<ISelectableEntity>
         }
         return result;
     }
-    public void RemoveMany(IEnumerable<ISelectableEntity> items)
+    public void RemoveMany(IEnumerable<ISelectableElement> items)
     {
         _internalList.RemoveMany(items.Where(item => item != null));
         _target.InvalidateVisual();
@@ -70,20 +70,20 @@ public class Selection : IEnumerable<ISelectableEntity>
         _target.InvalidateVisual();
     }
 
-    public ISelectableEntity[] ToArray() => _internalList.ToArray();
-    public List<ISelectableEntity> ToList() => _internalList.ToList();
-    public ISelectableEntity this[int index] => _internalList[index];
+    public ISelectableElement[] ToArray() => _internalList.ToArray();
+    public List<ISelectableElement> ToList() => _internalList.ToList();
+    public ISelectableElement this[int index] => _internalList[index];
     public int Count => _internalList.Count;
-    public bool Contains(ISelectableEntity item) => _internalList.Contains(item);
-    public int IndexOf(ISelectableEntity item) => _internalList.IndexOf(item);
+    public bool Contains(ISelectableElement item) => _internalList.Contains(item);
+    public int IndexOf(ISelectableElement item) => _internalList.IndexOf(item);
 
-    public void ForEach(Action<ISelectableEntity> action) => _internalList.ForEach(action);
-    public IEnumerator<ISelectableEntity> GetEnumerator() => _internalList.GetEnumerator();
+    public void ForEach(Action<ISelectableElement> action) => _internalList.ForEach(action);
+    public IEnumerator<ISelectableElement> GetEnumerator() => _internalList.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => _internalList.GetEnumerator();
 
     public SKMatrix Transform(float dx, float dy, float rotation)
     {
-        var matrix = CreateTransformMatrix(Bounds, 45f, 100, 100);
+        var matrix = CreateTransformMatrix(Bounds, dx, dy, rotation);
         ApplyMatrixToPaths(matrix);
         return matrix;
     }
@@ -104,7 +104,7 @@ public class Selection : IEnumerable<ISelectableEntity>
             return totalBounds;
         }
     }
-    public static SKMatrix CreateTransformMatrix(SKRect boundingBox, float rotationDegrees, float dx, float dy)
+    public static SKMatrix CreateTransformMatrix(SKRect boundingBox, float dx, float dy, float rotationDegrees)
     {
         var matrix = SKMatrix.CreateIdentity();
         matrix = matrix.PreConcat(SKMatrix.CreateTranslation(-boundingBox.MidX, -boundingBox.MidY));
@@ -122,4 +122,16 @@ public class Selection : IEnumerable<ISelectableEntity>
         _target.InvalidateVisual();
     }
 
+}
+
+public enum SelectionTransformKind
+{
+    MoveLeft,
+    MoveRight,
+    MoveUp,
+    MoveDown,
+    ScaleUp,
+    ScaleDown,
+    RotateRight,
+    RotateLeft,
 }

@@ -46,10 +46,14 @@ public class KeyboardData
 	public void Redo()
 	{
 		_engine.Stack.Redo();
-	}
-	public void Delete()
-	{
+    }
+    public void Delete()
+    {
         _engine.FocusedCommandTarget?.DeleteSelected();
+    }
+    public void Move(SelectionTransformKind transformKind)
+    {
+        _engine.FocusedCommandTarget?.Move(transformKind, IsControlDown, IsShiftDown);
     }
 
     public void OnKeyDown(KeyEventArgs e)
@@ -71,6 +75,20 @@ public class KeyboardData
                 case Key.X: Cut(); break;
                 case Key.Y: Redo(); break;
                 case Key.Z: Undo(); break;
+                case Key.Left: Move(SelectionTransformKind.MoveLeft); break;
+                case Key.Right: Move(SelectionTransformKind.MoveRight); break;
+                case Key.Up: Move(SelectionTransformKind.MoveUp); break;
+                case Key.Down: Move(SelectionTransformKind.MoveDown); break;
+            }
+        }
+        else if (IsShiftDown)
+        {
+            switch (e.Key)
+            {
+                case Key.Left: Move(SelectionTransformKind.MoveLeft); break;
+                case Key.Right: Move(SelectionTransformKind.MoveRight); break;
+                case Key.Up: Move(SelectionTransformKind.MoveUp); break;
+                case Key.Down: Move(SelectionTransformKind.MoveDown); break;
             }
         }
         else
@@ -79,6 +97,10 @@ public class KeyboardData
             {
                 case Key.Delete: Delete(); break;
                 case Key.Back: Delete(); break;
+                case Key.Left: Move(SelectionTransformKind.MoveLeft); break;
+                case Key.Right: Move(SelectionTransformKind.MoveRight); break;
+                case Key.Up: Move(SelectionTransformKind.MoveUp); break;
+                case Key.Down: Move(SelectionTransformKind.MoveDown); break;
             }
         }
     }

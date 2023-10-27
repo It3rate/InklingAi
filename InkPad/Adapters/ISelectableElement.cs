@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using SkiaSharp;
 
-    public interface ISelectableEntity
+    public interface ISelectableElement
     {
         public static int EntityCounter = 1;
         int Id { get; }

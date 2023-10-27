@@ -17,6 +17,18 @@ namespace InkPad.Adapters
 	{
 		protected PolyNumberSet Polyset { get; }
 
+        protected bool _pathDirty = true;
+
+        private SKMatrix _matrix = SKMatrix.Identity;
+        public SKMatrix Matrix
+        {
+            get => _matrix;
+            set
+            {
+                _matrix = value;
+                _pathDirty = true;
+            }
+        }
         protected SkiaAdapter(int width, int height) 
         {
             Polyset = CreatePolyset(width, height);
@@ -25,7 +37,7 @@ namespace InkPad.Adapters
 
         public int Count => Polyset.Count;
 
-		public SKPoint MakePoint(double[] values) => new SKPoint((float)values[0], (float)values[1]);
+        public SKPoint MakePoint(double[] values) => new SKPoint((float)values[0], (float)values[1]);
 		public SKPoint[] ToPoints()
 		{
 			var pts = Polyset.GetIndexedValues();
@@ -34,8 +46,9 @@ namespace InkPad.Adapters
 			for (int i = 0; i < pts.Length; i++)
 			{
 				result[i] = MakePoint(pts[i]);
-			}
-			return result;
+            }
+            result = Matrix.MapPoints(result);
+            return result;
 		}
 
 		public SKPath ToQuadCurves(bool closePath = true)

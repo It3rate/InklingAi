@@ -13,18 +13,19 @@ using Nums.CoreConcepts.Time;
 
 public class SelectElementCommand : CommandBase
 {
-    public List<ISelectableEntity> Elements { get; private set; } = new();
+    public List<ISelectableElement> Elements { get; private set; } = new();
     public SelectElementTask? SelectTask;
     private PaintableImage _target;
-    public SelectElementCommand(PaintableImage target, params ISelectableEntity?[]? elements)
+    public SelectElementCommand(PaintableImage target, params ISelectableElement?[]? elements)
     {
         if (elements != null)
         {
-            ISelectableEntity[] filtered = (ISelectableEntity[])(elements.Where(item => item != null).ToArray());
+            ISelectableElement[] filtered = (ISelectableElement[])(elements.Where(item => item != null).ToArray());
             Elements.AddRange(filtered);
         }
         _target = target;
     }
+    public override bool CanUndo => false;
 
     public override void Execute()
     {

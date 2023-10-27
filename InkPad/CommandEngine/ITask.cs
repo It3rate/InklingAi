@@ -20,8 +20,6 @@ namespace InkPad.CommandEngine
         bool IsValid { get; }
 	    void RunTask();
 	    void UnRunTask();
-        //Pad Pad { get; }
-        //PadKind PadKind { get; }
 
         //void OnAddedToCommand(IStackCommand command);
     }

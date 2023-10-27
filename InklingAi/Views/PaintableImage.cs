@@ -25,7 +25,7 @@ public class PaintableImage : BaseImage
 	public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
     public Selection Selection { get; }
-    private List<ISelectableEntity> _paths { get; } = new List<ISelectableEntity>();
+    private List<ISelectableElement> _paths { get; } = new List<ISelectableElement>();
     private SkPolyline _curPath;
     private UIRenderUtils _renderUtil = new UIRenderUtils();
     private SelectionHandles _selectionHandles;
@@ -40,11 +40,11 @@ public class PaintableImage : BaseImage
         _selectionHandles = new SelectionHandles(this);
     }
 
-    public int IndexOfElement(ISelectableEntity element)
+    public int IndexOfElement(ISelectableElement element)
     {
         return _paths.IndexOf(element);
     }
-    public void AddElement(ISelectableEntity path)
+    public void AddElement(ISelectableElement path)
     {
         _paths.Add(path);
         Selection.Set(path);
@@ -60,7 +60,7 @@ public class PaintableImage : BaseImage
 			InvalidateVisual();
 		}
     }
-    public int RemoveElement(ISelectableEntity element)
+    public int RemoveElement(ISelectableElement element)
     {
         int result = -1;
         if (_paths.Contains(element))
@@ -71,7 +71,7 @@ public class PaintableImage : BaseImage
         }
         return result;
     }
-    public void AddElementAt(int index, ISelectableEntity element)
+    public void AddElementAt(int index, ISelectableElement element)
     {
         if (index <= _paths.Count)
         {
@@ -251,7 +251,7 @@ public class PaintableImage : BaseImage
 	private void CheckForSelection(Point point)
     {
         var skpt = new SKPoint((float)point.X, (float)point.Y);
-        ISelectableEntity? sel = null;
+        ISelectableElement? sel = null;
         foreach (var path in _paths) 
         { 
             if(path.IsPointInside(skpt))
@@ -276,6 +276,15 @@ public class PaintableImage : BaseImage
             _engine.Stack.Do(cmd);
             InvalidateVisual();
         }
+    }
+    public void Move(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
+    {
+        var amount = isControlDown ? 1f : isShiftDown ? 32f : 4f;
+        var dx = transformKind == SelectionTransformKind.MoveLeft ? -amount : transformKind == SelectionTransformKind.MoveRight ? amount : 0;
+        var dy = transformKind == SelectionTransformKind.MoveUp ? -amount : transformKind == SelectionTransformKind.MoveDown ? amount : 0;
+        var cmd = new TransformElementCommand(this, dx, dy);
+        _engine.Stack.Do(cmd);
+        InvalidateVisual();
     }
 
 

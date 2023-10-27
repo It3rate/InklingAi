@@ -34,13 +34,18 @@ namespace InklingAi.Views
 		{
 			canvas.DrawCircle(data.CurrentPosition.X, data.CurrentPosition.Y, data.BrushSize/2, BrushOutinePen);
         }
-        public void DrawShape(SKCanvas canvas, ISelectableEntity line, bool strokePaint = false)
+        public void DrawShape(SKCanvas canvas, ISelectableElement element, bool strokePaint = false)
         {
+            //canvas.Save();
+            //canvas.SetMatrix(canvas.TotalMatrix.PostConcat(element.Matrix));
+
             if (strokePaint)
             {
-                canvas.DrawPath(line.PathOutline, _highlight);
+                canvas.DrawPath(element.PathOutline, _highlight);
             }
-            canvas.DrawPath(line.Path, line.Paint);
+            canvas.DrawPath(element.Path, element.Paint);
+
+            //canvas.Restore();
         }
     }
 }
