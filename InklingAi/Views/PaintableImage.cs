@@ -282,7 +282,7 @@ public class PaintableImage : BaseImage
 		var amount = isControlDown ? 1f : isShiftDown ? 32f : 4f;
 		var dx = transformKind == SelectionTransformKind.MoveLeft ? -amount : transformKind == SelectionTransformKind.MoveRight ? amount : 0;
 		var dy = transformKind == SelectionTransformKind.MoveUp ? -amount : transformKind == SelectionTransformKind.MoveDown ? amount : 0;
-		var cmd = new TransformElementCommand(this, dx, dy);
+		var cmd = TransformElementCommand.CreateTranslationCommand(this, dx, dy);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}
@@ -290,7 +290,17 @@ public class PaintableImage : BaseImage
 	{
 		var amount = isControlDown ? 1f : isShiftDown ? 15f : 45f;
 		var rot = transformKind == SelectionTransformKind.RotateLeft ? -amount : transformKind == SelectionTransformKind.RotateRight ? amount : 0;
-		var cmd = new TransformElementCommand(this, rot);
+		var cmd = TransformElementCommand.CreateRotationCommand(this, rot);
+		_engine.Stack.Do(cmd);
+		InvalidateVisual();
+	}
+	public void Scale(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
+	{
+		var amount = isControlDown ? 1.05f : isShiftDown ? 1.2f : 1.1f;
+		var scale = 
+            transformKind == SelectionTransformKind.ScaleDown ? 1f/amount : 
+            transformKind == SelectionTransformKind.ScaleUp ? amount : 0;
+		var cmd = TransformElementCommand.CreateScaleCommand(this, scale, scale);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}

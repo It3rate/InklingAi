@@ -21,18 +21,58 @@ public class TransformElementTask : TaskBase
     public List<SKMatrix> PreviousMatricies { get; } = new();
     public PaintableImage Target { get; }
     public override bool IsValid => true;
-	public TransformElementTask(PaintableImage target, float dx, float dy)
+    private TransformElementTask(PaintableImage target)
 	{
 		Target = target;
-		NewMatrix = SKMatrix.CreateTranslation(dx, dy);
 	}
-	public TransformElementTask(PaintableImage target, float rotate)
+	public TransformElementTask(PaintableImage target, float dx, float dy, float rotate, float scale)
 	{
 		Target = target;
 		var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
-        var bnds = selected.Bounds;
-		NewMatrix = SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), bnds.MidX, bnds.MidY);
+		NewMatrix = SKMatrix.Identity;
+		var bnds = selected.Bounds;
+		if (rotate != 0)
+		{
+			NewMatrix.PostConcat(SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), bnds.MidX, bnds.MidY));
+		}
+		if (scale != 1)
+		{
+			NewMatrix.PostConcat(SKMatrix.CreateTranslation(-bnds.MidX, -bnds.MidY));
+			NewMatrix.PostConcat(SKMatrix.CreateScale(scale, scale));
+			NewMatrix.PostConcat(SKMatrix.CreateTranslation(bnds.MidX, bnds.MidY));
+		}
+		if (dx != 0 || dy != 0)
+		{
+			NewMatrix.PostConcat(SKMatrix.CreateTranslation(dx, dy));
+		}
 	}
+
+	public static TransformElementTask CreateTranslationTask(PaintableImage target, float dx, float dy)
+	{
+		var result = new TransformElementTask(target);
+		result.NewMatrix = SKMatrix.CreateTranslation(dx, dy);
+		return result;
+	}
+	public static TransformElementTask CreateRotationTask(PaintableImage target, float rotate)
+	{
+		var result = new TransformElementTask(target);
+		var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
+		var bnds = selected.Bounds;
+		result.NewMatrix = SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), bnds.MidX, bnds.MidY);
+		return result;
+	}
+	public static TransformElementTask CreateScaleTask(PaintableImage target, float scaleX, float scaleY)
+	{
+		var result = new TransformElementTask(target);
+		var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
+		var bnds = selected.Bounds;
+		result.NewMatrix = SKMatrix.Identity;
+		result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateTranslation(-bnds.MidX, -bnds.MidY));
+		result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateScale(scaleX, scaleY));
+		result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateTranslation(bnds.MidX, bnds.MidY));
+		return result;
+	}
+
 	public override void RunTask()
     {
         var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));

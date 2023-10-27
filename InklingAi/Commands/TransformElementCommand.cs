@@ -14,17 +14,29 @@ public class TransformElementCommand : CommandBase
 {
     public TransformElementTask TransformTask;
     private PaintableImage _target;
-    public TransformElementCommand(PaintableImage target, float dx, float dy)
+    private TransformElementCommand(PaintableImage target)
     {
         _target = target;
-        TransformTask = new TransformElementTask(_target, dx, dy);
-    }
-
-	public TransformElementCommand(PaintableImage target, float rotate)
-	{
-		_target = target;
-		TransformTask = new TransformElementTask(_target, rotate);
 	}
+	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy)
+	{
+		var result = new TransformElementCommand(target);
+		result.TransformTask = TransformElementTask.CreateTranslationTask(target, dx, dy);
+		return result;
+	}
+	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float rotate)
+	{
+		var result = new TransformElementCommand(target);
+		result.TransformTask = TransformElementTask.CreateRotationTask(target, rotate);
+		return result;
+	}
+	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY)
+	{
+		var result = new TransformElementCommand(target);
+		result.TransformTask = TransformElementTask.CreateScaleTask(target, scaleX, scaleY);
+		return result;
+	}
+
 	public override void Execute()
     {
         base.Execute();

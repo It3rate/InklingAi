@@ -59,60 +59,63 @@ public class KeyboardData
 	{
 		_engine.FocusedCommandTarget?.Rotate(transformKind, IsControlDown, IsShiftDown);
 	}
+	public void Scale(SelectionTransformKind transformKind)
+	{
+		_engine.FocusedCommandTarget?.Scale(transformKind, IsControlDown, IsShiftDown);
+	}
+
+	private Key[] _alwaysCaptureKeys = new Key[] { Key.Left, Key.Right, Key.Up, Key.Down, 
+		Key.OemComma, Key.OemPeriod, Key.OemOpenBrackets, Key.OemCloseBrackets};
 
 	public void OnKeyDown(KeyEventArgs e)
     {
         _downKeys.Add(e.Key);
-        if (IsControlDown && IsShiftDown)
-        {
-            switch (e.Key)
-            {
-                case Key.Z: Redo(); break;
-            }
-        }
-        else if (IsControlDown)
-        {
-            switch (e.Key)
-            {
-                case Key.C: Copy(); break;
-                case Key.V: Paste(); break;
-                case Key.X: Cut(); break;
-                case Key.Y: Redo(); break;
-                case Key.Z: Undo(); break;
-                case Key.Left: Move(SelectionTransformKind.MoveLeft); break;
-                case Key.Right: Move(SelectionTransformKind.MoveRight); break;
-                case Key.Up: Move(SelectionTransformKind.MoveUp); break;
-                case Key.Down: Move(SelectionTransformKind.MoveDown); break;
+		if (_alwaysCaptureKeys.Contains(e.Key))
+		{
+			switch (e.Key)
+			{
+				case Key.Left: Move(SelectionTransformKind.MoveLeft); break;
+				case Key.Right: Move(SelectionTransformKind.MoveRight); break;
+				case Key.Up: Move(SelectionTransformKind.MoveUp); break;
+				case Key.Down: Move(SelectionTransformKind.MoveDown); break;
 				case Key.OemComma: Rotate(SelectionTransformKind.RotateLeft); break;
 				case Key.OemPeriod: Rotate(SelectionTransformKind.RotateRight); break;
+				case Key.OemOpenBrackets: Scale(SelectionTransformKind.ScaleDown); break;
+				case Key.OemCloseBrackets: Scale(SelectionTransformKind.ScaleUp); break;
 			}
-        }
-        else if (IsShiftDown)
-        {
-            switch (e.Key)
-            {
-                case Key.Left: Move(SelectionTransformKind.MoveLeft); break;
-                case Key.Right: Move(SelectionTransformKind.MoveRight); break;
-                case Key.Up: Move(SelectionTransformKind.MoveUp); break;
-                case Key.Down: Move(SelectionTransformKind.MoveDown); break;
-				case Key.OemComma: Rotate(SelectionTransformKind.RotateLeft); break;
-				case Key.OemPeriod: Rotate(SelectionTransformKind.RotateRight); break;
+		}
+		else if (IsControlDown && IsShiftDown)
+		{
+			switch (e.Key)
+			{
+				case Key.Z: Redo(); break;
 			}
-        }
-        else
-        {
-            switch (e.Key)
-            {
-                case Key.Delete: Delete(); break;
-                case Key.Back: Delete(); break;
-                case Key.Left: Move(SelectionTransformKind.MoveLeft); break;
-                case Key.Right: Move(SelectionTransformKind.MoveRight); break;
-                case Key.Up: Move(SelectionTransformKind.MoveUp); break;
-                case Key.Down: Move(SelectionTransformKind.MoveDown); break;
-				case Key.OemComma: Rotate(SelectionTransformKind.RotateLeft); break;
-				case Key.OemPeriod: Rotate(SelectionTransformKind.RotateRight); break;
+		}
+		else if (IsControlDown)
+		{
+			switch (e.Key)
+			{
+				case Key.C: Copy(); break;
+				case Key.V: Paste(); break;
+				case Key.X: Cut(); break;
+				case Key.Y: Redo(); break;
+				case Key.Z: Undo(); break;
 			}
-        }
+		}
+		else if (IsShiftDown)
+		{
+			switch (e.Key)
+			{
+			}
+		}
+		else
+		{
+			switch (e.Key)
+			{
+				case Key.Delete: Delete(); break;
+				case Key.Back: Delete(); break;
+			}
+		}
     }
 
 	public void OnKeyUp(KeyEventArgs e)
