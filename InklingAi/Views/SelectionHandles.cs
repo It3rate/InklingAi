@@ -22,7 +22,6 @@
     {
         public PaintableImage Paintable { get; }
         Selection Selection => Paintable.Selection;
-        TransformKind TransformKind { get; set; } = TransformKind.Scale;
 
 		private SKSvg _tl = new SKSvg();
 		private SKSvg _tr = new SKSvg();
@@ -54,33 +53,39 @@
 
         public void RenderSkia(SKCanvas canvas)
         {
-            SKRect? bnds = Selection?.Bounds;
-            if (bnds != null)
+            if (Selection.Count > 0)
             {
-                var b = bnds.Value;
-                DrawFrame(canvas, b);
-                DrawHandle(canvas, b, RectPosition.TopLeft);
-                DrawHandle(canvas, b, RectPosition.TopRight);
-                DrawHandle(canvas, b, RectPosition.BottomRight);
-                DrawHandle(canvas, b, RectPosition.BottomLeft);
-                DrawCenter(canvas, b.Center());
+                SKRect? bnds = Selection?.Bounds;
+                if (bnds != null)
+                {
+                    var b = bnds.Value;
+                    DrawFrame(canvas, b);
+                    DrawHandle(canvas, b, RectPosition.TopLeft);
+                    DrawHandle(canvas, b, RectPosition.TopRight);
+                    DrawHandle(canvas, b, RectPosition.BottomRight);
+                    DrawHandle(canvas, b, RectPosition.BottomLeft);
+                    DrawCenter(canvas, b.Center());
+                }
             }
         }
 
         private int _handleHalfWidth = 4;
         private void DrawFrame(SKCanvas canvas, SKRect frame)
         { 
-            switch(TransformKind)
-            {
-                case TransformKind.Scale:
-                    canvas.DrawRect(frame, UIRenderUtils.FramePen);
-                    break;
-            }
+            switch(Selection.TransformKind)
+			{
+				case TransformKind.Scale:
+					canvas.DrawRect(frame, UIRenderUtils.FramePen);
+					break;
+				case TransformKind.Rotate:
+					canvas.DrawRect(frame, UIRenderUtils.FramePen);
+					break;
+			}
 		}
 		private void DrawHandle(SKCanvas canvas, SKRect bnds, RectPosition pos)
 		{
             var pt = bnds.PointFromPosition(pos);
-			switch (TransformKind)
+			switch (Selection.TransformKind)
 			{
 				case TransformKind.Scale:
                     var rect = new SKRect(pt.X - _handleHalfWidth, pt.Y - _handleHalfWidth, pt.X + _handleHalfWidth, pt.Y + _handleHalfWidth);
@@ -102,7 +107,7 @@
         
 		private void DrawCenter(SKCanvas canvas, SKPoint center)
         {
-            switch (TransformKind)
+            switch (Selection.TransformKind)
             {
                 case TransformKind.Scale:
                     canvas.DrawCircle(center, _handleHalfWidth, UIRenderUtils.SelectionPen);

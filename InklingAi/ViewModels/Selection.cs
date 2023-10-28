@@ -9,13 +9,16 @@ using System.Threading.Tasks;
 using DynamicData;
 using InklingAi.Views;
 using InkPad.Adapters;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SkiaSharp;
 
 public class Selection : IEnumerable<ISelectableElement>
 {
     private readonly List<ISelectableElement> _internalList = new();
     protected PaintableImage _target;
-    public Selection(PaintableImage target) 
+	public TransformKind TransformKind { get; set; } = TransformKind.Scale;
+
+	public Selection(PaintableImage target) 
     {
         _target = target;
     }
@@ -40,14 +43,14 @@ public class Selection : IEnumerable<ISelectableElement>
         if (item != null)
         {
             _internalList.Add(item);
-            _target.InvalidateVisual();
+			ContentsChanged();
         }
     }
     public void AddRange(IEnumerable<ISelectableElement> items)
     {
         _internalList.AddRange(items.Where(item => item != null));
-        _target.InvalidateVisual();
-    }
+		ContentsChanged();
+	}
 
     public bool Remove(ISelectableElement item)
     {
@@ -55,31 +58,38 @@ public class Selection : IEnumerable<ISelectableElement>
         if (_internalList.Contains(item))
         {
             result = _internalList.Remove(item);
-            _target.InvalidateVisual();
-        }
+			ContentsChanged();
+		}
         return result;
     }
     public void RemoveMany(IEnumerable<ISelectableElement> items)
     {
         _internalList.RemoveMany(items.Where(item => item != null));
-        _target.InvalidateVisual();
-    }
+		ContentsChanged();
+	}
     public void Clear()
     {
         _internalList.Clear();
-        _target.InvalidateVisual();
-    }
+		ContentsChanged();
+	}
 
+    private void ContentsChanged()
+	{
+        TransformKind = TransformKind.Scale;
+		_target.InvalidateVisual();
+	}
+
+    public int Count => _internalList.Count;
     public ISelectableElement[] ToArray() => _internalList.ToArray();
     public List<ISelectableElement> ToList() => _internalList.ToList();
     public ISelectableElement this[int index] => _internalList[index];
-    public int Count => _internalList.Count;
     public bool Contains(ISelectableElement item) => _internalList.Contains(item);
     public int IndexOf(ISelectableElement item) => _internalList.IndexOf(item);
 
     public void ForEach(Action<ISelectableElement> action) => _internalList.ForEach(action);
     public IEnumerator<ISelectableElement> GetEnumerator() => _internalList.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => _internalList.GetEnumerator();
+    public int[] GetIds() => _internalList.Select(item => item.Id).ToArray();
 
     public SKMatrix Transform(float dx, float dy, float rotation)
     {

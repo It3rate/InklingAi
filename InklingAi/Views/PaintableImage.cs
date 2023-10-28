@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
@@ -85,7 +86,20 @@ public class PaintableImage : BaseImage
 	{
         if (DrawingData.DrawMode == DrawMode.Arrow)
         {
+            var ids = Selection.GetIds();
+
             CheckForSelection(currentPosition);
+            if(Selection.Count > 0 && ids.SequenceEqual(Selection.GetIds()) )
+            {
+                if(Selection.TransformKind == TransformKind.Scale)
+				{
+					Selection.TransformKind = TransformKind.Rotate;
+				}
+                else
+				{
+					Selection.TransformKind = TransformKind.Scale;
+				}
+            }
         }
         else
         {
