@@ -73,9 +73,14 @@ public class Selection : IEnumerable<ISelectableElement>
 		ContentsChanged();
 	}
 
+    int[] _prevIds = new int[0];
     private void ContentsChanged()
 	{
-        TransformKind = TransformKind.Scale;
+        if (!GetIds().SequenceEqual(_prevIds))
+        {
+            TransformKind = TransformKind.Scale;
+            _prevIds = GetIds();
+        }
 		_target.InvalidateVisual();
 	}
 
