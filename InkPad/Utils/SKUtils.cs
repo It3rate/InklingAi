@@ -94,8 +94,9 @@ public static class RectExtensions
 }
 public enum RectPosition
 {
-    TopLeft,
-    TopRight,
+	None,
+	TopLeft,
+	TopRight,
     BottomLeft,
     BottomRight,
     Center,
@@ -106,7 +107,7 @@ public enum RectPosition
 }
 public static class RectPosExtensions
 {
-	public static RectPosition OppositePoint(this RectPosition pos)
+	public static RectPosition OppositePosition(this RectPosition pos)
 	{
 		var result = RectPosition.Center;
 		switch (pos)

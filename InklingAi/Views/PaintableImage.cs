@@ -13,6 +13,8 @@ using InklingAi.CommandEngine;
 using InklingAi.Commands;
 using InklingAi.ViewModels;
 using InkPad.Adapters;
+using InkPad.Utils;
+using NumSharp.Utilities;
 using SkiaSharp;
 
 public class PaintableImage : BaseImage
@@ -81,25 +83,57 @@ public class PaintableImage : BaseImage
         }
     }
 
+
+
     #region Mouse Events
-    protected override void OnMouseDown(Point currentPosition)
+	private bool CheckHandlesHit(Point currentPosition)
+	{
+		bool result = false;
+		if (Selection.HasSelection)
+		{
+			var hnd = _selectionHandles.HitTest(currentPosition.ToSKPoint());
+			if (hnd != RectPosition.None)
+			{
+				result = true; ;
+			}
+		}
+		return result;
+	}
+	private bool CheckSelectionHit(Point currentPosition)
+	{
+        var result = false;
+		var skpt = new SKPoint((float)currentPosition.X, (float)currentPosition.Y);
+		ISelectableElement? sel = null;
+		foreach (var path in _paths)
+		{
+			if (path.IsPointInside(skpt))
+			{
+		        result = true;
+				var ids = Selection.GetIds();
+                if(ids.Contains(path.Id))
+                {
+                    var tk = Selection.TransformKind;
+					Selection.TransformKind = (tk == TransformKind.Scale) ? 
+                        TransformKind.Rotate : TransformKind.Scale;
+				}
+                else
+                {
+				    SelectElementCommand cmd = new SelectElementCommand(this, path);
+			        _engine.Stack.Do(cmd);
+                }
+				InvalidateVisual();
+				break;
+			}
+		}
+
+        return result;
+	}
+	protected override void OnMouseDown(Point currentPosition)
 	{
         if (DrawingData.DrawMode == DrawMode.Arrow)
         {
-            var ids = Selection.GetIds();
-
-            CheckForSelection(currentPosition);
-            if(Selection.Count > 0 && ids.SequenceEqual(Selection.GetIds()) )
-            {
-                if(Selection.TransformKind == TransformKind.Scale)
-				{
-					Selection.TransformKind = TransformKind.Rotate;
-				}
-                else
-				{
-					Selection.TransformKind = TransformKind.Scale;
-				}
-            }
+            if (CheckHandlesHit(currentPosition)){}
+            else if(CheckSelectionHit(currentPosition)){}
         }
         else
         {
@@ -157,7 +191,9 @@ public class PaintableImage : BaseImage
                 Selection.Clear();
             }
         }
-    }
+
+        _selectionHandles.EndDragHandle();
+	}
     private SkPolyline CreateNewPath()
     {
         return new SkPolyline((int)Bounds.Width, (int)Bounds.Height,
@@ -262,29 +298,9 @@ public class PaintableImage : BaseImage
 	private bool IsKeyDown(Key key) => _keyboardData.IsDown(key);
 	#endregion
 
-	private void CheckForSelection(Point point)
-    {
-        var skpt = new SKPoint((float)point.X, (float)point.Y);
-        ISelectableElement? sel = null;
-        foreach (var path in _paths) 
-        { 
-            if(path.IsPointInside(skpt))
-            {
-                sel = path;
-                break;
-            }
-        }
-
-        if(sel != Selection)
-        {
-            SelectElementCommand cmd = new SelectElementCommand(this, sel);
-            _engine.Stack.Do(cmd);
-            InvalidateVisual();
-        }
-    }
     public void DeleteSelected()
     {
-        if(Selection.Count > 0)
+        if(Selection.HasSelection)
         {
             var cmd = new DeleteSelectedElementsCommand(this);
             _engine.Stack.Do(cmd);

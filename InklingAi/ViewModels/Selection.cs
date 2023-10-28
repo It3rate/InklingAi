@@ -17,6 +17,8 @@ public class Selection : IEnumerable<ISelectableElement>
     private readonly List<ISelectableElement> _internalList = new();
     protected PaintableImage _target;
 	public TransformKind TransformKind { get; set; } = TransformKind.Scale;
+    public bool HasSelection => _internalList.Count > 0;
+	int[] _prevIds = new int[0];
 
 	public Selection(PaintableImage target) 
     {
@@ -73,7 +75,6 @@ public class Selection : IEnumerable<ISelectableElement>
 		ContentsChanged();
 	}
 
-    int[] _prevIds = new int[0];
     private void ContentsChanged()
 	{
         if (!GetIds().SequenceEqual(_prevIds))
