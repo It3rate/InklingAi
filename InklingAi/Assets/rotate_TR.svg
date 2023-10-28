@@ -2,20 +2,25 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Creator: CorelDRAW Home & Student 2018 -->
 <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="5.495mm" height="5.495mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-viewBox="0 0 37.84 37.84"
+viewBox="0 0 83.55 83.55"
  xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
    <![CDATA[
-    .str0 {stroke:black;stroke-width:0.52;stroke-miterlimit:22.9256;stroke-opacity:0.011765}
+    .str0 {stroke:black;stroke-width:1.16;stroke-miterlimit:22.9256;stroke-opacity:0.011765}
+    .str1 {stroke:black;stroke-width:5.15;stroke-miterlimit:22.9256}
+    .fil1 {fill:none}
     .fil0 {fill:none}
-    .fil1 {fill:black}
+    .fil2 {fill:#669999}
    ]]>
   </style>
  </defs>
  <g id="Layer_x0020_1">
   <metadata id="CorelCorpID_0Corel-Layer"/>
-  <polygon class="fil0 str0" points="37.58,0.26 37.58,37.58 0.26,37.58 0.26,0.26 "/>
-  <path class="fil1" d="M22.03 2.47l-1.55 2.1c5.05,3.32 9.21,7.9 12.02,13.29l2.07 -1.67 0.44 13.36 -8.14 -7.14 2.86 -2.31c-2.56,-5.19 -6.49,-9.58 -11.32,-12.71l-2.25 3.06 -7.5 -7.81 13.36 -0.17z"/>
+  <polygon class="fil0 str0" points="82.98,0.58 82.98,82.98 0.58,82.98 0.58,0.58 "/>
+  <g>
+   <path class="fil1 str1" d="M48.64 5.45l-3.41 4.64c11.16,7.33 20.33,17.44 26.54,29.34l4.56 -3.69 0.97 29.5 -17.97 -15.76 6.31 -5.09c-5.66,-11.46 -14.33,-21.16 -24.98,-28.07l-4.96 6.75 -16.55 -17.24 29.51 -0.37z"/>
+   <path id="1" class="fil2" d="M48.64 5.45l-3.41 4.64c11.16,7.33 20.33,17.44 26.54,29.34l4.56 -3.69 0.97 29.5 -17.97 -15.76 6.31 -5.09c-5.66,-11.46 -14.33,-21.16 -24.98,-28.07l-4.96 6.75 -16.55 -17.24 29.51 -0.37z"/>
+  </g>
  </g>
 </svg>
