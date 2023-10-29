@@ -124,12 +124,13 @@ public class PaintableImage : BaseImage
         {
 			if (_choseExistingSelection)
 			{
-				// move selection
-				Move((float)diff.X, (float)diff.Y);
+				Move(diff.X, diff.Y);
 			}
-			else if (_selectionHandles.IsHandlePressed)
+			else if (Selection.TransformKind == TransformKind.Rotate)
 			{
-				// scale or rotate
+				var adiff = _selectionHandles.TransformAnchor - currentPosition.ToSKPoint();
+				var radians = Math.Atan2(adiff.Y, adiff.X);
+				Rotate(radians * 180f / MathF.PI);
 			}
         }
         else
@@ -182,10 +183,11 @@ public class PaintableImage : BaseImage
 		bool result = false;
 		if (Selection.HasSelection)
 		{
-			_selectionHandles.HitTest(currentPosition.ToSKPoint());
+			var pos = _selectionHandles.HitTest(currentPosition.ToSKPoint());
 			if (_selectionHandles.IsHandlePressed)
 			{
 				result = true;
+				_selectionHandles.StartDragHandle(pos);
 			}
 		}
 		return result;
@@ -332,9 +334,9 @@ public class PaintableImage : BaseImage
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}
-	public void Move(float dx, float dy)
+	public void Move(double dx, double dy)
 	{
-		var cmd = TransformElementCommand.CreateTranslationCommand(this, dx, dy, false);
+		var cmd = TransformElementCommand.CreateTranslationCommand(this, (float)dx, (float)dy, false);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}
@@ -343,6 +345,12 @@ public class PaintableImage : BaseImage
 		var amount = isControlDown ? 1f : isShiftDown ? 15f : 45f;
 		var rot = transformKind == SelectionTransformKind.RotateLeft ? -amount : transformKind == SelectionTransformKind.RotateRight ? amount : 0;
 		var cmd = TransformElementCommand.CreateRotationCommand(this, rot);
+		_engine.Stack.Do(cmd);
+		InvalidateVisual();
+	}
+	public void Rotate(double degrees)
+	{
+		var cmd = TransformElementCommand.CreateRotationCommand(this, (float)degrees, false);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}

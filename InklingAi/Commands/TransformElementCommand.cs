@@ -25,16 +25,18 @@ public class TransformElementCommand : CommandBase
         result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float rotate)
+	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float degrees, bool isIncremental = true)
 	{
 		var result = new TransformElementCommand(target);
-		result.TransformTask = TransformElementTask.CreateRotationTask(target, rotate);
+		result.TransformTask = TransformElementTask.CreateRotationTask(target, degrees);
+		result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY)
+	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY, bool isIncremental = true)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateScaleTask(target, scaleX, scaleY);
+		result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
 

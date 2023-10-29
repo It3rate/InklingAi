@@ -139,5 +139,32 @@ public static class RectPosExtensions
 		}
 		return result;
 	}
-
+	public static bool IsEdge(this RectPosition pos)
+	{
+		var result = false;
+		switch (pos)
+		{
+			case RectPosition.TopCenter:
+			case RectPosition.RightCenter:
+			case RectPosition.BottomCenter:
+			case RectPosition.LeftCenter:
+				result = true;
+				break;
+		}
+		return result;
+	}
+	public static bool IsCorner(this RectPosition pos)
+	{
+		var result = false;
+		switch (pos)
+		{
+			case RectPosition.TopLeft:
+			case RectPosition.TopRight:
+			case RectPosition.BottomRight:
+			case RectPosition.BottomLeft:
+				result = true;
+				break;
+		}
+		return result;
+	}
 }

@@ -54,12 +54,12 @@ public class TransformElementTask : TaskBase
 		result.NewMatrix = SKMatrix.CreateTranslation(dx, dy);
 		return result;
 	}
-	public static TransformElementTask CreateRotationTask(PaintableImage target, float rotate)
+	public static TransformElementTask CreateRotationTask(PaintableImage target, float degrees)
 	{
 		var result = new TransformElementTask(target);
 		var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
 		var bnds = selected.Bounds;
-		result.NewMatrix = SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), bnds.MidX, bnds.MidY);
+		result.NewMatrix = SKMatrix.CreateRotationDegrees(degrees, bnds.MidX, bnds.MidY);
 		return result;
 	}
 	public static TransformElementTask CreateScaleTask(PaintableImage target, float scaleX, float scaleY)
