@@ -85,49 +85,9 @@ public class PaintableImage : BaseImage
 
 
 
-    #region Mouse Events
-	private bool CheckHandlesHit(Point currentPosition)
-	{
-		bool result = false;
-		if (Selection.HasSelection)
-		{
-			var hnd = _selectionHandles.HitTest(currentPosition.ToSKPoint());
-			if (hnd != RectPosition.None)
-			{
-				result = true; ;
-			}
-		}
-		return result;
-	}
-	private bool CheckSelectionHit(Point currentPosition)
-	{
-        var result = false;
-		var skpt = new SKPoint((float)currentPosition.X, (float)currentPosition.Y);
-		ISelectableElement? sel = null;
-		foreach (var path in _paths)
-		{
-			if (path.IsPointInside(skpt))
-			{
-		        result = true;
-				var ids = Selection.GetIds();
-                if(ids.Contains(path.Id))
-                {
-                    var tk = Selection.TransformKind;
-					Selection.TransformKind = (tk == TransformKind.Scale) ? 
-                        TransformKind.Rotate : TransformKind.Scale;
-				}
-                else
-                {
-				    SelectElementCommand cmd = new SelectElementCommand(this, path);
-			        _engine.Stack.Do(cmd);
-                }
-				InvalidateVisual();
-				break;
-			}
-		}
-
-        return result;
-	}
+	#region Mouse Events
+	private bool _hasDragged = false;
+	private bool _choseExistingSelection = false;
 	protected override void OnMouseDown(Point currentPosition)
 	{
         if (DrawingData.DrawMode == DrawMode.Arrow)
@@ -147,8 +107,10 @@ public class PaintableImage : BaseImage
     protected override void OnMouseMove(Point currentPosition)
     {
         DrawingData.CurrentPosition = currentPosition.ToSKPoint();
-        if (DrawingData.DrawMode == DrawMode.Arrow)
+
+		if (DrawingData.DrawMode == DrawMode.Arrow)
         {
+
         }
         else
         {
@@ -156,9 +118,19 @@ public class PaintableImage : BaseImage
         }
 	}
     protected override void OnMouseDownDrag(Point currentPosition, Point diff)
-    {
-        if (DrawingData.DrawMode == DrawMode.Arrow)
+	{
+		_hasDragged = true;
+		if (DrawingData.DrawMode == DrawMode.Arrow)
         {
+			if (_choseExistingSelection)
+			{
+				// move selection
+				Move((float)diff.X, (float)diff.Y);
+			}
+			else if (_selectionHandles.IsHandlePressed)
+			{
+				// scale or rotate
+			}
         }
         else
         {
@@ -172,19 +144,23 @@ public class PaintableImage : BaseImage
     protected override void OnMouseUp(Point currentPosition, Point diff)
     {
         if (DrawingData.DrawMode == DrawMode.Arrow)
-        {
-        }
+		{
+			if (_choseExistingSelection && !_hasDragged)
+			{
+				var tk = Selection.TransformKind;
+				Selection.TransformKind = (tk == TransformKind.Scale) ?
+					TransformKind.Rotate : TransformKind.Scale;
+				InvalidateVisual();
+			}
+		}
         else
         {
             _curPath.AddPoint(currentPosition.X, currentPosition.Y);
             if (_curPath.Count > 2)
             {
-                //_paths.Add(_curPath); // addpath command
                 var cmd = new CreateSKPolylineCommand(_curPath, this);
                 _engine.Stack.Do(cmd);
-
                 _curPath = CreateNewPath();
-                //InvalidateVisual();
             }
             else
             {
@@ -192,104 +168,144 @@ public class PaintableImage : BaseImage
             }
         }
 
-        _selectionHandles.EndDragHandle();
+		_hasDragged = false;
+		_choseExistingSelection = false;
+		_selectionHandles.EndDragHandle();
 	}
     private SkPolyline CreateNewPath()
     {
         return new SkPolyline((int)Bounds.Width, (int)Bounds.Height,
             DrawingData.BrushSize, DrawingData.SelColor.ToUInt32(), DrawingData.Feather);
-    }
-    //public void OnMouseMove(Panel? sender, MouseEventArgs e)
-    //{
-    //	_isMouseInside = true;
-    //	bool isTransformingPaint = (_isResizeCursor || _isResizeTransparent);
-    //	if (isTransformingPaint && InputPb != null)
-    //	{
-    //		_lastPoint = e.Location.CvPoint();
-    //		var dist = _startDownLocation.Y - _lastPoint.Y;
-    //		if (_isResizeTransparent)
-    //		{
-    //			var val = (int)Math.Max(0, Math.Min(255, _startTransparent + dist));
-    //			Transparent = val;
-    //			OnNumericChanged?.Invoke(PaintState.Transparent, val);
-    //		}
-    //		else if (_isResizeCursor)
-    //		{
-    //			NibRadius = (int)Math.Max(_nibMin, Math.Min(_nibMax, _startNibRadius + dist));
-    //			OnNumericChanged?.Invoke(PaintState.BrushSize, NibRadius);
-    //			_lastPoint = _startDownLocation - (_startDownLocation - _lastPoint);
-    //		}
-    //	}
-    //	else if (_paintState != PaintState.None)
-    //	{
-    //		switch (_paintState)
-    //		{
-    //			case PaintState.Dropper:
-    //				var color = GetPixelColorAt(sender, e.Location);
-    //				SetColor(color);
-    //				break;
-    //		}
-    //	}
-    //	else if (CurrentDrawState.CanDraw())
-    //	{
-    //		ContinueDraw(e.Location.CvPoint());
-    //	}
-    //	else if (CurrentDrawState == DrawState.Resize && IsPanning)
-    //	{
-    //		IsPanning = true;
-    //		var img = InputPb.InputImage;
-    //		if (img != null)
-    //		{
-    //			var scaledOffset = (_startDownLocation - e.Location.CvPoint()) * (1f / ZoomLevel);
-    //			_panOffset = scaledOffset;
-    //			//OnZoomPanChanged?.Invoke(this);
-    //			InputPb.SizeAndSetImage(img, true);
-    //		}
-    //	}
+	}
+	private bool CheckHandlesHit(Point currentPosition)
+	{
+		bool result = false;
+		if (Selection.HasSelection)
+		{
+			_selectionHandles.HitTest(currentPosition.ToSKPoint());
+			if (_selectionHandles.IsHandlePressed)
+			{
+				result = true;
+			}
+		}
+		return result;
+	}
+	private bool CheckSelectionHit(Point currentPosition)
+	{
+		var result = false;
+		var skpt = new SKPoint((float)currentPosition.X, (float)currentPosition.Y);
+		foreach (var path in _paths)
+		{
+			if (path.IsPointInside(skpt))
+			{
+				result = true;
+				if (Selection.GetIds().Contains(path.Id))
+				{
+					_choseExistingSelection = true;
+				}
+				else
+				{
+					SelectElementCommand cmd = new SelectElementCommand(this, path);
+					_engine.Stack.Do(cmd);
+				}
+				InvalidateVisual();
+				break;
+			}
+		}
 
-    //	if (!IsShiftDown())
-    //	{
-    //		_isResizeCursor = false;
-    //		if (!IsControlDown())
-    //		{
-    //			_isResizeTransparent = false;
-    //		}
-    //	}
-    //	Invalidate(true); // optimize rect eventually, probably will switch to skia anyway
-    //}
-    //public void OnMouseUp(MouseEventArgs e)
-    //{
-    //	if (CurrentDrawState.CanDraw())
-    //	{
-    //		EndDraw(e.Location.CvPoint());
-    //	}
-    //	if ((CurrentDrawState == DrawState.Resize) && IsPanning)
-    //	{
-    //		Pan = _pan + _panOffset;
-    //		_panOffset = new Point(0, 0);
-    //		ReprocessRequested?.Invoke();
-    //	}
-    //	IsPanning = false;
-    //	_isResizeCursor = false;
-    //	_isResizeTransparent = false;
-    //}
-    //public void OnMouseWheel(MouseEventArgs e)
-    //{
-    //	if (CurrentDrawState == DrawState.Resize && InputPb != null)
-    //	{
-    //		var img = InputPb.InputImage;
-    //		if (img != null)
-    //		{
-    //			const int WHEEL_DELTA = 120;
-    //			ZoomLevel += (e.Delta / WHEEL_DELTA) * 0.01f;
-    //			InputPb.SizeAndSetImage(img, true);
+		return result;
+	}
+	//public void OnMouseMove(Panel? sender, MouseEventArgs e)
+	//{
+	//	_isMouseInside = true;
+	//	bool isTransformingPaint = (_isResizeCursor || _isResizeTransparent);
+	//	if (isTransformingPaint && InputPb != null)
+	//	{
+	//		_lastPoint = e.Location.CvPoint();
+	//		var dist = _startDownLocation.Y - _lastPoint.Y;
+	//		if (_isResizeTransparent)
+	//		{
+	//			var val = (int)Math.Max(0, Math.Min(255, _startTransparent + dist));
+	//			Transparent = val;
+	//			OnNumericChanged?.Invoke(PaintState.Transparent, val);
+	//		}
+	//		else if (_isResizeCursor)
+	//		{
+	//			NibRadius = (int)Math.Max(_nibMin, Math.Min(_nibMax, _startNibRadius + dist));
+	//			OnNumericChanged?.Invoke(PaintState.BrushSize, NibRadius);
+	//			_lastPoint = _startDownLocation - (_startDownLocation - _lastPoint);
+	//		}
+	//	}
+	//	else if (_paintState != PaintState.None)
+	//	{
+	//		switch (_paintState)
+	//		{
+	//			case PaintState.Dropper:
+	//				var color = GetPixelColorAt(sender, e.Location);
+	//				SetColor(color);
+	//				break;
+	//		}
+	//	}
+	//	else if (CurrentDrawState.CanDraw())
+	//	{
+	//		ContinueDraw(e.Location.CvPoint());
+	//	}
+	//	else if (CurrentDrawState == DrawState.Resize && IsPanning)
+	//	{
+	//		IsPanning = true;
+	//		var img = InputPb.InputImage;
+	//		if (img != null)
+	//		{
+	//			var scaledOffset = (_startDownLocation - e.Location.CvPoint()) * (1f / ZoomLevel);
+	//			_panOffset = scaledOffset;
+	//			//OnZoomPanChanged?.Invoke(this);
+	//			InputPb.SizeAndSetImage(img, true);
+	//		}
+	//	}
 
-    //			_reprocessTimer.Stop();
-    //			_reprocessTimer.Start();
-    //		}
-    //	}
-    //}
-    protected override void OnDrop(object? sender, DragEventArgs e) { }
+	//	if (!IsShiftDown())
+	//	{
+	//		_isResizeCursor = false;
+	//		if (!IsControlDown())
+	//		{
+	//			_isResizeTransparent = false;
+	//		}
+	//	}
+	//	Invalidate(true); // optimize rect eventually, probably will switch to skia anyway
+	//}
+	//public void OnMouseUp(MouseEventArgs e)
+	//{
+	//	if (CurrentDrawState.CanDraw())
+	//	{
+	//		EndDraw(e.Location.CvPoint());
+	//	}
+	//	if ((CurrentDrawState == DrawState.Resize) && IsPanning)
+	//	{
+	//		Pan = _pan + _panOffset;
+	//		_panOffset = new Point(0, 0);
+	//		ReprocessRequested?.Invoke();
+	//	}
+	//	IsPanning = false;
+	//	_isResizeCursor = false;
+	//	_isResizeTransparent = false;
+	//}
+	//public void OnMouseWheel(MouseEventArgs e)
+	//{
+	//	if (CurrentDrawState == DrawState.Resize && InputPb != null)
+	//	{
+	//		var img = InputPb.InputImage;
+	//		if (img != null)
+	//		{
+	//			const int WHEEL_DELTA = 120;
+	//			ZoomLevel += (e.Delta / WHEEL_DELTA) * 0.01f;
+	//			InputPb.SizeAndSetImage(img, true);
+
+	//			_reprocessTimer.Stop();
+	//			_reprocessTimer.Start();
+	//		}
+	//	}
+	//}
+	protected override void OnDrop(object? sender, DragEventArgs e) { }
 	#endregion
 
 	#region Keyboard Events
@@ -313,6 +329,12 @@ public class PaintableImage : BaseImage
 		var dx = transformKind == SelectionTransformKind.MoveLeft ? -amount : transformKind == SelectionTransformKind.MoveRight ? amount : 0;
 		var dy = transformKind == SelectionTransformKind.MoveUp ? -amount : transformKind == SelectionTransformKind.MoveDown ? amount : 0;
 		var cmd = TransformElementCommand.CreateTranslationCommand(this, dx, dy);
+		_engine.Stack.Do(cmd);
+		InvalidateVisual();
+	}
+	public void Move(float dx, float dy)
+	{
+		var cmd = TransformElementCommand.CreateTranslationCommand(this, dx, dy, false);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}

@@ -104,7 +104,7 @@ public abstract class BaseImage : UserControl
 	protected Point? _startPosition;
 	protected Point _currentPosition;
 	public bool IsMouseInside { get; protected set; }
-	protected int _minDragDistance = 8;
+	protected int _minDragDistance = 10;
 	protected bool _canDrag = true;
 
 	protected virtual void OnMouseDown(Point currentPosition) { }

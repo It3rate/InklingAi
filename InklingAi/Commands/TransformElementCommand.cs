@@ -18,10 +18,11 @@ public class TransformElementCommand : CommandBase
     {
         _target = target;
 	}
-	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy)
+	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy, bool isIncremental = true)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateTranslationTask(target, dx, dy);
+        result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
 	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float rotate)

@@ -20,6 +20,7 @@ public class TransformElementTask : TaskBase
     public List<ISelectableElement> PreviousSelection { get; } = new();
     public List<SKMatrix> PreviousMatricies { get; } = new();
     public PaintableImage Target { get; }
+	public bool IsIncremental { get; set; } = true;
     public override bool IsValid => true;
     private TransformElementTask(PaintableImage target)
 	{
@@ -89,8 +90,6 @@ public class TransformElementTask : TaskBase
 
     public override void UnRunTask()
     {
-        var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
-
         for (int i = 0; i < PreviousSelection.Count; i++)
         {
             PreviousSelection[i].Matrix = PreviousMatricies[i];
@@ -100,14 +99,25 @@ public class TransformElementTask : TaskBase
     public override bool MergeDataFrom(TaskBase newTask)
     {
         var result = false;
-        if (newTask is TransformElementTask task)
+        if (newTask is TransformElementTask task && task.IsIncremental == IsIncremental)
         {
-            NewMatrix.PostConcat(task.NewMatrix);
-            var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
-            foreach (var element in selected)
-            {
-                element.Matrix = element.Matrix.PostConcat(task.NewMatrix);
-            }
+			if (IsIncremental)
+			{
+				NewMatrix.PostConcat(task.NewMatrix);
+				var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
+				foreach (var element in selected)
+				{
+					element.Matrix = element.Matrix.PostConcat(task.NewMatrix);
+				}
+			}
+			else
+			{
+				NewMatrix = task.NewMatrix;
+				for (int i = 0; i < PreviousSelection.Count; i++)
+				{
+					PreviousSelection[i].Matrix = PreviousMatricies[i].PostConcat(NewMatrix);
+				}
+			}
             result = true;
         }
         return result;

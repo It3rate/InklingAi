@@ -70,12 +70,16 @@
 			return result;
         }
 
+        public bool IsHandlePressed => CurrentDownHandle != RectPosition.None;
 		public RectPosition CurrentDownHandle { get; set; } = RectPosition.None;
-		private  SKRect _bounds { get; set; } = SKRect.Empty;
+		private SKRect StartTransformBounds { get; set; } = SKRect.Empty;
+		private SKRect _bounds { get; set; } = SKRect.Empty;
 		public void StartDragHandle(RectPosition hnd)
         {
             CurrentDownHandle = hnd;
-            if(hnd == RectPosition.Center)
+            StartTransformBounds = _bounds;
+
+			if (hnd == RectPosition.Center)
             {
 				TransformAnchor = _bounds.PointFromPosition(hnd);
 			}
@@ -90,6 +94,7 @@
 		}
 		public void EndDragHandle()
 		{
+			StartTransformBounds = SKRect.Empty;
 			CurrentDownHandle = RectPosition.None;
 			TransformAnchor = SKPoint.Empty;
 		}
@@ -112,7 +117,7 @@
             }
         }
 
-        private int _handleHalfWidth = 4;
+        private static int _handleHalfWidth = 4;
         private void DrawFrame(SKCanvas canvas, SKRect frame)
         { 
             switch(Selection.TransformKind)
@@ -158,8 +163,10 @@
         {
             SKRect result = SKRect.Empty;
             switch (Selection.TransformKind)
-            {
-                case TransformKind.Scale:
+			{
+				case TransformKind.Scale:
+                    break;
+				case TransformKind.Rotate:
 					result = new SKRect(
                         center.X - _handleHalfWidth, 
                         center.Y - _handleHalfWidth, 
