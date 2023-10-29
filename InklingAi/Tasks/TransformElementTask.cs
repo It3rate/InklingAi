@@ -96,10 +96,15 @@ public class TransformElementTask : TaskBase
         }
         Target.InvalidateVisual();
     }
+
+    private int[] PreviousIds() => PreviousSelection.Select(item => item.Id).ToArray();
     public override bool MergeDataFrom(TaskBase newTask)
     {
         var result = false;
-        if (newTask is TransformElementTask task && task.IsIncremental == IsIncremental)
+        if (newTask is TransformElementTask task && 
+            task.Target == Target && 
+            task.IsIncremental == IsIncremental && 
+            task.Target.Selection.GetIds().SequenceEqual(PreviousIds()))
         {
 			if (IsIncremental)
 			{
