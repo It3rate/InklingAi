@@ -87,8 +87,9 @@ public class PaintableImage : BaseImage
 
 	#region Mouse Events
 	private bool _hasDragged = false;
-	private bool _choseExistingSelection = false;
-	protected override void OnMouseDown(Point currentPosition)
+    private bool _madeSelection = false;
+    private bool _choseExistingSelection = false;
+    protected override void OnMouseDown(Point currentPosition)
 	{
         if (DrawingData.DrawMode == DrawMode.Arrow)
         {
@@ -122,16 +123,35 @@ public class PaintableImage : BaseImage
 		_hasDragged = true;
 		if (DrawingData.DrawMode == DrawMode.Arrow)
         {
-			if (_choseExistingSelection)
+			if (_madeSelection)
 			{
 				Move(diff.X, diff.Y);
-			}
-			else if (Selection.TransformKind == TransformKind.Rotate)
-			{
-				var adiff = _selectionHandles.TransformAnchor - currentPosition.ToSKPoint();
-				var radians = Math.Atan2(adiff.Y, adiff.X);
-				Rotate(radians * 180f / MathF.PI);
-			}
+            }
+            else if (Selection.TransformKind == TransformKind.Scale)
+            {
+                var ta = _selectionHandles.TransformAnchor;
+               // Scale()
+            }
+            else if (Selection.TransformKind == TransformKind.Rotate)
+            {
+                var ta = _selectionHandles.TransformAnchor;
+                var startDiff = _startPosition.Value.ToSKPoint() - ta;
+                var curDiff = currentPosition.ToSKPoint() - ta;
+
+                var startRadians = Math.Atan2(startDiff.Y, startDiff.X);
+                var curRadians = Math.Atan2(curDiff.Y, curDiff.X);
+
+                var deltaRadians = curRadians - startRadians;
+                if (deltaRadians > Math.PI)
+                {
+                    deltaRadians -= 2 * Math.PI;
+                }
+                else if (deltaRadians < -Math.PI)
+                {
+                    deltaRadians += 2 * Math.PI;
+                }
+                Rotate(deltaRadians * 180f / MathF.PI);
+            }
         }
         else
         {
@@ -170,7 +190,8 @@ public class PaintableImage : BaseImage
         }
 
 		_hasDragged = false;
-		_choseExistingSelection = false;
+        _madeSelection = false;
+        _choseExistingSelection = false;
 		_selectionHandles.EndDragHandle();
 	}
     private SkPolyline CreateNewPath()
@@ -201,7 +222,9 @@ public class PaintableImage : BaseImage
 			if (path.IsPointInside(skpt))
 			{
 				result = true;
-				if (Selection.GetIds().Contains(path.Id))
+                _madeSelection = true;
+
+                if (Selection.GetIds().Contains(path.Id))
 				{
 					_choseExistingSelection = true;
 				}
