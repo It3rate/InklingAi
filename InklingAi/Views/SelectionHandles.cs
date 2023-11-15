@@ -2,7 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-	using Avalonia.Platform;
+    using System.Diagnostics;
+    using Avalonia.Platform;
 	using InklingAi.ViewModels;
     using InkPad.Utils;
     using SkiaSharp;

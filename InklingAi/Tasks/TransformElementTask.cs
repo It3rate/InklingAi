@@ -17,60 +17,76 @@ using SkiaSharp;
 public class TransformElementTask : TaskBase
 {
     public SKMatrix NewMatrix { get; private set; }
+    public SKPoint Anchor { get; private set; }
     public List<ISelectableElement> PreviousSelection { get; } = new();
     public List<SKMatrix> PreviousMatricies { get; } = new();
     public PaintableImage Target { get; }
 	public bool IsIncremental { get; set; } = true;
     public override bool IsValid => true;
-    private TransformElementTask(PaintableImage target)
-	{
-		Target = target;
+    private TransformElementTask(PaintableImage target, SKPoint? anchor = null)
+    {
+        NewMatrix = SKMatrix.Identity;
+        Target = target;
+        if (anchor != null)
+        {
+            Anchor = anchor.Value;
+        }
+        else
+        {
+		    var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
+            var bnds = selected.Bounds;
+            Anchor = new SKPoint(bnds.MidX, bnds.MidY);
+        }
 	}
-	public TransformElementTask(PaintableImage target, float dx, float dy, float rotate, float scale)
+	public TransformElementTask(PaintableImage target, float dx, float dy, float rotate, float scaleX, float scaleY, SKPoint? anchor = null) : this(target, anchor)
 	{
-		Target = target;
-		var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
-		NewMatrix = SKMatrix.Identity;
-		var bnds = selected.Bounds;
-		if (rotate != 0)
+		//Target = target;
+		//var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
+		//NewMatrix = SKMatrix.Identity;
+		//var bnds = selected.Bounds;
+  //      Anchor = anchor ?? new SKPoint(bnds.MidX, bnds.MidY); 
+
+        if (rotate != 0)
 		{
-			NewMatrix.PostConcat(SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), bnds.MidX, bnds.MidY));
+            NewMatrix = NewMatrix.PostConcat(SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), Anchor.X, Anchor.Y));
 		}
-		if (scale != 1)
+		if (scaleX != 1 || scaleY != 1)
 		{
-			NewMatrix.PostConcat(SKMatrix.CreateTranslation(-bnds.MidX, -bnds.MidY));
-			NewMatrix.PostConcat(SKMatrix.CreateScale(scale, scale));
-			NewMatrix.PostConcat(SKMatrix.CreateTranslation(bnds.MidX, bnds.MidY));
+            NewMatrix = NewMatrix.PostConcat(SKMatrix.CreateTranslation(-Anchor.X, -Anchor.Y));
+            NewMatrix = NewMatrix.PostConcat(SKMatrix.CreateScale(scaleX, scaleY));
+            NewMatrix = NewMatrix.PostConcat(SKMatrix.CreateTranslation(Anchor.X, Anchor.Y));
 		}
 		if (dx != 0 || dy != 0)
 		{
-			NewMatrix.PostConcat(SKMatrix.CreateTranslation(dx, dy));
+            NewMatrix = NewMatrix.PostConcat(SKMatrix.CreateTranslation(dx, dy));
 		}
 	}
 
-	public static TransformElementTask CreateTranslationTask(PaintableImage target, float dx, float dy)
+	public static TransformElementTask CreateTranslationTask(PaintableImage target, float dx, float dy, SKPoint? anchor = null)
 	{
-		var result = new TransformElementTask(target);
-		result.NewMatrix = SKMatrix.CreateTranslation(dx, dy);
+		var result = new TransformElementTask(target, dx, dy, 0, 1f, 1f, anchor);
 		return result;
 	}
-	public static TransformElementTask CreateRotationTask(PaintableImage target, float degrees)
+	public static TransformElementTask CreateRotationTask(PaintableImage target, float degrees, SKPoint? anchor = null)
 	{
-		var result = new TransformElementTask(target);
-		var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
-		var bnds = selected.Bounds;
-		result.NewMatrix = SKMatrix.CreateRotationDegrees(degrees, bnds.MidX, bnds.MidY);
-		return result;
+		//var result = new TransformElementTask(target);
+		//var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
+		//var bnds = selected.Bounds;
+		//result.NewMatrix = SKMatrix.CreateRotationDegrees(degrees, bnds.MidX, bnds.MidY);
+        var result = new TransformElementTask(target, 0, 0, degrees, 1f, 1f, anchor);
+        return result;
 	}
-	public static TransformElementTask CreateScaleTask(PaintableImage target, float scaleX, float scaleY)
-	{
-		var result = new TransformElementTask(target);
-		var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
-		var bnds = selected.Bounds;
-		result.NewMatrix = SKMatrix.Identity;
-		result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateTranslation(-bnds.MidX, -bnds.MidY));
-		result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateScale(scaleX, scaleY));
-		result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateTranslation(bnds.MidX, bnds.MidY));
+	public static TransformElementTask CreateScaleTask(PaintableImage target, float scaleX, float scaleY, SKPoint? anchor = null)
+    {
+        var result = new TransformElementTask(target, 0, 0, 0, scaleX, scaleY, anchor);
+
+  //      var result = new TransformElementTask(target);
+		//var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
+		//var bnds = selected.Bounds;
+		//result.NewMatrix = SKMatrix.Identity;
+		//result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateTranslation(-bnds.MidX, -bnds.MidY));
+		//result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateScale(scaleX, scaleY));
+		//result.NewMatrix = result.NewMatrix.PostConcat(SKMatrix.CreateTranslation(bnds.MidX, bnds.MidY));
 		return result;
 	}
 

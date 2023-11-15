@@ -9,6 +9,7 @@ using InklingAi.Tasks;
 using InklingAi.Views;
 using InkPad.CommandEngine;
 using Nums.CoreConcepts.Time;
+using SkiaSharp;
 
 public class TransformElementCommand : CommandBase
 {
@@ -18,24 +19,24 @@ public class TransformElementCommand : CommandBase
     {
         _target = target;
 	}
-	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy, bool isIncremental = true)
+	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy, SKPoint? anchor = null, bool isIncremental = true)
 	{
 		var result = new TransformElementCommand(target);
-		result.TransformTask = TransformElementTask.CreateTranslationTask(target, dx, dy);
+		result.TransformTask = TransformElementTask.CreateTranslationTask(target, dx, dy, anchor);
         result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float degrees, bool isIncremental = true)
+	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float degrees, SKPoint? anchor = null, bool isIncremental = true)
 	{
 		var result = new TransformElementCommand(target);
-		result.TransformTask = TransformElementTask.CreateRotationTask(target, degrees);
+		result.TransformTask = TransformElementTask.CreateRotationTask(target, degrees, anchor);
 		result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY, bool isIncremental = true)
+	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY, SKPoint? anchor = null, bool isIncremental = true)
 	{
 		var result = new TransformElementCommand(target);
-		result.TransformTask = TransformElementTask.CreateScaleTask(target, scaleX, scaleY);
+		result.TransformTask = TransformElementTask.CreateScaleTask(target, scaleX, scaleY, anchor);
 		result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}

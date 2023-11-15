@@ -130,7 +130,10 @@ public class PaintableImage : BaseImage
             else if (Selection.TransformKind == TransformKind.Scale)
             {
                 var ta = _selectionHandles.TransformAnchor;
-               // Scale()
+                var startDiff = _startPosition.Value.ToSKPoint() - ta;
+                var curDiff = currentPosition.ToSKPoint() - ta;
+                var anchor = _selectionHandles.TransformAnchor;
+                Scale(1.005f, 1f, anchor, true);
             }
             else if (Selection.TransformKind == TransformKind.Rotate)
             {
@@ -359,7 +362,7 @@ public class PaintableImage : BaseImage
 	}
 	public void Move(double dx, double dy)
 	{
-		var cmd = TransformElementCommand.CreateTranslationCommand(this, (float)dx, (float)dy, false);
+		var cmd = TransformElementCommand.CreateTranslationCommand(this, (float)dx, (float)dy, null, false);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}
@@ -373,7 +376,7 @@ public class PaintableImage : BaseImage
 	}
 	public void Rotate(double degrees)
 	{
-		var cmd = TransformElementCommand.CreateRotationCommand(this, (float)degrees, false);
+		var cmd = TransformElementCommand.CreateRotationCommand(this, (float)degrees, null, false);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}
@@ -386,10 +389,16 @@ public class PaintableImage : BaseImage
 		var cmd = TransformElementCommand.CreateScaleCommand(this, scale, scale);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
-	}
+    }
+    public void Scale(float scaleX, float scaleY, SKPoint anchor, bool isDragging = true)
+    {
+        var cmd = TransformElementCommand.CreateScaleCommand(this, scaleX, scaleY, anchor, isDragging);
+        _engine.Stack.Do(cmd);
+        InvalidateVisual();
+    }
 
 
-	protected override void RenderSkia(SKCanvas canvas)
+    protected override void RenderSkia(SKCanvas canvas)
     {
         for (int i = 0; i < _paths.Count; i++) // Note: foreach can have collection modified issues
         {
