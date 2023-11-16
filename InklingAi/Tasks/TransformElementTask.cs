@@ -90,16 +90,28 @@ public class TransformElementTask : TaskBase
 		return result;
 	}
 
+    private bool _wasRun = false;
 	public override void RunTask()
     {
         var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
-        PreviousSelection.Clear();
-        PreviousMatricies.Clear();
-        foreach (var element in selected) // todo: Do transforms in selection class and return old values
+        if (IsIncremental && PreviousMatricies.Count > 0)
         {
-            PreviousSelection.Add(element);
-            PreviousMatricies.Add(element.Matrix);
-            element.Matrix = element.Matrix.PostConcat(NewMatrix); 
+            for (int i = 0; i < selected.Count; i++)
+            { 
+                var m = PreviousMatricies[i];
+                selected[i].Matrix = m.PostConcat(NewMatrix);
+            }
+        }
+        else
+        {
+            PreviousSelection.Clear();
+            PreviousMatricies.Clear();
+            foreach (var element in selected) // todo: Do transforms in selection class and return old values
+            {
+                    PreviousSelection.Add(element);
+                    PreviousMatricies.Add(element.Matrix);
+                    element.Matrix = element.Matrix.PostConcat(NewMatrix); 
+            }
         }
         Target.InvalidateVisual();
     }
@@ -128,7 +140,7 @@ public class TransformElementTask : TaskBase
 				var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
 				foreach (var element in selected)
 				{
-					element.Matrix = element.Matrix.PostConcat(task.NewMatrix);
+					element.Matrix = task.NewMatrix;
 				}
 			}
 			else

@@ -133,7 +133,7 @@ public class PaintableImage : BaseImage
                 var startDiff = _startPosition.Value.ToSKPoint() - ta;
                 var curDiff = currentPosition.ToSKPoint() - ta;
                 var anchor = _selectionHandles.TransformAnchor;
-                Scale(1.005f, 1f, anchor, true);
+                Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor, true);
             }
             else if (Selection.TransformKind == TransformKind.Rotate)
             {
@@ -208,7 +208,7 @@ public class PaintableImage : BaseImage
 		if (Selection.HasSelection)
 		{
 			var pos = _selectionHandles.HitTest(currentPosition.ToSKPoint());
-			if (_selectionHandles.IsHandlePressed)
+			if (pos != RectPosition.None)
 			{
 				result = true;
 				_selectionHandles.StartDragHandle(pos);
