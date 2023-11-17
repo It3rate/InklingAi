@@ -176,6 +176,10 @@ public class PaintableImage : BaseImage
 					TransformKind.Rotate : TransformKind.Scale;
 				InvalidateVisual();
 			}
+            else if (_hasDragged && _engine.Stack.PreviousCommand() is TransformElementCommand tec)
+            {
+               tec.IsSealed = true;
+            }
 		}
         else
         {

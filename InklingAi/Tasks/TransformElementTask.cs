@@ -21,7 +21,7 @@ public class TransformElementTask : TaskBase
     public List<ISelectableElement> PreviousSelection { get; } = new();
     public List<SKMatrix> PreviousMatricies { get; } = new();
     public PaintableImage Target { get; }
-	public bool IsIncremental { get; set; } = true;
+    public bool IsIncremental { get; set; } = true;
     public override bool IsValid => true;
     private TransformElementTask(PaintableImage target, SKPoint? anchor = null)
     {

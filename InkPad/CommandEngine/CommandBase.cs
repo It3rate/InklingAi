@@ -44,6 +44,7 @@ public abstract class CommandBase : IStackCommand, ICommand
     public virtual bool CanUndo => true;
     public virtual bool IsRetainedCommand => true;
 
+    public bool IsSealed { get; set; } = false;
     public virtual bool IsRepeatable() => false;
     public virtual bool IsComplete() => true;
     public virtual bool Evaluate() => true;

@@ -58,7 +58,7 @@ public class TransformElementCommand : CommandBase
     public override bool TryMergeWith(IStackCommand newCommand)
     {
         var result = false;
-        if (newCommand is TransformElementCommand newCmd)
+        if (!IsSealed && newCommand is TransformElementCommand newCmd)
         {
             result = TransformTask.MergeDataFrom(newCmd.TransformTask);
         }
