@@ -17,6 +17,7 @@ using SkiaSharp;
 public class TransformElementTask : TaskBase
 {
     public SKMatrix NewMatrix { get; private set; }
+    public SKMatrix OrgMatrix { get; private set; }
     public SKPoint Anchor { get; private set; }
     public List<ISelectableElement> PreviousSelection { get; } = new();
     public List<SKMatrix> PreviousMatricies { get; } = new();
@@ -59,8 +60,8 @@ public class TransformElementTask : TaskBase
 		if (dx != 0 || dy != 0)
 		{
             NewMatrix = NewMatrix.PostConcat(SKMatrix.CreateTranslation(dx, dy));
-		}
-	}
+        }
+    }
 
 	public static TransformElementTask CreateTranslationTask(PaintableImage target, float dx, float dy, SKPoint? anchor = null)
 	{
@@ -136,12 +137,16 @@ public class TransformElementTask : TaskBase
         {
 			if (IsIncremental)
 			{
-				NewMatrix.PostConcat(task.NewMatrix);
+                //NewMatrix = OrgMatrix.PostConcat(task.NewMatrix);
 				var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
-				foreach (var element in selected)
-				{
-					element.Matrix = task.NewMatrix;
-				}
+                for (int i = 0; i < selected.Count; i++)
+                {
+                    selected[i].Matrix = PreviousMatricies[i].PostConcat(task.NewMatrix);
+                }
+    //            foreach (var element in selected)
+				//{
+				//	element.Matrix = task.NewMatrix;
+				//}
 			}
 			else
 			{
