@@ -143,10 +143,6 @@ public class TransformElementTask : TaskBase
                 {
                     selected[i].Matrix = PreviousMatricies[i].PostConcat(task.NewMatrix);
                 }
-    //            foreach (var element in selected)
-				//{
-				//	element.Matrix = task.NewMatrix;
-				//}
 			}
 			else
 			{
