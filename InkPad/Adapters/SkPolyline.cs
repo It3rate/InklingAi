@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InkPad.Adapters;
 
-public class SkPolyline : SkiaAdapter, ISelectableElement
+public class SkPolyline : SkiaShapeAdapter, ISelectableElement
 {
     #region private fields
     public int Id { get; }

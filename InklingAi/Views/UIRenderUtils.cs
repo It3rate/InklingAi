@@ -29,6 +29,16 @@ namespace InklingAi.Views
             StrokeMiter = 3.0f,
             IsAntialias = true,
         };
+        public static SKPaint _ghost = new SKPaint
+        {
+            Style = SKPaintStyle.Stroke,
+            Color = new SKColor(255, 0, 0, 100),
+            StrokeWidth = 2,
+            StrokeCap = SKStrokeCap.Round,
+            StrokeJoin = SKStrokeJoin.Round,
+            StrokeMiter = 3.0f,
+            IsAntialias = true,
+        };
 
         public void RenderHoverBrush(SKCanvas canvas, DrawingData data)
 		{
@@ -46,6 +56,10 @@ namespace InklingAi.Views
             canvas.DrawPath(element.Path, element.Paint);
 
             //canvas.Restore();
+        }
+        public void GhostShape(SKCanvas canvas, ISelectableElement element)
+        {
+            canvas.DrawPath(element.Path, _ghost);
         }
     }
 }

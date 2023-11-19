@@ -14,6 +14,7 @@
     {
         public PaintableImage Paintable { get; }
         Selection Selection => Paintable.Selection;
+        public SKMatrix Matrix { get; set; }
         public SKPoint TransformAnchor { get; set; } = SKPoint.Empty;
 
 		private SKSvg _tl = new SKSvg();
@@ -80,7 +81,18 @@
             CurrentDownHandle = hnd;
             StartTransformBounds = _bounds;
 
-			if (hnd == RectPosition.Center)
+            if(Selection.TransformKind == TransformKind.Rotate)
+            {
+                if(Selection.Count == 1)
+                {
+                    TransformAnchor = Selection[0].TransformAnchor;
+                }
+                else
+                {
+                    TransformAnchor = Selection.Bounds.Center();
+                }
+            }
+			else if (hnd == RectPosition.Center)
             {
 				TransformAnchor = _bounds.PointFromPosition(hnd);
 			}
@@ -98,16 +110,17 @@
 			StartTransformBounds = SKRect.Empty;
 			CurrentDownHandle = RectPosition.None;
 			TransformAnchor = SKPoint.Empty;
-		}
+            Matrix = SKMatrix.Identity;
+        }
 
 		public void RenderSkia(SKCanvas canvas)
         {
-            if (Selection.HasSelection)
+            if (Selection.HasSelection && !IsHandlePressed)
             {
                 SKRect? bnds = Selection?.Bounds;
                 if (bnds != null)
                 {
-					_bounds = bnds.Value;
+                    _bounds = bnds.Value;
                     DrawFrame(canvas, _bounds);
                     DrawHandle(canvas, _bounds, RectPosition.TopLeft);
                     DrawHandle(canvas, _bounds, RectPosition.TopRight);

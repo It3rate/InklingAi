@@ -26,6 +26,7 @@ public class PolyNumberSet
 
 	public PolyNumberSet(params PolyNumber[] values)
 	{
+        // todo: allow empty polysets for init objects
 		if (values.Length < 1 || !values.All(p => p.Count == values[0].Count))
 		{
 			throw new ArgumentException("Values count must be greater than one and have the same count.");
@@ -62,20 +63,37 @@ public class PolyNumberSet
         }
     }
     public double[][] GetIndexedValues()
-	{
-		var len = Count;
-		var result = new double[len][];
-		for (int i = 0; i < len; i++)
-		{
-			result[i] = new double[Dimensions];
-			for (int j = 0; j < Dimensions; j++)
-			{
-				result[i][j] = _polynumbers[j].ValueAtPosition(i);
-			}
-		}
-		return result;
-	}
-	public void Reset()
+    {
+        var len = Count;
+        var result = new double[len][];
+        for (int i = 0; i < len; i++)
+        {
+            result[i] = new double[Dimensions];
+            for (int j = 0; j < Dimensions; j++)
+            {
+                result[i][j] = _polynumbers[j].ValueAtPosition(i);
+            }
+        }
+        return result;
+    }
+    public bool HasNonZeroContent()
+    {
+        var result = false;
+        var len = Count;
+        for (int i = 0; i < len; i++)
+        {
+            for (int j = 0; j < Dimensions; j++)
+            {
+                if(_polynumbers[j].ValueAtPosition(i) != 0)
+                {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    public void Reset()
 	{
 		for (int i = 0; i < _polynumbers.Length; i++)
 		{

@@ -125,7 +125,7 @@ public class PaintableImage : BaseImage
         {
 			if (_madeSelection)
 			{
-				Move(diff.X, diff.Y);
+                _selectionHandles.Matrix = Move(diff.X, diff.Y);
             }
             else if (Selection.TransformKind == TransformKind.Scale)
             {
@@ -133,7 +133,7 @@ public class PaintableImage : BaseImage
                 var startDiff = _startPosition.Value.ToSKPoint() - ta;
                 var curDiff = currentPosition.ToSKPoint() - ta;
                 var anchor = _selectionHandles.TransformAnchor;
-                Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor, true);
+                _selectionHandles.Matrix = Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor, true);
             }
             else if (Selection.TransformKind == TransformKind.Rotate)
             {
@@ -153,13 +153,13 @@ public class PaintableImage : BaseImage
                 {
                     deltaRadians += 2 * Math.PI;
                 }
-                Rotate(deltaRadians * 180f / MathF.PI);
+                _selectionHandles.Matrix = Rotate(deltaRadians * 180f / MathF.PI, ta);
             }
         }
         else
         {
             _curPath.AddPoint(currentPosition.X, currentPosition.Y);
-            if (_curPath.Count > 1)
+            if (_curPath.PointCount > 1)
             {
                 InvalidateVisual();
             }
@@ -184,7 +184,7 @@ public class PaintableImage : BaseImage
         else
         {
             _curPath.AddPoint(currentPosition.X, currentPosition.Y);
-            if (_curPath.Count > 2)
+            if (_curPath.PointCount > 2)
             {
                 var cmd = new CreateSKPolylineCommand(_curPath, this);
                 _engine.Stack.Do(cmd);
@@ -200,7 +200,8 @@ public class PaintableImage : BaseImage
         _madeSelection = false;
         _choseExistingSelection = false;
 		_selectionHandles.EndDragHandle();
-	}
+        InvalidateVisual();
+    }
     private SkPolyline CreateNewPath()
     {
         return new SkPolyline((int)Bounds.Width, (int)Bounds.Height,
@@ -364,11 +365,12 @@ public class PaintableImage : BaseImage
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}
-	public void Move(double dx, double dy)
+	public SKMatrix Move(double dx, double dy)
 	{
 		var cmd = TransformElementCommand.CreateTranslationCommand(this, (float)dx, (float)dy, null, false);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
+        return cmd.NewMatrix;
 	}
 	public void Rotate(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
 	{
@@ -377,13 +379,14 @@ public class PaintableImage : BaseImage
 		var cmd = TransformElementCommand.CreateRotationCommand(this, rot);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
-	}
-	public void Rotate(double degrees)
+    }
+	public SKMatrix Rotate(double degrees, SKPoint anchor)
 	{
-		var cmd = TransformElementCommand.CreateRotationCommand(this, (float)degrees, null, false);
+		var cmd = TransformElementCommand.CreateRotationCommand(this, (float)degrees, anchor, false);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
-	}
+        return cmd.NewMatrix;
+    }
 	public void Scale(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
 	{
 		var amount = isControlDown ? 1.05f : isShiftDown ? 1.2f : 1.1f;
@@ -394,11 +397,12 @@ public class PaintableImage : BaseImage
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
     }
-    public void Scale(float scaleX, float scaleY, SKPoint anchor, bool isDragging = true)
+    public SKMatrix Scale(float scaleX, float scaleY, SKPoint anchor, bool isDragging = true)
     {
         var cmd = TransformElementCommand.CreateScaleCommand(this, scaleX, scaleY, anchor, isDragging);
         _engine.Stack.Do(cmd);
         InvalidateVisual();
+        return cmd.NewMatrix;
     }
 
 
@@ -411,17 +415,21 @@ public class PaintableImage : BaseImage
 
         if (DrawingData.DrawMode == DrawMode.Arrow)
         {
+            if (_selectionHandles.IsHandlePressed)
+            {
+                _renderUtil.GhostShape(canvas, Selection[0]); // todo: draw original position while transforming. Requires 'live' command stack.
+            }
         }
         else
         {
-            if (_curPath != null)
+            if (_curPath != null && _curPath.HasContent)
             {
-                _renderUtil.DrawShape(canvas, _curPath, true);
+                _renderUtil.DrawShape(canvas, _curPath, true); // in progress drawing
             }
 
             if (IsMouseInside && !IsMouseDown)
             {
-                _renderUtil.RenderHoverBrush(canvas, DrawingData);
+                _renderUtil.RenderHoverBrush(canvas, DrawingData); // draw pen nib
 		    }
         }
         _selectionHandles.RenderSkia(canvas);

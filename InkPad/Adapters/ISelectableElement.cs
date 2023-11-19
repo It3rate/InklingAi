@@ -14,6 +14,7 @@
         bool IsPointInside(SKPoint point);
         SKRect Bounds { get; }
         SKMatrix Matrix { get; set; }
+        SKPoint TransformAnchor { get; set; }
         public SKPaint Paint { get; }
         public SKPath? Path { get; }
         public SKPath PathOutline { get; }

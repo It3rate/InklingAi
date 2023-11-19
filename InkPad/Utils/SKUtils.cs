@@ -89,7 +89,26 @@ public static class RectExtensions
     {
         var pts = matrix.MapPoints(rect.CornerPoints());
         return FromCornerPoints(pts);
-
+    }
+    public static SKPoint Center(this SKPoint[] points)
+    {
+        var result = SKPoint.Empty;
+        if (points.Length > 0)
+        {
+            float minX = float.MaxValue;
+            float minY = float.MaxValue;
+            float maxX = float.MinValue;
+            float maxY = float.MinValue;
+            foreach (var p in points)
+            {
+                if (p.X < minX) minX = p.X;
+                if (p.Y < minY) minY = p.Y;
+                if (p.X > maxX) maxX = p.X;
+                if (p.Y > maxY) maxY = p.Y;
+            }
+            result = new SKPoint(minX + (maxX - minX) / 2f, minY + (maxY - minY) / 2f);
+        }
+        return result;
     }
 }
 public enum RectPosition

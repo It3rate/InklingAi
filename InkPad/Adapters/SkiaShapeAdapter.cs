@@ -1,4 +1,5 @@
 ﻿using InkPad.Renderer;
+using InkPad.Utils;
 using Nums.Composites;
 using Nums.CoreConcepts.CoreTraits;
 using Nums.Primitives;
@@ -13,11 +14,13 @@ using System.Threading.Tasks;
 
 namespace InkPad.Adapters
 {
-	public abstract class SkiaAdapter
+	public abstract class SkiaShapeAdapter
 	{
 		protected PolyNumberSet Polyset { get; }
 
         protected bool _pathDirty = true;
+
+        public SKPoint TransformAnchor { get; set; }
 
         private SKMatrix _matrix = SKMatrix.Identity;
         public SKMatrix Matrix
@@ -29,14 +32,14 @@ namespace InkPad.Adapters
                 _pathDirty = true;
             }
         }
-        protected SkiaAdapter(int width, int height) 
+        public bool HasContent => Polyset.Count > 2 || Polyset.HasNonZeroContent();
+        protected SkiaShapeAdapter(int width, int height) 
         {
             Polyset = CreatePolyset(width, height);
         }
         protected abstract PolyNumberSet CreatePolyset(int width, int height);
 
-        public int Count => Polyset.Count;
-
+        public int PointCount => Polyset.Count;
         public SKPoint MakePoint(double[] values) => new SKPoint((float)values[0], (float)values[1]);
 		public SKPoint[] ToPoints()
 		{
@@ -48,6 +51,7 @@ namespace InkPad.Adapters
 				result[i] = MakePoint(pts[i]);
             }
             result = Matrix.MapPoints(result);
+            TransformAnchor = result.Center();
             return result;
 		}
 

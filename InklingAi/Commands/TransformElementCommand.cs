@@ -14,7 +14,9 @@ using SkiaSharp;
 public class TransformElementCommand : CommandBase
 {
     public TransformElementTask TransformTask;
+    public SKMatrix NewMatrix => TransformTask.NewMatrix;
     private PaintableImage _target;
+
     private TransformElementCommand(PaintableImage target)
     {
         _target = target;
