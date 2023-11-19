@@ -81,7 +81,7 @@ public partial class BrushToolbar : UserControl
 			}
 			else if (sender == nudFeather)
 			{
-				Trace.WriteLine("nudFeather");
+				//Trace.WriteLine("nudFeather");
 				//DrawingData.Instance.BrushSize = 
 			}
 			else if (sender == nudTransparent) // taken care of by color

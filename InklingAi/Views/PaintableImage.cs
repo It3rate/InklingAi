@@ -85,16 +85,22 @@ public class PaintableImage : BaseImage
 
 
 
-	#region Mouse Events
-	private bool _hasDragged = false;
+    #region Mouse Events
+    private bool _hasDragged = false;
     private bool _madeSelection = false;
     private bool _choseExistingSelection = false;
+    private bool _isDraggingHandle = false;
     protected override void OnMouseDown(Point currentPosition)
 	{
         if (DrawingData.DrawMode == DrawMode.Arrow)
         {
-            if (CheckHandlesHit(currentPosition)){}
-            else if(CheckSelectionHit(currentPosition)){}
+            if (CheckHandlesHit(currentPosition))
+            {
+                _isDraggingHandle = true;
+            }
+            else if(CheckSelectionHit(currentPosition))
+            {
+            }
         }
         else
         {
@@ -127,7 +133,7 @@ public class PaintableImage : BaseImage
 			{
                 _selectionHandles.Matrix = Move(diff.X, diff.Y);
             }
-            else if (Selection.TransformKind == TransformKind.Scale)
+            else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Scale)
             {
                 var ta = _selectionHandles.TransformAnchor;
                 var startDiff = _startPosition.Value.ToSKPoint() - ta;
@@ -135,7 +141,7 @@ public class PaintableImage : BaseImage
                 var anchor = _selectionHandles.TransformAnchor;
                 _selectionHandles.Matrix = Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor, true);
             }
-            else if (Selection.TransformKind == TransformKind.Rotate)
+            else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Rotate)
             {
                 var ta = _selectionHandles.TransformAnchor;
                 var startDiff = _startPosition.Value.ToSKPoint() - ta;
@@ -199,7 +205,8 @@ public class PaintableImage : BaseImage
 		_hasDragged = false;
         _madeSelection = false;
         _choseExistingSelection = false;
-		_selectionHandles.EndDragHandle();
+        _isDraggingHandle = false;
+        _selectionHandles.EndDragHandle();
         InvalidateVisual();
     }
     private SkPolyline CreateNewPath()
@@ -248,96 +255,6 @@ public class PaintableImage : BaseImage
 
 		return result;
 	}
-	//public void OnMouseMove(Panel? sender, MouseEventArgs e)
-	//{
-	//	_isMouseInside = true;
-	//	bool isTransformingPaint = (_isResizeCursor || _isResizeTransparent);
-	//	if (isTransformingPaint && InputPb != null)
-	//	{
-	//		_lastPoint = e.Location.CvPoint();
-	//		var dist = _startDownLocation.Y - _lastPoint.Y;
-	//		if (_isResizeTransparent)
-	//		{
-	//			var val = (int)Math.Max(0, Math.Min(255, _startTransparent + dist));
-	//			Transparent = val;
-	//			OnNumericChanged?.Invoke(PaintState.Transparent, val);
-	//		}
-	//		else if (_isResizeCursor)
-	//		{
-	//			NibRadius = (int)Math.Max(_nibMin, Math.Min(_nibMax, _startNibRadius + dist));
-	//			OnNumericChanged?.Invoke(PaintState.BrushSize, NibRadius);
-	//			_lastPoint = _startDownLocation - (_startDownLocation - _lastPoint);
-	//		}
-	//	}
-	//	else if (_paintState != PaintState.None)
-	//	{
-	//		switch (_paintState)
-	//		{
-	//			case PaintState.Dropper:
-	//				var color = GetPixelColorAt(sender, e.Location);
-	//				SetColor(color);
-	//				break;
-	//		}
-	//	}
-	//	else if (CurrentDrawState.CanDraw())
-	//	{
-	//		ContinueDraw(e.Location.CvPoint());
-	//	}
-	//	else if (CurrentDrawState == DrawState.Resize && IsPanning)
-	//	{
-	//		IsPanning = true;
-	//		var img = InputPb.InputImage;
-	//		if (img != null)
-	//		{
-	//			var scaledOffset = (_startDownLocation - e.Location.CvPoint()) * (1f / ZoomLevel);
-	//			_panOffset = scaledOffset;
-	//			//OnZoomPanChanged?.Invoke(this);
-	//			InputPb.SizeAndSetImage(img, true);
-	//		}
-	//	}
-
-	//	if (!IsShiftDown())
-	//	{
-	//		_isResizeCursor = false;
-	//		if (!IsControlDown())
-	//		{
-	//			_isResizeTransparent = false;
-	//		}
-	//	}
-	//	Invalidate(true); // optimize rect eventually, probably will switch to skia anyway
-	//}
-	//public void OnMouseUp(MouseEventArgs e)
-	//{
-	//	if (CurrentDrawState.CanDraw())
-	//	{
-	//		EndDraw(e.Location.CvPoint());
-	//	}
-	//	if ((CurrentDrawState == DrawState.Resize) && IsPanning)
-	//	{
-	//		Pan = _pan + _panOffset;
-	//		_panOffset = new Point(0, 0);
-	//		ReprocessRequested?.Invoke();
-	//	}
-	//	IsPanning = false;
-	//	_isResizeCursor = false;
-	//	_isResizeTransparent = false;
-	//}
-	//public void OnMouseWheel(MouseEventArgs e)
-	//{
-	//	if (CurrentDrawState == DrawState.Resize && InputPb != null)
-	//	{
-	//		var img = InputPb.InputImage;
-	//		if (img != null)
-	//		{
-	//			const int WHEEL_DELTA = 120;
-	//			ZoomLevel += (e.Delta / WHEEL_DELTA) * 0.01f;
-	//			InputPb.SizeAndSetImage(img, true);
-
-	//			_reprocessTimer.Stop();
-	//			_reprocessTimer.Start();
-	//		}
-	//	}
-	//}
 	protected override void OnDrop(object? sender, DragEventArgs e) { }
 	#endregion
 
