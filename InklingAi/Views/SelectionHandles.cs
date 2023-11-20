@@ -16,8 +16,9 @@
         Selection Selection => Paintable.Selection;
         public SKMatrix Matrix { get; set; }
         public SKPoint TransformAnchor { get; set; } = SKPoint.Empty;
+        public SKPoint Center => Selection.Bounds.Center();
 
-		private SKSvg _tl = new SKSvg();
+        private SKSvg _tl = new SKSvg();
 		private SKSvg _tr = new SKSvg();
 		private SKSvg _br = new SKSvg();
 		private SKSvg _bl = new SKSvg();

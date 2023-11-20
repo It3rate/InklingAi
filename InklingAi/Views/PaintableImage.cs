@@ -131,7 +131,7 @@ public class PaintableImage : BaseImage
         {
 			if (_madeSelection)
 			{
-                _selectionHandles.Matrix = Move(diff.X, diff.Y);
+                _selectionHandles.Matrix = Move(diff.X, diff.Y, _selectionHandles.Center);
             }
             else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Scale)
             {
@@ -139,7 +139,7 @@ public class PaintableImage : BaseImage
                 var startDiff = _startPosition.Value.ToSKPoint() - ta;
                 var curDiff = currentPosition.ToSKPoint() - ta;
                 var anchor = _selectionHandles.TransformAnchor;
-                _selectionHandles.Matrix = Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor, true);
+                _selectionHandles.Matrix = Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor);
             }
             else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Rotate)
             {
@@ -282,9 +282,9 @@ public class PaintableImage : BaseImage
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
 	}
-	public SKMatrix Move(double dx, double dy)
+	public SKMatrix Move(double dx, double dy, SKPoint anchor)
 	{
-		var cmd = TransformElementCommand.CreateTranslationCommand(this, (float)dx, (float)dy, null, false);
+		var cmd = TransformElementCommand.CreateTranslationCommand(this, (float)dx, (float)dy, anchor, true);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
         return cmd.NewMatrix;
@@ -299,7 +299,7 @@ public class PaintableImage : BaseImage
     }
 	public SKMatrix Rotate(double degrees, SKPoint anchor)
 	{
-		var cmd = TransformElementCommand.CreateRotationCommand(this, (float)degrees, anchor, false);
+		var cmd = TransformElementCommand.CreateRotationCommand(this, (float)degrees, anchor, _isDraggingHandle);
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
         return cmd.NewMatrix;
@@ -314,9 +314,9 @@ public class PaintableImage : BaseImage
 		_engine.Stack.Do(cmd);
 		InvalidateVisual();
     }
-    public SKMatrix Scale(float scaleX, float scaleY, SKPoint anchor, bool isDragging = true)
+    public SKMatrix Scale(float scaleX, float scaleY, SKPoint anchor)
     {
-        var cmd = TransformElementCommand.CreateScaleCommand(this, scaleX, scaleY, anchor, isDragging);
+        var cmd = TransformElementCommand.CreateScaleCommand(this, scaleX, scaleY, anchor, _isDraggingHandle);
         _engine.Stack.Do(cmd);
         InvalidateVisual();
         return cmd.NewMatrix;

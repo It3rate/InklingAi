@@ -146,7 +146,7 @@ public class TransformElementTask : TaskBase
 			}
 			else
 			{
-				NewMatrix = task.NewMatrix;
+				NewMatrix = NewMatrix.PostConcat(task.NewMatrix);
 				for (int i = 0; i < PreviousSelection.Count; i++)
 				{
 					PreviousSelection[i].Matrix = PreviousMatricies[i].PostConcat(NewMatrix);

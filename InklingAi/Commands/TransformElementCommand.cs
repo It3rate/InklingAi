@@ -21,21 +21,21 @@ public class TransformElementCommand : CommandBase
     {
         _target = target;
 	}
-	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy, SKPoint? anchor = null, bool isIncremental = true)
+	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy, SKPoint? anchor = null, bool isIncremental = false)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateTranslationTask(target, dx, dy, anchor);
         result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float degrees, SKPoint? anchor = null, bool isIncremental = true)
+	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float degrees, SKPoint? anchor = null, bool isIncremental = false)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateRotationTask(target, degrees, anchor);
 		result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY, SKPoint? anchor = null, bool isIncremental = true)
+	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY, SKPoint? anchor = null, bool isIncremental = false)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateScaleTask(target, scaleX, scaleY, anchor);
