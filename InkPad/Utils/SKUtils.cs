@@ -187,3 +187,12 @@ public static class RectPosExtensions
 		return result;
 	}
 }
+
+public static class ColorExtensions
+{
+    public static byte Alpha(this uint color) => (byte)((color & 0xFF000000) >> 24);
+    public static byte Red(this uint color) => (byte)((color & 0x00FF0000) >> 16);
+    public static byte Green(this uint color) => (byte)((color & 0x0000FF00) >> 8);
+    public static byte Blue(this uint color) => (byte)((color & 0x000000FF));
+
+}

@@ -1,8 +1,6 @@
-﻿using Avalonia.Media;
-using InklingAi.ViewModels;
-using InklingAi.Views;
-using InkPad.Adapters;
+﻿using InklingAi.ViewModels;
 using InkPad.CommandEngine;
+using InkPad.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +11,19 @@ namespace InklingAi.Tasks;
 
 public class ChangeBrushParamsTask : TaskBase, ICreateTask
 {
-	public DrawingData DrawingData { get; }
+	public IDrawingData DrawingData { get; }
 	public float BrushSize { get; private set; }
 	public float Feather { get; private set; }
-	public Color SelColor { get; private set; }
+	public uint ColorValue { get; private set; }
 
 	private float _prevBrushSize { get; set; }
 	private float _prevFeather { get; set; }
-	private Color _prevSelColor { get; set; }
+	private uint _prevSelColor { get; set; }
 
 	public override bool IsValid => true;
 	bool _firstRunSkip = false;
 
-	public ChangeBrushParamsTask(DrawingData drawingData, float brushSize, float feather, Color selColor, bool isPreviousValues)
+	public ChangeBrushParamsTask(IDrawingData drawingData, float brushSize, float feather, uint selColor, bool isPreviousValues)
 	{
 		DrawingData = drawingData;
 		if (isPreviousValues)
@@ -40,10 +38,10 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
 			_firstRunSkip = false;
 			BrushSize = brushSize;
 			Feather = feather;
-			SelColor = selColor;
+            ColorValue = selColor;
 		}
 	}
-	public ChangeBrushParamsTask(DrawingData drawingData, Color oldSelColor)
+	public ChangeBrushParamsTask(IDrawingData drawingData, uint oldSelColor)
 	{
 		_firstRunSkip = true;
 		DrawingData = drawingData;
@@ -52,18 +50,18 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
 		_prevSelColor = oldSelColor;
 		BrushSize = drawingData.BrushSize;
 		Feather = drawingData.Feather;
-		SelColor = drawingData.SelColor;
+        ColorValue = drawingData.ColorValue;
 	}
-	public ChangeBrushParamsTask(DrawingData drawingData, float oldBrushSize)
+	public ChangeBrushParamsTask(IDrawingData drawingData, float oldBrushSize)
 	{
 		_firstRunSkip = true;
 		DrawingData = drawingData;
 		_prevBrushSize = oldBrushSize;
 		_prevFeather = drawingData.Feather;
-		_prevSelColor = drawingData.SelColor;
+		_prevSelColor = drawingData.ColorValue;
 		BrushSize = drawingData.BrushSize;
 		Feather = drawingData.Feather;
-		SelColor = drawingData.SelColor;
+        ColorValue = drawingData.ColorValue;
 	}
 
 	public override void RunTask()
@@ -76,8 +74,8 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
 
 			DrawingData.BrushSize = BrushSize;
 			DrawingData.Feather = Feather;
-			DrawingData.SelColor = SelColor;
-            DrawingData.Transparency = SelColor.A;
+			DrawingData.ColorValue = ColorValue;
+            DrawingData.Transparency = ColorValue.Alpha();
         }
 		_firstRunSkip = false;
 	}
@@ -86,8 +84,8 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
 	{
 		DrawingData.BrushSize = _prevBrushSize;
 		DrawingData.Feather = _prevFeather;
-		DrawingData.SelColor = _prevSelColor;
-        DrawingData.Transparency = _prevSelColor.A;
+		DrawingData.ColorValue = _prevSelColor;
+        DrawingData.Transparency = _prevSelColor.Alpha();
 	}
 
     public override bool MergeDataFrom(TaskBase newTask)
@@ -97,7 +95,7 @@ public class ChangeBrushParamsTask : TaskBase, ICreateTask
         {
             BrushSize = newCbp.BrushSize;
             Feather = newCbp.Feather;
-            SelColor = newCbp.SelColor;
+            ColorValue = newCbp.ColorValue;
             result = true;
         }
         return result;

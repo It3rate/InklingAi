@@ -2,11 +2,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+//using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Skia;
 using InklingAi.CommandEngine;
@@ -14,18 +16,71 @@ using InklingAi.Commands;
 using InklingAi.ViewModels;
 using InkPad.Adapters;
 using InkPad.Utils;
-using NumSharp.Utilities;
 using SkiaSharp;
+using Tmds.DBus.SourceGenerator;
 
-public class PaintableImage : BaseImage
+public class PaintableImage : BaseImage, INotifyPropertyChanged
 {
 	private InklingModel _model => InklingModel.Instance;
 	private Engine _engine => _model.Engine;
 	private KeyboardData _keyboardData => _model.KeyboardData;
 
-	public DrawingData DrawingData { get; set; } = new DrawingData();
 
-	public DrawState CurrentDrawState { get; set; } = DrawState.Black;
+    public BrushMode BrushMode { get; set; } = BrushMode.None;
+    public DrawMode DrawMode { get; set; } = DrawMode.Paint;
+
+    private DrawingData _unSelDrawingData { get; set; } = new DrawingData();
+    public DrawingData DrawingData { get; set; } = new DrawingData();
+    private IDrawingData _prevDrawingDataSource;
+    public IDrawingData? SingleSelection => Selection.Count == 1 ? Selection[0] : null;
+    //public IDrawingData DrawingDataSource => SingleSelection ?? DrawingData;
+
+    //public static readonly StyledProperty<IDrawingData> DrawingDataSourceProperty = AvaloniaProperty.Register<PaintableImage, IDrawingData>(nameof(DrawingDataSource));
+    //public IDrawingData DrawingDataSource
+    //{
+    //    get => GetValue(DrawingDataSourceProperty);
+    //    set
+    //    {
+    //        SetValue(DrawingDataSourceProperty, value);
+    //        InvalidateVisual();
+    //    }
+    //}
+    public IDrawingData DrawingDataSource => SingleSelection ?? _unSelDrawingData;
+
+
+    public static readonly StyledProperty<byte> TransparencyProperty = AvaloniaProperty.Register<PaintableImage, byte>(nameof(Transparency), 255);
+    public byte Transparency
+    {
+        get => GetValue(TransparencyProperty);
+        set
+        {
+            SetValue(TransparencyProperty, value);
+            DrawingDataSource.Transparency = value;
+            InvalidateVisual();
+        }
+    }
+
+    public static readonly StyledProperty<float> FeatherProperty = AvaloniaProperty.Register<PaintableImage, float>(nameof(Feather), 0);
+    public float Feather
+    {
+        get => GetValue(FeatherProperty);
+        set
+        {
+            SetValue(FeatherProperty, value);
+            DrawingDataSource.Feather = value;
+            InvalidateVisual();
+        }
+    }
+    public Color SelColor
+    {
+        get => Color.FromUInt32(DrawingDataSource.ColorValue);
+        set
+        {
+            DrawingDataSource.ColorValue = value.ToUInt32();
+            InvalidateVisual();
+        }
+    }
+    public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
     public Selection Selection { get; }
     private List<ISelectableElement> _paths { get; } = new List<ISelectableElement>();
@@ -38,9 +93,50 @@ public class PaintableImage : BaseImage
         _engine.FocusedCommandTarget = this; // todo: there will be multiple instances of this eventually
 
         Selection = new Selection(this);
-		_canDrag = false;
+        _prevDrawingDataSource = DrawingData;
+        _canDrag = false;
 		_curPath = CreateNewPath();
         _selectionHandles = new SelectionHandles(this);
+        Selection.ContentChanged += Selection_ContentChanged;
+        DrawingData.BrushSizeChanged += DrawingData_BrushSizeChanged;
+        DrawingData.FeatherChanged += DrawingData_FeatherChanged;
+        DrawingData.TransparencyChanged += DrawingData_TransparencyChanged;
+        DrawingData.ColorValueChanged += DrawingData_ColorValueChanged;
+    }
+
+    private void DrawingData_ColorValueChanged(object? sender, EventArgs e)
+    {
+        DrawingDataSource.ColorValue = DrawingData.ColorValue;
+        InvalidateVisual();
+    }
+
+    private void DrawingData_TransparencyChanged(object? sender, EventArgs e)
+    {
+        DrawingDataSource.Transparency = DrawingData.Transparency;
+        InvalidateVisual();
+    }
+
+    private void DrawingData_FeatherChanged(object? sender, EventArgs e)
+    {
+        DrawingDataSource.Feather = DrawingData.Feather;
+        InvalidateVisual();
+    }
+
+    private void DrawingData_BrushSizeChanged(object? sender, EventArgs e)
+    {
+        DrawingDataSource.BrushSize = DrawingData.BrushSize;
+        InvalidateVisual();
+    }
+
+    private void Selection_ContentChanged(object? sender, EventArgs e)
+    {
+        IDrawingData src = SingleSelection ?? DrawingData;
+        if (_prevDrawingDataSource != src)
+        {
+            DrawingData.SetValuesNoEvents(src);
+
+            _prevDrawingDataSource = src;
+        }
     }
 
     public int IndexOfElement(ISelectableElement element)
@@ -92,14 +188,35 @@ public class PaintableImage : BaseImage
     private bool _isDraggingHandle = false;
     protected override void OnMouseDown(Point currentPosition)
 	{
-        if (DrawingData.DrawMode == DrawMode.Arrow)
+        if (DrawMode == DrawMode.Arrow)
         {
             if (CheckHandlesHit(currentPosition))
             {
                 _isDraggingHandle = true;
             }
-            else if(CheckSelectionHit(currentPosition))
+            else
             {
+                if (CheckSelectionHit(currentPosition))
+                {
+                    if (SingleSelection != null)
+                    {
+                        //DrawingData.ColorValue = SingleSelection.ColorValue;
+                        //DrawingData.BrushSize = SingleSelection.BrushSize;
+                        //DrawingData.Feather = SingleSelection.Feather;
+                        //DrawingData.Transparency = SingleSelection.Transparency;
+                    }
+                    else
+                    {
+                        //DrawingData.ColorValue = DrawingData.ColorValue;
+                        //DrawingData.BrushSize = DrawingData.BrushSize;
+                        //DrawingData.Feather = DrawingData.Feather;
+                        //DrawingData.Transparency = DrawingData.Transparency;
+                    }
+                }
+                else
+                {
+                    Selection.Clear();
+                }
             }
         }
         else
@@ -115,7 +232,7 @@ public class PaintableImage : BaseImage
     {
         DrawingData.CurrentPosition = currentPosition.ToSKPoint();
 
-		if (DrawingData.DrawMode == DrawMode.Arrow)
+		if (DrawMode == DrawMode.Arrow)
         {
 
         }
@@ -127,7 +244,7 @@ public class PaintableImage : BaseImage
     protected override void OnMouseDownDrag(Point currentPosition, Point diff)
 	{
 		_hasDragged = true;
-		if (DrawingData.DrawMode == DrawMode.Arrow)
+		if (DrawMode == DrawMode.Arrow)
         {
 			if (_madeSelection)
 			{
@@ -173,7 +290,7 @@ public class PaintableImage : BaseImage
     }
     protected override void OnMouseUp(Point currentPosition, Point diff)
     {
-        if (DrawingData.DrawMode == DrawMode.Arrow)
+        if (DrawMode == DrawMode.Arrow)
 		{
 			if (_choseExistingSelection && !_hasDragged)
 			{
@@ -330,7 +447,7 @@ public class PaintableImage : BaseImage
             _renderUtil.DrawShape(canvas, _paths[i]);
         }
 
-        if (DrawingData.DrawMode == DrawMode.Arrow)
+        if (DrawMode == DrawMode.Arrow)
         {
             if (_selectionHandles.IsHandlePressed)
             {

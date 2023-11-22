@@ -5,9 +5,10 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using InklingAi.ViewModels;
     using SkiaSharp;
 
-    public interface ISelectableElement
+    public interface ISelectableElement : IDrawingData
     {
         public static int EntityCounter = 1;
         int Id { get; }

@@ -8,17 +8,45 @@
 	using Avalonia.Media;
 	using SkiaSharp;
 
-    public class DrawingData : ViewModelBase
-	{
+    public class DrawingData : ViewModelBase, IDrawingData
+    {
+        public event EventHandler BrushSizeChanged;
+        public event EventHandler FeatherChanged;
+        public event EventHandler TransparencyChanged;
+        public event EventHandler ColorValueChanged;
+        private bool _pauseEvents = false;
+
         public SKPoint CurrentPosition { get; set; }
 
-        public BrushMode BrushMode { get; set; } = BrushMode.None;
-        public DrawMode DrawMode { get; set; } = DrawMode.Paint;
-        public float BrushSize { get; set; } = 20f;
-        public float Feather { get; set; } = 0f;
-        public SKPoint ClonePoint { get; set; } = SKPoint.Empty;
+        public float _brushSize = 20f;
+        public float BrushSize
+        {
+            get => _brushSize;
+            set
+            {
+                SetProperty(ref _brushSize, value);
+                if (!_pauseEvents)
+                {
+                    BrushSizeChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
 
-		private byte _transparency = 255;
+        public float _feather = 0f;
+        public float Feather
+        {
+            get => _feather;
+            set
+            {
+                SetProperty(ref _feather, value);
+                if (!_pauseEvents)
+                {
+                    FeatherChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        private byte _transparency = 255;
 		public byte Transparency 
         { 
             get => _transparency;
@@ -26,21 +54,50 @@
 			{
 				SetProperty(ref _transparency, value);
 				SelColor = new Color(_transparency, _selColor.R, _selColor.G, _selColor.B);
+                if (!_pauseEvents)
+                {
+                    TransparencyChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
-		Color _selColor = Color.FromUInt32(0xFF0072B2);
-		public Color SelColor {
-            get => _selColor;
-            set
-			{
-				SetProperty(ref _selColor, new Color(_transparency, value.R, value.G, value.B));
-                //if (_transparency != _selColor.A)
-                //{
-                //    Transparency = _selColor.A;
-                //}
+        public uint ColorValue
+        {
+            get => SelColor.ToUInt32();
+            set 
+            { 
+                SelColor = Color.FromUInt32(value);
+                if (!_pauseEvents)
+                {
+                    ColorValueChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
+
+        Color _selColor = Color.FromUInt32(0xFF0072B2);
+		public Color SelColor
+        {
+            get => _selColor;
+            set
+            {
+                SetProperty(ref _selColor, new Color(_transparency, value.R, value.G, value.B));
+                if (!_pauseEvents)
+                {
+                    ColorValueChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+        public void SetValuesNoEvents(IDrawingData data)
+        {
+            _pauseEvents = true;
+            Transparency = data.Transparency;
+            SelColor = Color.FromUInt32(data.ColorValue);
+            BrushSize = data.BrushSize;
+            Feather = data.Feather;
+            _pauseEvents = false;
+        }
+        public SKPoint ClonePoint { get; set; } = SKPoint.Empty;
+
         public Color CurrentGray { get; set; } = Colors.Gray;
 
 		public DrawingData() { }

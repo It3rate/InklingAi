@@ -28,8 +28,6 @@ public partial class BrushToolbar : UserControl
 		set => SetValue(PaintableImageProperty, value);
 	}
 
-	public DrawingData DrawingData => PaintableImage.DrawingData;
-
 	public bool GenCommandsOnChange = false;
 	public BrushToolbar()
     {
@@ -110,12 +108,12 @@ public partial class BrushToolbar : UserControl
 
 	private void ChangeBrushSizeCommand(float oldBrushSize)
 	{
-		var task = new ChangeBrushParamsTask(PaintableImage.DrawingData, oldBrushSize);
+		var task = new ChangeBrushParamsTask(PaintableImage.DrawingDataSource, oldBrushSize);
 		RunCommand(task);
 	}
 	private void ChangeColorCommand(Color oldColor)
 	{
-		var task = new ChangeBrushParamsTask(PaintableImage.DrawingData, oldColor);
+		var task = new ChangeBrushParamsTask(PaintableImage.DrawingDataSource, oldColor.ToUInt32());
 		RunCommand(task);
 	}
 	private void RunCommand(ChangeBrushParamsTask task)
@@ -130,7 +128,7 @@ public partial class BrushToolbar : UserControl
 		{
 			switch (numericUpDown.Name)
 			{
-				case "brushSize": PaintableImage.DrawingData.BrushSize = (float)(numericUpDown.Value ?? 20); break;
+				case "brushSize": PaintableImage.DrawingDataSource.BrushSize = (float)(numericUpDown.Value ?? 20); break;
 			}
 		}
     }

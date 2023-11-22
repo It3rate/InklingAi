@@ -41,12 +41,6 @@ public class TransformElementTask : TaskBase
 	}
 	public TransformElementTask(PaintableImage target, float dx, float dy, float rotate, float scaleX, float scaleY, SKPoint? anchor = null) : this(target, anchor)
 	{
-		//Target = target;
-		//var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));
-		//NewMatrix = SKMatrix.Identity;
-		//var bnds = selected.Bounds;
-  //      Anchor = anchor ?? new SKPoint(bnds.MidX, bnds.MidY); 
-
         if (rotate != 0)
 		{
             NewMatrix = NewMatrix.PostConcat(SKMatrix.CreateRotation(rotate * (MathF.PI / 180f), Anchor.X, Anchor.Y));

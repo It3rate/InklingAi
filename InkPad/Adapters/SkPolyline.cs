@@ -21,7 +21,6 @@ public class SkPolyline : SkiaShapeAdapter, ISelectableElement
     private SKPaint _paint = new();
 
     private float _brushSize = 20f;
-    private uint _colorValue;
 
     private bool _brushDirty = true;
     #endregion
@@ -39,7 +38,21 @@ public class SkPolyline : SkiaShapeAdapter, ISelectableElement
             }
         }
     }
-    public uint ColorValue { get => _colorValue; 
+    public byte Transparency
+    {
+        get => (byte)((_colorValue & 0xFF000000) >> 24);
+        set
+        {
+            _colorValue = (uint)((_colorValue & 0xFFFFFF) + (value << 24));
+            _brushDirty = true;
+        }
+    }
+    public float Feather { get; set; } = 0f;
+
+    private uint _colorValue;
+    public uint ColorValue 
+    { 
+        get => _colorValue; 
         set
         {
             if (_colorValue != value)
@@ -49,7 +62,6 @@ public class SkPolyline : SkiaShapeAdapter, ISelectableElement
             }
         }
     }
-    public float Feather { get; set; } = 0f;
 
 
     public SkPolyline(int width, int height, float? brushSize = null, uint? currentColor = null, float? feather = null) : base(width, height)

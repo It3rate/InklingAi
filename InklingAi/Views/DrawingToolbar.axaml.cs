@@ -32,7 +32,7 @@ namespace InklingAi.Views
         {
             if (PaintableImage != null && sender is Button btn)
             {
-                PaintableImage.DrawingData.DrawMode = _buttonModes[btn];
+                PaintableImage.DrawMode = _buttonModes[btn];
             }
         }
     }

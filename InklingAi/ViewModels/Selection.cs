@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using DynamicData;
 using InklingAi.Views;
 using InkPad.Adapters;
@@ -14,6 +15,7 @@ using SkiaSharp;
 
 public class Selection : IEnumerable<ISelectableElement>
 {
+    public event EventHandler ContentChanged;
     private readonly List<ISelectableElement> _internalList = new();
     protected PaintableImage _target;
 	public TransformKind TransformKind { get; set; } = TransformKind.Scale;
@@ -81,9 +83,14 @@ public class Selection : IEnumerable<ISelectableElement>
         {
             TransformKind = TransformKind.Scale;
             _prevIds = GetIds();
+            OnContentChanged(EventArgs.Empty);
         }
 		_target.InvalidateVisual();
-	}
+    }
+    protected virtual void OnContentChanged(EventArgs e)
+    {
+        ContentChanged?.Invoke(this, e);
+    }
 
     public int Count => _internalList.Count;
     public ISelectableElement[] ToArray() => _internalList.ToArray();
