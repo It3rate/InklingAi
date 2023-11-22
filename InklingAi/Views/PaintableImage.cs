@@ -130,7 +130,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
 
     private void Selection_ContentChanged(object? sender, EventArgs e)
     {
-        IDrawingData src = SingleSelection ?? DrawingData;
+        IDrawingData src = DrawingDataSource;
         if (_prevDrawingDataSource != src)
         {
             DrawingData.SetValuesNoEvents(src);
@@ -198,20 +198,6 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
             {
                 if (CheckSelectionHit(currentPosition))
                 {
-                    if (SingleSelection != null)
-                    {
-                        //DrawingData.ColorValue = SingleSelection.ColorValue;
-                        //DrawingData.BrushSize = SingleSelection.BrushSize;
-                        //DrawingData.Feather = SingleSelection.Feather;
-                        //DrawingData.Transparency = SingleSelection.Transparency;
-                    }
-                    else
-                    {
-                        //DrawingData.ColorValue = DrawingData.ColorValue;
-                        //DrawingData.BrushSize = DrawingData.BrushSize;
-                        //DrawingData.Feather = DrawingData.Feather;
-                        //DrawingData.Transparency = DrawingData.Transparency;
-                    }
                 }
                 else
                 {
