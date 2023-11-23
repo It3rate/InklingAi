@@ -40,7 +40,7 @@ namespace InklingAi.Views
             IsAntialias = true,
         };
 
-        public void RenderHoverBrush(SKCanvas canvas, DrawingData data)
+        public void RenderHoverBrush(SKCanvas canvas, BrushState data)
 		{
 			canvas.DrawCircle(data.CurrentPosition.X, data.CurrentPosition.Y, data.BrushSize/2, BrushOutinePen);
         }

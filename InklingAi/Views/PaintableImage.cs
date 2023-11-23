@@ -3,10 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 //using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -17,7 +15,6 @@ using InklingAi.ViewModels;
 using InkPad.Adapters;
 using InkPad.Utils;
 using SkiaSharp;
-using Tmds.DBus.SourceGenerator;
 
 public class PaintableImage : BaseImage, INotifyPropertyChanged
 {
@@ -25,120 +22,27 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
 	private Engine _engine => _model.Engine;
 	private KeyboardData _keyboardData => _model.KeyboardData;
 
-
     public BrushMode BrushMode { get; set; } = BrushMode.None;
     public DrawMode DrawMode { get; set; } = DrawMode.Paint;
-
-    private DrawingData _unSelDrawingData { get; set; } = new DrawingData();
-    public DrawingData DrawingData { get; set; } = new DrawingData();
-    private IDrawingData _prevDrawingDataSource;
-    public IDrawingData? SingleSelection => Selection.Count == 1 ? Selection[0] : null;
-    //public IDrawingData DrawingDataSource => SingleSelection ?? DrawingData;
-
-    //public static readonly StyledProperty<IDrawingData> DrawingDataSourceProperty = AvaloniaProperty.Register<PaintableImage, IDrawingData>(nameof(DrawingDataSource));
-    //public IDrawingData DrawingDataSource
-    //{
-    //    get => GetValue(DrawingDataSourceProperty);
-    //    set
-    //    {
-    //        SetValue(DrawingDataSourceProperty, value);
-    //        InvalidateVisual();
-    //    }
-    //}
-    public IDrawingData DrawingDataSource => SingleSelection ?? _unSelDrawingData;
-
-
-    public static readonly StyledProperty<byte> TransparencyProperty = AvaloniaProperty.Register<PaintableImage, byte>(nameof(Transparency), 255);
-    public byte Transparency
-    {
-        get => GetValue(TransparencyProperty);
-        set
-        {
-            SetValue(TransparencyProperty, value);
-            DrawingDataSource.Transparency = value;
-            InvalidateVisual();
-        }
-    }
-
-    public static readonly StyledProperty<float> FeatherProperty = AvaloniaProperty.Register<PaintableImage, float>(nameof(Feather), 0);
-    public float Feather
-    {
-        get => GetValue(FeatherProperty);
-        set
-        {
-            SetValue(FeatherProperty, value);
-            DrawingDataSource.Feather = value;
-            InvalidateVisual();
-        }
-    }
-    public Color SelColor
-    {
-        get => Color.FromUInt32(DrawingDataSource.ColorValue);
-        set
-        {
-            DrawingDataSource.ColorValue = value.ToUInt32();
-            InvalidateVisual();
-        }
-    }
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
-
-    public Selection Selection { get; }
-    private List<ISelectableElement> _paths { get; } = new List<ISelectableElement>();
-    private SkPolyline _curPath;
-    private UIRenderUtils _renderUtil = new UIRenderUtils();
-    private SelectionHandles _selectionHandles;
 
 	public PaintableImage()
     {
         _engine.FocusedCommandTarget = this; // todo: there will be multiple instances of this eventually
 
         Selection = new Selection(this);
-        _prevDrawingDataSource = DrawingData;
+        _prevBrushStateSource = BrushState;
         _canDrag = false;
 		_curPath = CreateNewPath();
         _selectionHandles = new SelectionHandles(this);
         Selection.ContentChanged += Selection_ContentChanged;
-        DrawingData.BrushSizeChanged += DrawingData_BrushSizeChanged;
-        DrawingData.FeatherChanged += DrawingData_FeatherChanged;
-        DrawingData.TransparencyChanged += DrawingData_TransparencyChanged;
-        DrawingData.ColorValueChanged += DrawingData_ColorValueChanged;
+        BrushState.BrushSizeChanged += OnBrushSizeChanged;
+        BrushState.FeatherChanged += OnFeatherChanged;
+        BrushState.TransparencyChanged += OnTransparencyChanged;
+        BrushState.ColorValueChanged += OnColorValueChanged;
     }
 
-    private void DrawingData_ColorValueChanged(object? sender, EventArgs e)
-    {
-        DrawingDataSource.ColorValue = DrawingData.ColorValue;
-        InvalidateVisual();
-    }
-
-    private void DrawingData_TransparencyChanged(object? sender, EventArgs e)
-    {
-        DrawingDataSource.Transparency = DrawingData.Transparency;
-        InvalidateVisual();
-    }
-
-    private void DrawingData_FeatherChanged(object? sender, EventArgs e)
-    {
-        DrawingDataSource.Feather = DrawingData.Feather;
-        InvalidateVisual();
-    }
-
-    private void DrawingData_BrushSizeChanged(object? sender, EventArgs e)
-    {
-        DrawingDataSource.BrushSize = DrawingData.BrushSize;
-        InvalidateVisual();
-    }
-
-    private void Selection_ContentChanged(object? sender, EventArgs e)
-    {
-        IDrawingData src = DrawingDataSource;
-        if (_prevDrawingDataSource != src)
-        {
-            DrawingData.SetValuesNoEvents(src);
-
-            _prevDrawingDataSource = src;
-        }
-    }
-
+    #region Elements
     public int IndexOfElement(ISelectableElement element)
     {
         return _paths.IndexOf(element);
@@ -178,8 +82,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
             InvalidateVisual();
         }
     }
-
-
+    #endregion
 
     #region Mouse Events
     private bool _hasDragged = false;
@@ -207,16 +110,16 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
         }
         else
         {
-            _curPath.ColorValue = DrawingData.SelColor.ToUInt32();
-            _curPath.BrushSize = DrawingData.BrushSize;
-            _curPath.Feather = DrawingData.Feather;
+            _curPath.ColorValue = BrushState.SelColor.ToUInt32();
+            _curPath.BrushSize = BrushState.BrushSize;
+            _curPath.Feather = BrushState.Feather;
             _curPath.Reset();
             _curPath.AddPoint(currentPosition.X, currentPosition.Y);
         }
     }
     protected override void OnMouseMove(Point currentPosition)
     {
-        DrawingData.CurrentPosition = currentPosition.ToSKPoint();
+        BrushState.CurrentPosition = currentPosition.ToSKPoint();
 
 		if (DrawMode == DrawMode.Arrow)
         {
@@ -315,7 +218,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
     private SkPolyline CreateNewPath()
     {
         return new SkPolyline((int)Bounds.Width, (int)Bounds.Height,
-            DrawingData.BrushSize, DrawingData.SelColor.ToUInt32(), DrawingData.Feather);
+            BrushState.BrushSize, BrushState.SelColor.ToUInt32(), BrushState.Feather);
 	}
 	private bool CheckHandlesHit(Point currentPosition)
 	{
@@ -365,8 +268,9 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
 	private bool IsShiftDown() => _keyboardData.IsShiftDown;
 	private bool IsControlDown() => _keyboardData.IsControlDown;
 	private bool IsKeyDown(Key key) => _keyboardData.IsDown(key);
-	#endregion
+    #endregion
 
+    #region Commands
     public void DeleteSelected()
     {
         if(Selection.HasSelection)
@@ -376,7 +280,29 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
             InvalidateVisual();
         }
 	}
-	public void Move(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
+
+    private void OnColorValueChanged(object? sender, EventArgs e)
+    {
+        BrushStateSource.ColorValue = BrushState.ColorValue;
+        InvalidateVisual();
+    }
+    private void OnTransparencyChanged(object? sender, EventArgs e)
+    {
+        BrushStateSource.Transparency = BrushState.Transparency;
+        InvalidateVisual();
+    }
+    private void OnFeatherChanged(object? sender, EventArgs e)
+    {
+        BrushStateSource.Feather = BrushState.Feather;
+        InvalidateVisual();
+    }
+    private void OnBrushSizeChanged(object? sender, EventArgs e)
+    {
+        BrushStateSource.BrushSize = BrushState.BrushSize;
+        InvalidateVisual();
+    }
+
+    public void Move(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
 	{
 		var amount = isControlDown ? 1f : isShiftDown ? 32f : 4f;
 		var dx = transformKind == SelectionTransformKind.MoveLeft ? -amount : transformKind == SelectionTransformKind.MoveRight ? amount : 0;
@@ -424,8 +350,43 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
         InvalidateVisual();
         return cmd.NewMatrix;
     }
+    #endregion
 
+    #region Selection
+    public Selection Selection { get; }
+    private List<ISelectableElement> _paths { get; } = new List<ISelectableElement>();
+    private SkPolyline _curPath;
+    private SelectionHandles _selectionHandles;
+    private void Selection_ContentChanged(object? sender, EventArgs e)
+    {
+        IBrushState src = BrushStateSource;
+        if (_prevBrushStateSource != src)
+        {
+            BrushState.SetValuesNoEvents(src);
 
+            _prevBrushStateSource = src;
+        }
+    }
+    #endregion
+
+    #region BrushState
+    public BrushData GetBrushDataClone() => BrushState.GetBrushDataClone();
+    public void SetWithBrushData(BrushData brushData)
+    {
+        BrushState.SetWithBrushData(brushData);
+    }
+    private BrushState _unSelBrushState { get; set; } = new BrushState();
+    public BrushState BrushState { get; set; } = new BrushState();
+
+    private IBrushState _prevBrushStateSource;
+    public IBrushState? SingleSelection => Selection.Count == 1 ? Selection[0] : null;
+    public IBrushState BrushStateSource => SingleSelection ?? _unSelBrushState;
+
+    #endregion
+
+    #region Render
+
+    private UIRenderUtils _renderUtil = new UIRenderUtils();
     protected override void RenderSkia(SKCanvas canvas)
     {
         for (int i = 0; i < _paths.Count; i++) // Note: foreach can have collection modified issues
@@ -449,12 +410,13 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
 
             if (IsMouseInside && !IsMouseDown)
             {
-                _renderUtil.RenderHoverBrush(canvas, DrawingData); // draw pen nib
+                _renderUtil.RenderHoverBrush(canvas, BrushState); // draw pen nib
 		    }
         }
         _selectionHandles.RenderSkia(canvas);
     }
 
+    #endregion
 }
 
 public enum DrawState

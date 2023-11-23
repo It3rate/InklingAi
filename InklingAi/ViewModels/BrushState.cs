@@ -8,8 +8,34 @@
 	using Avalonia.Media;
 	using SkiaSharp;
 
-    public class DrawingData : ViewModelBase, IDrawingData
+    public class BrushData
     {
+        public float BrushSize = 20f;
+        public float Feather = 0f;
+        public byte Transparency = 255;
+        public uint ColorValue = 0xFF0072B2;
+
+        public BrushData()
+        { 
+        }
+        public BrushData(float brushSize, float feather, byte transparency, uint colorValue)
+        {
+            BrushSize = brushSize;
+            Feather = feather;
+            Transparency = transparency;
+            ColorValue = colorValue;
+        }
+        public BrushData Clone()
+        {
+            return new BrushData(BrushSize, Feather, Transparency, ColorValue);
+        }
+    }
+
+    public class BrushState : ViewModelBase, IBrushState
+    {
+
+        private BrushData _brushData { get; } = new BrushData();
+
         public event EventHandler BrushSizeChanged;
         public event EventHandler FeatherChanged;
         public event EventHandler TransparencyChanged;
@@ -18,27 +44,34 @@
 
         public SKPoint CurrentPosition { get; set; }
 
-        public float _brushSize = 20f;
+        public BrushState() { }
+        public BrushData GetBrushDataClone() => _brushData.Clone();
+        public void SetWithBrushData(BrushData brushData)
+        {
+            BrushSize = brushData.BrushSize;
+            Feather = brushData.Feather;
+            Transparency = brushData.Transparency;
+            ColorValue = brushData.ColorValue;
+        }
+
         public float BrushSize
         {
-            get => _brushSize;
+            get => _brushData.BrushSize;
             set
             {
-                SetProperty(ref _brushSize, value);
+                SetProperty(ref _brushData.BrushSize, value);
                 if (!_pauseEvents)
                 {
                     BrushSizeChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
-
-        public float _feather = 0f;
         public float Feather
         {
-            get => _feather;
+            get => _brushData.Feather;
             set
             {
-                SetProperty(ref _feather, value);
+                SetProperty(ref _brushData.Feather, value);
                 if (!_pauseEvents)
                 {
                     FeatherChanged?.Invoke(this, EventArgs.Empty);
@@ -46,14 +79,13 @@
             }
         }
 
-        private byte _transparency = 255;
-		public byte Transparency 
-        { 
-            get => _transparency;
+        public byte Transparency
+        {
+            get => _brushData.Transparency;
             set
-			{
-				SetProperty(ref _transparency, value);
-				SelColor = new Color(_transparency, _selColor.R, _selColor.G, _selColor.B);
+            {
+                SetProperty(ref _brushData.Transparency, value);
+                SelColor = new Color(_brushData.Transparency, _selColor.R, _selColor.G, _selColor.B); // set both so UI reflects changes
                 if (!_pauseEvents)
                 {
                     TransparencyChanged?.Invoke(this, EventArgs.Empty);
@@ -64,8 +96,8 @@
         public uint ColorValue
         {
             get => SelColor.ToUInt32();
-            set 
-            { 
+            set
+            {
                 SelColor = Color.FromUInt32(value);
                 if (!_pauseEvents)
                 {
@@ -74,20 +106,21 @@
             }
         }
 
-        Color _selColor = Color.FromUInt32(0xFF0072B2);
-		public Color SelColor
+        public Color _selColor = Color.FromUInt32(0xFF0072B2);
+        public Color SelColor
         {
             get => _selColor;
             set
             {
-                SetProperty(ref _selColor, new Color(_transparency, value.R, value.G, value.B));
+                SetProperty(ref _selColor, new Color(_brushData.Transparency, value.R, value.G, value.B));
+                _brushData.ColorValue = _selColor.ToUInt32();
                 if (!_pauseEvents)
                 {
                     ColorValueChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
-        public void SetValuesNoEvents(IDrawingData data)
+        public void SetValuesNoEvents(IBrushState data)
         {
             _pauseEvents = true;
             Transparency = data.Transparency;
@@ -99,8 +132,6 @@
         public SKPoint ClonePoint { get; set; } = SKPoint.Empty;
 
         public Color CurrentGray { get; set; } = Colors.Gray;
-
-		public DrawingData() { }
     }
 
     public enum BrushMode

@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using InkPad.Adapters;
 
-    public interface IDrawingData
+    public interface IBrushState
     {
         float BrushSize { get; set; }
         float Feather { get; set; }

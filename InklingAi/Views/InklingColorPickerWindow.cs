@@ -25,12 +25,6 @@ namespace InklingAi.Views
 			IsCIELABSelectable = false;
 
 			Icon = new WindowIcon(new Avalonia.Media.Imaging.Bitmap("Assets/colorPicker.ico"));
-			//IsHSBVisible = true;
-			//IsHSBSelectable = true;
-			//IsRGBVisible = true;
-			//IsRGBSelectable = true;
-			//ColorSpace = AvaloniaColorPicker.ColorPicker.ColorSpaces.RGB;
-			//Color = DrawingData.Instance.SelColor;
 		}
 
 

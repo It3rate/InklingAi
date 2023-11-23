@@ -8,7 +8,7 @@
     using InklingAi.ViewModels;
     using SkiaSharp;
 
-    public interface ISelectableElement : IDrawingData
+    public interface ISelectableElement : IBrushState
     {
         public static int EntityCounter = 1;
         int Id { get; }
