@@ -281,27 +281,66 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
         }
 	}
 
-    private void OnColorValueChanged(object? sender, EventArgs e)
+    private void OnBrushSizeChanged(object? sender, EventArgs e)
     {
-        BrushStateSource.ColorValue = BrushState.ColorValue;
-        InvalidateVisual();
-    }
-    private void OnTransparencyChanged(object? sender, EventArgs e)
-    {
-        BrushStateSource.Transparency = BrushState.Transparency;
+        if(Selection.Count > 0)
+        {
+            var bd = GetBrushDataClone();
+            bd.BrushSize = BrushState.BrushSize;
+            var cmd = new SetSelectionAttributesCommand(this, bd);
+            _engine.Stack.Do(cmd);
+        }
+        else
+        {
+            _unSelBrushState.BrushSize = BrushState.BrushSize;
+        }
         InvalidateVisual();
     }
     private void OnFeatherChanged(object? sender, EventArgs e)
     {
-        BrushStateSource.Feather = BrushState.Feather;
+        if (Selection.Count > 0)
+        {
+            var bd = GetBrushDataClone();
+            bd.Feather = BrushState.Feather;
+            var cmd = new SetSelectionAttributesCommand(this, bd);
+            _engine.Stack.Do(cmd);
+        }
+        else
+        {
+            _unSelBrushState.Feather = BrushState.Feather;
+        }
         InvalidateVisual();
     }
-    private void OnBrushSizeChanged(object? sender, EventArgs e)
+    private void OnTransparencyChanged(object? sender, EventArgs e)
     {
-        BrushStateSource.BrushSize = BrushState.BrushSize;
+        if (Selection.Count > 0)
+        {
+            var bd = GetBrushDataClone();
+            bd.Transparency = BrushState.Transparency;
+            var cmd = new SetSelectionAttributesCommand(this, bd);
+            _engine.Stack.Do(cmd);
+        }
+        else
+        {
+            _unSelBrushState.Transparency = BrushState.Transparency;
+        }
         InvalidateVisual();
     }
-
+    private void OnColorValueChanged(object? sender, EventArgs e)
+    {
+        if (Selection.Count > 0)
+        {
+            var bd = GetBrushDataClone();
+            bd.ColorValue = BrushState.ColorValue;
+            var cmd = new SetSelectionAttributesCommand(this, bd);
+            _engine.Stack.Do(cmd);
+        }
+        else
+        {
+            _unSelBrushState.ColorValue = BrushState.ColorValue;
+        }
+        InvalidateVisual();
+    }
     public void Move(SelectionTransformKind transformKind, bool isControlDown, bool isShiftDown)
 	{
 		var amount = isControlDown ? 1f : isShiftDown ? 32f : 4f;

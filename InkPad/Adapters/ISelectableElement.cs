@@ -10,14 +10,16 @@
 
     public interface ISelectableElement : IBrushState
     {
-        public static int EntityCounter = 1;
+        static int EntityCounter = 1;
         int Id { get; }
         bool IsPointInside(SKPoint point);
         SKRect Bounds { get; }
         SKMatrix Matrix { get; set; }
         SKPoint TransformAnchor { get; set; }
-        public SKPaint Paint { get; }
-        public SKPath? Path { get; }
-        public SKPath PathOutline { get; }
+        SKPaint Paint { get; }
+        SKPath? Path { get; }
+        SKPath PathOutline { get; }
+
+        public void SetWithBrushData(BrushData brushData);
     }
 }

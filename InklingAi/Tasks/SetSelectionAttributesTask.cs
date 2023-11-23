@@ -24,14 +24,23 @@
         public override void RunTask()
         {
             PreviousBrushData = Target.GetBrushDataClone();
-            Target.SetWithBrushData(NewBrushData);
+            foreach (var item in Target.Selection)
+            {
+                item.SetWithBrushData(NewBrushData);
+            }
+
+            Target.InvalidateVisual();
         }
 
         public override void UnRunTask()
         {
             if (PreviousBrushData != null)
             {
-                Target.SetWithBrushData(PreviousBrushData);
+                foreach (var item in Target.Selection)
+                {
+                    item.SetWithBrushData(PreviousBrushData);
+                }
+                Target.InvalidateVisual();
             }
         }
         public override bool MergeDataFrom(TaskBase newTask)

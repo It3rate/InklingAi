@@ -1,4 +1,5 @@
-﻿using InkPad.Renderer;
+﻿using InklingAi.ViewModels;
+using InkPad.Renderer;
 using InkPad.Utils;
 using Nums.Composites;
 using Nums.CoreConcepts.CoreTraits;
@@ -80,6 +81,13 @@ public class SkPolyline : SkiaShapeAdapter, ISelectableElement
         {
             Feather = feather.Value;
         }
+    }
+    public void SetWithBrushData(BrushData brushData)
+    {
+        BrushSize = brushData.BrushSize;
+        Feather = brushData.Feather;
+        Transparency = brushData.Transparency;
+        ColorValue = brushData.ColorValue;
     }
     protected override PolyNumberSet CreatePolyset(int width, int height)
     {
