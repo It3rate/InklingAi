@@ -8,6 +8,7 @@ using InklingAi.CommandEngine;
 using InklingAi.StableDiffusion;
 using InklingAi.Utils;
 using InklingAi.Views;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -115,5 +116,34 @@ public partial class InklingModel : ViewModelBase
         }
         return result;
     }
+    //public void EnableLoadedModelsThreadCheck()
+    //{
+    //    //if (InvokeRequired) // tofo:check for UI thread
+    //    //{
+    //    //    this.Invoke((MethodInvoker)delegate
+    //    //    {
+    //    //        EnableLoadedModels();
+    //    //    });
+    //    //}
+    //    //else
+    //    //{
+    //    EnableLoadedModels();
+    //    //}
+
+    //}
+    //public void EnableLoadedModels()
+    //{
+    //    var modelExists = IOUtils.UnetModelExists(CurrentModelName, pbMask.Checked);
+    //    SetCanGenerate(modelExists);
+
+    //    foreach (var pb in _controlnetPbs)
+    //    {
+    //        if (pb.Checkbox != null)
+    //        {
+    //            var path = IOUtils.GetModelPath(pb.PBName);
+    //            pb.Checkbox.Enabled = File.Exists(path);
+    //        }
+    //    }
+    //}
 }
 
