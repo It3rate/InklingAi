@@ -1,0 +1,25 @@
+
+scipy
+diffusers==0.12.1
+Flask==2.2.2
+huggingface_hub==0.12.0
+numpy==1.24.2
+Pillow==9.4.0
+transformers==4.26.1
+-f https://download.pytorch.org/whl/torch_stable.html
+torch==2.0.1+cu117
+-f https://download.pytorch.org/whl/torch_stable.html
+torchvision==0.15.2+cu117
+-f https://download.pytorch.org/whl/torch_stable.html
+torchaudio==2.0.2+cu117
+scikit-image
+addict
+yapf
+einops
+safetensors
+opencv-python
+pytorch_lightning
+xformers
+accelerate
+timm
+matplotlib

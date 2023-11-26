@@ -1,0 +1,52 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Inkling",
+            "type": "python",
+            "request": "launch",
+            "program": "Main.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "ConvertVae",
+            "type": "python",
+            "request": "launch",
+            "program": "Conversion/ConvertVae.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Convert Safetensors",
+            "type": "python",
+            "request": "launch",
+            "program": "Conversion/ConvertSafetensors.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Convert Data",
+            "type": "python",
+            "request": "launch",
+            "program": "Conversion/ConvertToData.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Convert Onnx",
+            "type": "python",
+            "request": "launch",
+            "program": "Conversion/ConvertToOnnx.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}"
+            }
+        },
+    ]
+}

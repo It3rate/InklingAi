@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="python\.vscode\launch.json" />
+    <Content Include="python\.vscode\settings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SkiaSharp" Version="2.88.6" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
@@ -26,6 +31,14 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AIEnv.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="python\SD\images\" />
+    <Folder Include="python\SD\models\" />
+    <Folder Include="python\SD\uploads\" />
+    <Folder Include="python\SD\working\" />
+    <Folder Include="python\Text\" />
   </ItemGroup>
 
 </Project>
