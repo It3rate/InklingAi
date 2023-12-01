@@ -1,11 +1,9 @@
 ﻿
-namespace InklingAi.Onnx;
+namespace AIEnv.Onnx;
 
-using MathNet.Numerics.Distributions;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using NumSharp;
-using InklingAi.Onnx;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

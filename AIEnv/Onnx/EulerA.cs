@@ -1,4 +1,4 @@
-﻿namespace InklingAi.Onnx;
+﻿namespace AIEnv.Onnx;
 
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
@@ -41,21 +41,21 @@ public class EulerA : SchedulerBase
         //sample = sample / ((sigma * *2 + 1) * *0.5)
         //return sample
 
-        int stepIndex = this.Timesteps.IndexOf(timestep);
-        var sigma = this.Sigmas[stepIndex];
-        sigma = (float)Math.Sqrt(sigma*sigma + 1);
+        int stepIndex = Timesteps.IndexOf(timestep);
+        var sigma = Sigmas[stepIndex];
+        sigma = (float)Math.Sqrt(sigma * sigma + 1);
 
         var div = OnnxUtils.DivideTensorByFloat(sample, sigma);
         return div;
     }
 
-    public override DenseTensor<Float16> Step(Tensor<Float16> modelOutput16,int timestep,Tensor<Float16> sample16 )
+    public override DenseTensor<Float16> Step(Tensor<Float16> modelOutput16, int timestep, Tensor<Float16> sample16)
     {
         var dims = sample16.Dimensions.ToArray();
         var modelOutput = modelOutput16.ToFloatTensor();
         var sample = sample16.ToFloatTensor();
 
-        int stepIndex = Timesteps.IndexOf((int)timestep);
+        int stepIndex = Timesteps.IndexOf(timestep);
         var sigma = Sigmas[stepIndex];
 
         // 1. compute predicted original sample (x_0) from sigma-scaled predicted noise
@@ -69,10 +69,10 @@ public class EulerA : SchedulerBase
         var sigmaToSq = sigmaTo * sigmaTo;
         var sigmaFromLessSigmaTo = sigmaFromSq - sigmaToSq;
 
-        var sigmaUpResult = (sigmaToSq * sigmaFromLessSigmaTo) / sigmaFromSq;
+        var sigmaUpResult = sigmaToSq * sigmaFromLessSigmaTo / sigmaFromSq;
         var sigmaUp = sigmaUpResult < 0 ? -MathF.Sqrt(MathF.Abs(sigmaUpResult)) : MathF.Sqrt(sigmaUpResult);
 
-        var sigmaDownResult = sigmaToSq - sigmaUp*sigmaUp;
+        var sigmaDownResult = sigmaToSq - sigmaUp * sigmaUp;
         var sigmaDown = sigmaDownResult < 0 ? -MathF.Sqrt(MathF.Abs(sigmaDownResult)) : MathF.Sqrt(sigmaDownResult);
 
         // 2. Convert to an ODE derivative

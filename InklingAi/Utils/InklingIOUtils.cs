@@ -195,6 +195,11 @@
             return result;
         }
 
+
+
+
+
+
         public static StableDiffusionConfig? GetExifData(string path)
         {
             StableDiffusionConfig? result = null;
@@ -225,12 +230,7 @@
                 }
             }
         }
-
-
-
-
         static readonly HttpClient httpClient = new HttpClient();
-
         static async Task DownloadFileAsync(string url, string outputPath, IProgress<double> progress = null)
         {
             using var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
@@ -261,6 +261,54 @@
                 }
             }
         }
+
+        public static string ModelUrlFolder = @"https://huggingface.co/debreuil/SD_PureDataModels/resolve/main/";
+
+        public static List<string> ModelFiles = new List<string>()
+        {
+            "vae",                          "vae_f16_cuda.bin",
+            "text_encoder",                 "text_encoder_f16_cuda.bin",
+
+            "RevAnimated V122",             "revAnimated_v122_f16.bin",
+            "RevAnimated V122 inpainting",  "revAnimated_v121Inp_inpainting_f16.bin",
+
+            "canny",                        "controlNet_canny_f16_cuda.bin",
+
+            "midas_input",                  "dpt_hybrid-midas-501f0c75.pt",
+            "depth",                        "controlNet_depth_f16_cuda.bin",
+            "normal",                       "controlNet_normalbae_f16_cuda.bin",
+
+            "leres_input",                  "res101.pth",
+            "leres",                        "controlNet_depth_f16_cuda.bin",
+
+            "hed_input",                    "network-bsds500.pth",
+            "hed",                          "controlNet_lineart_anime_f16_cuda.bin",
+
+            "openpose_body_input",          "body_pose_model.pth",
+            "openpose_hand_input",          "hand_pose_model.pth",
+            "openpose",                     "controlNet_openpose_f16_cuda.bin",
+
+            "mlsd_input",                   "mlsd_large_512_fp32.pth",
+            "mlsd",                         "controlNet_mlsd_f16_cuda.bin",
+
+            "pidinet_input",                "table5_pidinet.pth",
+            "pidinet",                      "controlNet_softedge_f16_cuda.bin",
+
+            "uniformer_input",              "upernet_global_small.pth",
+            "uniformer",                    "controlNet_seg_f16_cuda.bin",
+
+            "Realistic Vision V30",         "realisticVisionV30_v30VAE_f16.bin",
+            "Realistic Vision V30 inpainting", "realisticVisionV40_v30Novae_inpainting_f16.bin",
+            "Deliberate V2",                "deliberate_v2_f16.bin",
+            "Deliberate V2 inpainting",     "deliberate_v2_inpainting_f16.bin",
+            "Dreamshaper 7",                "dreamshaper_7_f16.bin",
+            "Dreamshaper 7 inpainting",     "dreamshaper_7_inpainting_f16.bin",
+            "Default",                      "unet_f16_cuda.bin",
+            "Default inpainting",           "unet_inpainting_f16_cuda.bin",
+        };
+
+
+
         public async static Task<bool> SaveWorkingFolder(Window window)
         {
             bool result = false;
@@ -404,6 +452,7 @@
             //}
             //File.WriteAllBytes(filename, byteArray);
         }
+
         //public static void SaveShape(DenseTensor<Float16> tensor, string filePath)
         //{
         //    var data = tensor.Dimensions.ToArray();

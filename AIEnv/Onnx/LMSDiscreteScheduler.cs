@@ -1,14 +1,13 @@
 ﻿
-namespace InklingAi.Onnx;
+namespace AIEnv.Onnx;
 
 using Microsoft.ML.OnnxRuntime.Tensors;
 using Microsoft.ML.OnnxRuntime;
-using MathNet.Numerics;
-using NumSharp;
-using InklingAi.Onnx;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using NumSharp;
+using MathNet.Numerics;
 
 public class LMSDiscreteScheduler : SchedulerBase
 {

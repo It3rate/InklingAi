@@ -13,6 +13,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using SkiaSharp;
+    using static System.Net.Mime.MediaTypeNames;
 
     public class DalleClient : ClientBase
     {
@@ -34,18 +35,21 @@
         // -H "Content-Type: application/json"
         // -H "Authorization: Bearer $OPENAI_API_KEY"
         // -d '{ "model": "dall-e-3", "prompt": "A cute baby sea otter", "n": 1, "size": "1024x1024"}'
-        public virtual async Task<SKBitmap?> RequestImageAsync(string prompt)
+        public virtual async Task<string?> RequestImageAsync(StableDiffusionConfig config)
         {
-            SKBitmap? result = null;
+            string? result = null;
             var route = Route(_modelName);
-            var jsonContent = GetRequestJson(prompt);
+            var jsonContent = GetRequestJson(config.Prompt);
             try
             {
                 var response = await _httpClient.PostAsync(route, jsonContent);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var jsonObject = JObject.Parse(responseContent);
                 var url = jsonObject["data"][0]["url"].ToString();
-                result = await DownloadImageAsync(url);
+                SKBitmap img = await DownloadImageAsync(url);
+                var path = IOUtils.SDImageFolder + $"test{config.Seed}.png";
+                IOUtils.SaveLocalImage(img, path);
+                result = path;
             }
             catch (Exception ex)
             {

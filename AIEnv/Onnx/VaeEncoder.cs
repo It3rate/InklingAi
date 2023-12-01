@@ -1,7 +1,6 @@
-﻿namespace InklingAi.Onnx;
+﻿namespace AIEnv.Onnx;
 
-using Avalonia.Media;
-using InklingAi.Utils;
+using AIEnv.Utils;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SkiaSharp;
@@ -26,7 +25,7 @@ public class VaeEncoder
     unsafe public DenseTensor<Float16> EncodeImage(SKBitmap sourceBmp)
     {
         // might need to resize
-        var tensor = InklingIOUtils.GetTensorFromImage(sourceBmp);
+        var tensor = IOUtils.GetTensorFromImage(sourceBmp);
         var result = Encode(tensor);
         return result;
     }

@@ -10,6 +10,12 @@
 
     using System.Net.Http;
     using System.Runtime.InteropServices;
+    using AIEnv.Clients.StableDiffusion;
+    using ExifLibrary;
+    using SkiaSharp;
+    using Microsoft.ML.OnnxRuntime.Tensors;
+    using Microsoft.ML.OnnxRuntime;
+    using AIEnv.Onnx;
 
     //using Microsoft.ML.OnnxRuntime.Tensors;
     //using PAI2.Onnx;
@@ -86,21 +92,17 @@
         }
         public static string ImagePath(string name, bool isInput = false, string ext = "png") =>
             SDWorkingFolder + ImageName(name, isInput, ext);
-
         public static string IterationStepName(int stepIndex, string prefix = "", string ext = "png")
         {
             prefix = prefix == "" ? "iter" : prefix;
             return prefix + "_" + stepIndex + "." + ext;
         }
-
         public static string LatentStepName(int stepIndex) => IterationStepName(stepIndex, "latent", "bin");
         public static string IterationStepPath(int stepIndex, string prefix = "") =>
                                     SDWorkingFolder + IterationStepName(stepIndex, prefix);
         public static string RegionStepPath(int stepIndex) => SDWorkingFolder + IterationStepName(stepIndex, "region");
         public static string LatentStepPath(int stepIndex) => SDWorkingFolder + LatentStepName(stepIndex);
-
         public static string CachedImageFolderName(string imagePath) => Path.GetDirectoryName(imagePath) + Sep + "_" + Path.GetFileNameWithoutExtension(imagePath) + Sep;
-
         public static IPAddress? LocalIPAddress()
         {
             IPAddress? result = null;
@@ -118,7 +120,6 @@
             }
             return result;
         }
-
         public static bool CopyFile(string fromPath, string toPath)
         {
             var result = false;
@@ -136,42 +137,41 @@
             }
             return result;
         }
+        public static bool CopyCacheFolder(string fromFolder, string toFolder)
+        {
+            bool result = fromFolder == toFolder;
+            if (!result)
+            {
+                try
+                {
+                    var config = StableDiffusionConfig.LoadFromJson(fromFolder + ConfigFilemame);
+                    if (config != null)
+                    {
+                        Directory.CreateDirectory(toFolder);
 
-        //public static bool CopyCacheFolder(string fromFolder, string toFolder)
-        //{
-        //    bool result = fromFolder == toFolder;
-        //    if (!result)
-        //    {
-        //        try
-        //        {
-        //            var config = StableDiffusionConfig.LoadFromJson(fromFolder + ConfigFilemame);
-        //            if (config != null)
-        //            {
-        //                Directory.CreateDirectory(toFolder);
-
-        //                File.Copy(fromFolder + ConfigFilemame, toFolder + ConfigFilemame, true);
-        //                for (int i = 0; i < config.NumInferenceSteps + 1; i++) // include final image, generated as "iter{steps}.png"
-        //                {
-        //                    CopyIfExists(fromFolder, toFolder, IterationStepName(i));
-        //                    CopyIfExists(fromFolder, toFolder, LatentStepName(i));
-        //                }
-        //                foreach (var root in config.ActiveInputs) // includes controlNet, mask and input image
-        //                {
-        //                    var inputFilename = ImageName(root, true);
-        //                    CopyIfExists(fromFolder, toFolder, inputFilename);
-        //                    var outputFilename = ImageName(root, false);
-        //                    CopyIfExists(fromFolder, toFolder, outputFilename);
-        //                }
-        //                result = true;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Trace.WriteLine("Error copying folder. " + ex.Message);
-        //        }
-        //    }
-        //    return result;
-        //}
+                        File.Copy(fromFolder + ConfigFilemame, toFolder + ConfigFilemame, true);
+                        for (int i = 0; i < config.NumInferenceSteps + 1; i++) // include final image, generated as "iter{steps}.png"
+                        {
+                            CopyIfExists(fromFolder, toFolder, IterationStepName(i));
+                            CopyIfExists(fromFolder, toFolder, LatentStepName(i));
+                        }
+                        foreach (var root in config.ActiveInputs) // includes controlNet, mask and input image
+                        {
+                            var inputFilename = ImageName(root, true);
+                            CopyIfExists(fromFolder, toFolder, inputFilename);
+                            var outputFilename = ImageName(root, false);
+                            CopyIfExists(fromFolder, toFolder, outputFilename);
+                        }
+                        result = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Error copying folder. " + ex.Message);
+                }
+            }
+            return result;
+        }
         private static bool CopyIfExists(string inputFolder, string outputFolder, string filename)
         {
             bool result = false;
@@ -182,37 +182,36 @@
             }
             return result;
         }
+        public static StableDiffusionConfig? GetExifData(string path)
+        {
+            StableDiffusionConfig? result = null;
 
-        //public static StableDiffusionConfig? GetExifData(string path)
-        //{
-        //    StableDiffusionConfig? result = null;
-
-        //    if (path != null && path != "")
-        //    {
-        //        var file = ImageFile.FromFile(path);
-        //        var pngTag = file.Properties.Get(ExifTag.PNGText);
-        //        if (pngTag != null)
-        //        {
-        //            var desc = pngTag.Value.ToString();
-        //            result = StableDiffusionConfig.ParseExif(desc);
-        //        }
-        //    }
-        //    return result;
-        //}
-        //public static void SetExifData(string path, StableDiffusionConfig config)
-        //{
-        //    if (path != null && path != "")
-        //    {
-        //        var file = ImageFile.FromFile(path);
-        //        if (file != null)
-        //        {
-        //            var data = config.GetExifString();
-        //            var prop = new PNGText(ExifTag.PNGText, "parameters", data, false);
-        //            file.Properties.Add(prop);
-        //            file.Save(path);
-        //        }
-        //    }
-        //}
+            if (path != null && path != "")
+            {
+                var file = ImageFile.FromFile(path);
+                var pngTag = file.Properties.Get(ExifTag.PNGText);
+                if (pngTag != null)
+                {
+                    var desc = pngTag.Value.ToString();
+                    result = StableDiffusionConfig.ParseExif(desc);
+                }
+            }
+            return result;
+        }
+        public static void SetExifData(string path, StableDiffusionConfig config)
+        {
+            if (path != null && path != "")
+            {
+                var file = ImageFile.FromFile(path);
+                if (file != null)
+                {
+                    var data = config.GetExifString();
+                    var prop = new PNGText(ExifTag.PNGText, "parameters", data, false);
+                    file.Properties.Add(prop);
+                    file.Save(path);
+                }
+            }
+        }
 
 
 
@@ -337,6 +336,64 @@
 
 
 
+        public static DenseTensor<byte> GetTensorFromImage(SKBitmap sourceBmp)
+        {
+            //var bmp = GraphicUtils.ConvertToRGBIfNeeded(sourceBmp);
+            //var tensorShape = new int[] { bmp.Height, bmp.Width, 3 };
+            //var bytes = GraphicUtils.BytesFromBitmap(bmp);
+            //var result = new DenseTensor<byte>(bytes, tensorShape);
+            //return result;
+            return new DenseTensor<byte>(0);
+        }
+        unsafe public static DenseTensor<Float16>? GetLatentTensor(string path, int[] tensorShape)
+        {
+            DenseTensor<Float16>? result = null;
+            try
+            {
+                if (File.Exists(path))
+                {
+                    byte[] fileBytes = File.ReadAllBytes(path);
+                    int tensorSize = fileBytes.Length / 2;
+                    Float16[] f16_org;
+                    fixed (byte* byteDataPtr = fileBytes)
+                    {
+                        f16_org = new Span<Float16>((void*)byteDataPtr, tensorSize).ToArray();
+                    }
+                    var mem = new Memory<Float16>(f16_org);
+                    result = new DenseTensor<Float16>(mem, tensorShape);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Error getting latent data. " + ex.Message);
+            }
+            return result;
+        }
+        unsafe public static DenseTensor<Float16> LoadEncoding(string filename, int[] dimensions)
+        {
+            var data = File.ReadAllBytes(filename);
+            return OnnxUtils.CreateFloat16TensorFromBytes(data, dimensions);
+        }
+        unsafe public static void SaveEncoding(DenseTensor<Float16> tensor, string filename)
+        {
+            Span<Float16> tensorSpan = tensor.Buffer.Span;
+            byte[] byteArray = MemoryMarshal.AsBytes(tensorSpan).ToArray();
+
+            // Write bytes to a file
+            File.WriteAllBytes(filename, byteArray);
+
+            //var data = tensor.ToArray();
+            //byte[] byteArray = new byte[data.Length * 2];
+
+            //for (int i = 0; i < data.Length; i++)
+            //{
+            //    ushort val = (ushort)data[i].value;
+            //    byteArray[i * 2] = (byte)(val & 0xFF);
+            //    byteArray[i * 2 + 1] = (byte)((val >> 8) & 0xFF);
+            //}
+            //File.WriteAllBytes(filename, byteArray);
+        }
+
 
 
         //public static async Task EnsureModelsLoaded()
@@ -451,36 +508,36 @@
         //    }
         //    return result;
         //}
-        //public static string SaveLocalImage(SKBitmap? img, string? filename, StableDiffusionConfig? exifData = null)
-        //{
-        //    var success = false;
-        //    if (img != null && filename != null && filename != "")
-        //    {
-        //        try
-        //        {
-        //            using (var image = SKImage.FromBitmap(img))
-        //            using (var data = image.Encode())
-        //            {
-        //                using (var stream = File.OpenWrite(filename))
-        //                {
-        //                    data.SaveTo(stream);
-        //                }
-        //            }
+        public static string SaveLocalImage(SKBitmap? img, string? filename, StableDiffusionConfig? exifData = null)
+        {
+            var success = false;
+            if (img != null && filename != null && filename != "")
+            {
+                try
+                {
+                    using (var image = SKImage.FromBitmap(img))
+                    using (var data = image.Encode())
+                    {
+                        using (var stream = File.OpenWrite(filename))
+                        {
+                            data.SaveTo(stream);
+                        }
+                    }
 
-        //            if (exifData != null)
-        //            {
-        //                SetExifData(filename, exifData);
-        //            }
+                    if (exifData != null)
+                    {
+                        SetExifData(filename, exifData);
+                    }
 
-        //            success = true;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Trace.WriteLine(ex.Message);
-        //        }
-        //    }
-        //    return success ? filename : "";
-        //}
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.Message);
+                }
+            }
+            return success ? filename : "";
+        }
 
         //public static DenseTensor<byte> GetTensorFromImage(SKBitmap sourceBmp)
         //{

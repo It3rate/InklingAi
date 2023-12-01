@@ -1,4 +1,4 @@
-﻿namespace InklingAi.Onnx;
+﻿namespace AIEnv.Onnx;
 
 using Microsoft.ML.OnnxRuntime.Tensors;
 using Microsoft.ML.OnnxRuntime;

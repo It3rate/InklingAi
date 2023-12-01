@@ -1,4 +1,4 @@
-﻿namespace InklingAi.Onnx;
+﻿namespace AIEnv.Onnx;
 
 using System;
 using System.Collections.Generic;
