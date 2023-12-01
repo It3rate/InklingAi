@@ -18,7 +18,7 @@
         private const int itemsPerPage = 31;
 
 
-        private string _mainImagePath = IOUtils.SDWorkingFolder + @"main.png";
+        private string _mainImagePath = InklingIOUtils.SDWorkingFolder + @"main.png";
         public string MainImagePath
         {
             get => _mainImagePath;
@@ -38,7 +38,7 @@
             {
                 currentPage = startIndex;
             }
-            string dirPath = IOUtils.SDImageFolder;
+            string dirPath = InklingIOUtils.SDImageFolder;
             var allFiles = Directory.GetFiles(dirPath, "*.png")
                              .OrderByDescending(file => new FileInfo(file).LastWriteTime)
                              .ToArray();

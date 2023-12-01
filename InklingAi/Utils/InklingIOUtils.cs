@@ -9,7 +9,6 @@
     using System.Threading.Tasks;
 
     using ExifLibrary;
-    using InklingAi.StableDiffusion;
     using System.Net.Http;
     using Microsoft.ML.OnnxRuntime.Tensors;
     using Microsoft.ML.OnnxRuntime;
@@ -20,11 +19,12 @@
     using SkiaSharp;
     using InklingAi.Onnx;
     using System.Runtime.InteropServices;
+    using AIEnv.Clients.StableDiffusion;
 
     //using Microsoft.ML.OnnxRuntime.Tensors;
     //using PAI2.Onnx;
 
-    public class IOUtils
+    public class InklingIOUtils
     {
         public static System.Drawing.Size CurrentSize { get; set; } = new System.Drawing.Size(640, 512);
         public static float AspectRatio => CurrentSize.Width / (float)CurrentSize.Height;
@@ -78,7 +78,7 @@
         public static string TextDataFolder = DataFolder + TextData + _sep;
         public static string TextParsedFolder = DataFolder + TextParsed + _sep;
 
-        static IOUtils()
+        static InklingIOUtils()
         {
             Directory.CreateDirectory(DataFolder);
             Directory.CreateDirectory(SDDataFolder);
@@ -97,7 +97,7 @@
             return prefix + name + suffix + fileType;
         }
         public static string ImagePath(string name, bool isInput = false, string ext = "png") =>
-            IOUtils.SDWorkingFolder + ImageName(name, isInput, ext);
+            InklingIOUtils.SDWorkingFolder + ImageName(name, isInput, ext);
 
         public static string IterationStepName(int stepIndex, string prefix = "", string ext = "png")
         {
@@ -107,9 +107,9 @@
 
         public static string LatentStepName(int stepIndex) => IterationStepName(stepIndex, "latent", "bin");
         public static string IterationStepPath(int stepIndex, string prefix = "") =>
-                                    IOUtils.SDWorkingFolder + IterationStepName(stepIndex, prefix);
-        public static string RegionStepPath(int stepIndex) => IOUtils.SDWorkingFolder + IterationStepName(stepIndex, "region");
-        public static string LatentStepPath(int stepIndex) => IOUtils.SDWorkingFolder + LatentStepName(stepIndex);
+                                    InklingIOUtils.SDWorkingFolder + IterationStepName(stepIndex, prefix);
+        public static string RegionStepPath(int stepIndex) => InklingIOUtils.SDWorkingFolder + IterationStepName(stepIndex, "region");
+        public static string LatentStepPath(int stepIndex) => InklingIOUtils.SDWorkingFolder + LatentStepName(stepIndex);
 
         public static string CachedImageFolderName(string imagePath) => Path.GetDirectoryName(imagePath) + _sep + "_" + Path.GetFileNameWithoutExtension(imagePath) + _sep;
 

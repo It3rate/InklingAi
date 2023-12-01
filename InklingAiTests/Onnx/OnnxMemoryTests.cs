@@ -54,7 +54,7 @@
                 //var originalData = Enumerable.Range(0, 4*64*64).Select(i => ((i + 0.5f).ToFloat16())).ToArray();
                 //Assert.Equal(originalData.ToArray(), inTensor.GetTensorDataAsSpan<Float16>().ToArray());
 
-                string modelPath = IOUtils.SDOnnxFolder + @"vae_decoder\model.onnx";
+                string modelPath = InklingIOUtils.SDOnnxFolder + @"vae_decoder\model.onnx";
                 byte[] modelData = File.ReadAllBytes(modelPath);
                 CudaDeviceVariable<byte> deviceModel = new CudaDeviceVariable<byte>(modelData.Length);
                 deviceModel.CopyToDevice(modelData);

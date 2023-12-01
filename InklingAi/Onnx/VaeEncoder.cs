@@ -26,7 +26,7 @@ public class VaeEncoder
     unsafe public DenseTensor<Float16> EncodeImage(SKBitmap sourceBmp)
     {
         // might need to resize
-        var tensor = IOUtils.GetTensorFromImage(sourceBmp);
+        var tensor = InklingIOUtils.GetTensorFromImage(sourceBmp);
         var result = Encode(tensor);
         return result;
     }

@@ -9,20 +9,15 @@ using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using InklingAi.ViewModels;
 using Avalonia.Data;
-using Avalonia.VisualTree;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using SkiaSharp;
 using InklingAi.Utils;
-using Avalonia.Threading;
-using System.Diagnostics;
-using Avalonia.Controls.Shapes;
-using Avalonia.Markup.Xaml;
+using AIEnv.Utils;
 
 public abstract class BaseImage : UserControl
 {
@@ -210,8 +205,8 @@ public abstract class BaseImage : UserControl
         context.Custom((ICustomDrawOperation)renderingLogic);
         base.Render(context);
     }
-    protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, (Size)AspectSize, StretchDirection.Both);
-    protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, (Size)AspectSize);
+    protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize.ToAvaloniaSize(), StretchDirection.Both);
+    protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize.ToAvaloniaSize());
 
     protected void DrawImage(SKCanvas canvas, SKBitmap? img, double alpha = 1.0)
     {

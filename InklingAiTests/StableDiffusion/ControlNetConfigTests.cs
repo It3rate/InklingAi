@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AIEnv.Clients.StableDiffusion;
 using global::InklingAi.StableDiffusion;
-using InklingAi.StableDiffusion;
 using Newtonsoft.Json;
 
 public class ControlNetConfigTests

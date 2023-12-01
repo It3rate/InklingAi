@@ -1,11 +1,11 @@
 ﻿namespace InklingAi.ViewModels;
 
+using InklingAi.StableDiffusion;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using InklingAi.CommandEngine;
-using InklingAi.StableDiffusion;
 using InklingAi.Utils;
 using InklingAi.Views;
 using SkiaSharp;
@@ -15,6 +15,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using AIEnv.Clients.StableDiffusion;
+using AIEnv.Utils;
+using Avalonia.Controls.Shapes;
 
 public partial class InklingModel : ViewModelBase
 {
@@ -48,10 +51,15 @@ public partial class InklingModel : ViewModelBase
     public ICommand DeleteCommand { get; }
     public ICommand ChangeAspectSizeCommand { get; }
 
-    public void OnGenerate()
+    private DalleClient _dalle = new();
+    public async void OnGenerate()
     {
+        var image = await _dalle.RequestImageAsync("Photorealistic Christmas ornament of a beautifully colorfully wrapped gift box.");
+        var path = IOUtils.SDImageFolder + $"test{SDConfig.Seed}.png";
+
+        InklingIOUtils.SaveLocalImage(image, path);
         RandomizeSeed();
-        var path = sdController.Generate(SDConfig);
+        //var path = sdController.Generate(SDConfig);
         GalleryData.LoadNextPage(0);
     }
     public void OnDelete()

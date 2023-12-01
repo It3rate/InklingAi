@@ -1,5 +1,6 @@
 ﻿namespace InklingAi.Utils
 {
+    using AIEnv.Utils;
     using InklingAi.Utils;
     using System;
     using System.Collections.Generic;
@@ -152,5 +153,10 @@
     {
         public static float[] ToFloats(this double[] data) { return Array.ConvertAll(data, x => (float)x); }
         public static float[] ToFloats(this IEnumerable<double> data) => data.Select(x => (float)x).ToArray();
+    }
+    public static class SizeExtensions
+    {
+        public static IntSize ToIntSize(this Avalonia.Size size) => new IntSize((int)size.Width, (int)size.Height);
+        public static Avalonia.Size ToAvaloniaSize(this IntSize intSize) => new Avalonia.Size(intSize.Width, intSize.Height);
     }
 }

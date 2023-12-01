@@ -32,7 +32,7 @@
         public void LoadInputControls()
         {
             _inputItems.Clear();
-            string dirPath = IOUtils.SDWorkingFolder;// @"C:\Users\Robin\InklingAI\SD\working\";
+            string dirPath = InklingIOUtils.SDWorkingFolder;// @"C:\Users\Robin\InklingAI\SD\working\";
             _inputMap = ImageData.GenerateInputItems(dirPath);
             foreach (var val in _inputMap.Values)
             {

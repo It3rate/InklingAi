@@ -1,4 +1,4 @@
-﻿namespace InklingAi.StableDiffusion
+﻿namespace AIEnv.Clients.StableDiffusion
 {
     using Newtonsoft.Json;
 

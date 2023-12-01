@@ -6,11 +6,11 @@
     using System.Text;
     using System.Threading.Tasks;
     using Xunit;
-    using InklingAi.StableDiffusion;
     using System.IO;
     using global::InklingAi.StableDiffusion;
     using InklingAi.Utils;
     using System.Collections;
+    using AIEnv.Clients.StableDiffusion;
 
     public class StableDiffusionConfigTests
     {
@@ -22,7 +22,7 @@
                 Prompt = "Test Prompt",
                 Seed = 12345
             };
-            var expectedFileName = IOUtils.SDImageFolder + "Test_Prompt12345.png";
+            var expectedFileName = InklingIOUtils.SDImageFolder + "Test_Prompt12345.png";
             Assert.Equal(expectedFileName, config.GenerateImageName());
         }
 

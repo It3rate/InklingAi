@@ -8,10 +8,11 @@
     using System.Text;
     using System.Threading.Tasks;
     using InklingAi.Onnx;
-    using InklingAi.StableDiffusion;
     using InklingAi.Utils;
     using SkiaSharp;
     using InklingAi.ViewModels;
+    using AIEnv.Clients.StableDiffusion;
+    using AIEnv.Utils;
 
     public class StableDiffusionController
     {
@@ -49,7 +50,7 @@
             //IOUtils.SaveLocalImage(image, path);
 
             var path = config.GenerateImageName();
-            IOUtils.SaveLocalImage(image, path);
+            InklingAi.Utils.InklingIOUtils.SaveLocalImage(image, path);
             //var path = IOUtils.IterationStepPath(999);
             //IOUtils.SaveLocalImage(image, path);
             return image;

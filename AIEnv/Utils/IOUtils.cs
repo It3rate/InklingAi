@@ -57,7 +57,8 @@
 
         public static string ConfigFilemame = "config.json";
 
-        public static string OpenAI_ApiKey = DataFolder + @"openAI.apikey";
+        public static string OpenAI_ApiKeyPath = DataFolder + @"openAI.apikey";
+        public static string? OpenAI_ApiKey = File.Exists(OpenAI_ApiKeyPath) ? File.ReadAllText(OpenAI_ApiKeyPath) : Environment.GetEnvironmentVariable("OPENAI_API_KEY");
         public static string TextRoot = "text";
         public static string TextData = TextRoot + Sep + "data";
         public static string TextParsed = TextRoot + Sep + "parsed";

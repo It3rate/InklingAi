@@ -14,6 +14,7 @@
     using Avalonia.Media.Imaging;
     using Avalonia.Platform;
     using SkiaSharp;
+    using AIEnv.Utils;
 
     public class VaeDecoder : IDisposable
     {
@@ -31,7 +32,7 @@
         {
             SKBitmap? result = null;
             var tensorShape = new int[] { 1, 4, (int)Math.Floor(size.Height / 8.0), (int)Math.Floor(size.Width / 8.0) };
-            var latentData = IOUtils.GetLatentTensor(latentPath, tensorShape);
+            var latentData = InklingIOUtils.GetLatentTensor(latentPath, tensorShape);
             if(latentData != null)
             {
                 result = Decode(latentData);

@@ -20,7 +20,7 @@ public abstract class ClientBase : IDisposable
 
     protected string _hostIP = IOUtils.LocalIPAddress()?.ToString() ?? "127.0.0.1";
     protected int _hostPort = 9000;
-    protected string Host => _hostIP + ":" + _hostPort + "/";
+    protected virtual string Host => _hostIP + ":" + _hostPort + "/";
     protected string _embeddingRootName = "_emb";
 
     protected readonly string _apiKey;
@@ -31,9 +31,9 @@ public abstract class ClientBase : IDisposable
     protected bool _enabled = false;
     protected readonly HttpClient _httpClient = new HttpClient();
 
-    protected ClientBase(string apiKey, string modelName)
+    protected ClientBase(string? apiKey, string modelName)
     {
-        _apiKey = apiKey;
+        _apiKey = apiKey ?? "";
         _httpClient = new HttpClient();
         _modelName = modelName;
     }
@@ -276,6 +276,21 @@ public abstract class ClientBase : IDisposable
         }
     }
 
+    public async Task<SKBitmap?> DownloadImageAsync(string url)
+    {
+        SKBitmap? result = null;
+        using (var client = new HttpClient())
+        {
+            var response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            using (var stream = await response.Content.ReadAsStreamAsync())
+            {
+                result = SKBitmap.Decode(stream);
+            }
+        }
+        return result;
+    }
     public void Enable()
     {
         _enabled = true;

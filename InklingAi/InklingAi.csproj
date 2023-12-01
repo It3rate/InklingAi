@@ -53,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AIEnv\AIEnv.csproj" />
     <ProjectReference Include="..\InkPad\InkPad.csproj" />
     <ProjectReference Include="..\Nums\Nums.csproj" />
   </ItemGroup>
