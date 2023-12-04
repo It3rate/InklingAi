@@ -17,9 +17,9 @@
     using Avalonia.Media.Imaging;
     using Avalonia.Platform.Storage;
     using SkiaSharp;
-    using InklingAi.Onnx;
     using System.Runtime.InteropServices;
     using AIEnv.Clients.StableDiffusion;
+    using AIEnv.Onnx;
 
     //using Microsoft.ML.OnnxRuntime.Tensors;
     //using PAI2.Onnx;

@@ -19,6 +19,7 @@
         public ImageKind ImageKind { get; set; }
         public string InputTitle { get; set; }
         public bool IsActive { get; set; } = false;
+        public bool IsApplicable { get; set; } = true;
 
         private IImage? _undoImage;
         private IImage? _resetImage;

@@ -10,7 +10,7 @@ namespace InklingAi.Views
         public static readonly StyledProperty<ImageData> ItemDataProperty =
             AvaloniaProperty.Register<InputControl, ImageData>(nameof(ItemData));
 
-        public ImageData ItemData
+        public ImageData? ItemData
         {
             get { return GetValue(ItemDataProperty); }
             set { SetValue(ItemDataProperty, value); }
@@ -25,20 +25,26 @@ namespace InklingAi.Views
 
         private void OnExpanded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            ItemData.IsActive = true;
-            var mvm = InklingModel.GetRootDataContext(this);
-            if (mvm != null)
+            if (ItemData != null)
             {
-                mvm.InfluenceData.ResetActiveItems();
+                ItemData.IsActive = true;
+                var mvm = InklingModel.GetRootDataContext(this);
+                if (mvm != null)
+                {
+                    mvm.InfluenceData.ResetActiveItems();
+                }
             }
         }
         private void OnCollapsed(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            ItemData.IsActive = false;
-            var mvm = InklingModel.GetRootDataContext(this);
-            if(mvm != null)
+            if (ItemData != null)
             {
-                mvm.InfluenceData.ResetActiveItems();
+                ItemData.IsActive = false;
+                var mvm = InklingModel.GetRootDataContext(this);
+                if (mvm != null)
+                {
+                    mvm.InfluenceData.ResetActiveItems();
+                }
             }
         }
     }

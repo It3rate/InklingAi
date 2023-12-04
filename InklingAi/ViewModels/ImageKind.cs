@@ -1,4 +1,6 @@
-﻿namespace InklingAi.ViewModels
+﻿using InklingAi.ViewModels;
+
+namespace InklingAi.ViewModels
 {
 
     using System.Collections.Generic;
@@ -57,11 +59,30 @@
             var result = ImageKind.None;
             foreach (var kind in inputKindNames)
             {
-                if(kind.Value == name)
+                if (kind.Value == name)
                 {
                     result = kind.Key;
                     break;
                 }
+            }
+            return result;
+        }
+        public static bool IsControlNet(this ImageKind kind)
+        {
+            var result = false;
+            switch (kind)
+            {
+                case ImageKind.Canny:
+                case ImageKind.Depth:
+                case ImageKind.Leres:
+                case ImageKind.Hed:
+                case ImageKind.Openpose:
+                case ImageKind.Normal:
+                case ImageKind.Mlsd:
+                case ImageKind.Pidinet:
+                case ImageKind.Uniformer:
+                    result = true;
+                    break;
             }
             return result;
         }

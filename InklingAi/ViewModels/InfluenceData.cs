@@ -4,18 +4,24 @@
 	using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
     public class InfluenceData : ViewModelBase
     {
-        private Dictionary<string, ImageData>? _inputMap;
+        private Dictionary<string, ImageData> _allItemsMap = new();
+
         private ObservableCollection<ImageData> _inputItems = new();
         public ObservableCollection<ImageData> InputItems
         {
             get => _inputItems;
             set => SetProperty(ref _inputItems, value);
+        }
+        public void ResetInputItems()
+        {
+            InputItems = new ObservableCollection<ImageData>(_allItemsMap.Values.Where(item => item.IsApplicable));
         }
 
         private ObservableCollection<ImageData> _activeItems = new();
@@ -33,12 +39,20 @@
         {
             _inputItems.Clear();
             string dirPath = InklingIOUtils.SDWorkingFolder;// @"C:\Users\Robin\InklingAI\SD\working\";
-            _inputMap = ImageData.GenerateInputItems(dirPath);
-            foreach (var val in _inputMap.Values)
+            _allItemsMap = ImageData.GenerateInputItems(dirPath);
+            ResetInputItems();
+        }
+        public void AllowControlNet(bool allowControlNet)
+        {
+            foreach(var item in _allItemsMap.Values)
             {
-                InputItems.Add(val);
+                if (item.ImageKind.IsControlNet())
+                {
+                    item.IsApplicable = allowControlNet;
+                }
             }
-
+            ResetInputItems();
+            ResetActiveItems();
         }
     }
 }

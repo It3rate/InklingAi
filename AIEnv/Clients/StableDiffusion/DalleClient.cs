@@ -39,17 +39,24 @@
         {
             string? result = null;
             var route = Route(_modelName);
-            var jsonContent = GetRequestJson(config.Prompt);
+            var jsonContent = GetRequestJson(config.Prompt + " " + config.StylePrompt);
             try
             {
                 var response = await _httpClient.PostAsync(route, jsonContent);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var jsonObject = JObject.Parse(responseContent);
-                var url = jsonObject["data"][0]["url"].ToString();
-                SKBitmap img = await DownloadImageAsync(url);
-                var path = IOUtils.SDImageFolder + $"test{config.Seed}.png";
-                IOUtils.SaveLocalImage(img, path);
-                result = path;
+                if (jsonObject.ContainsKey("data"))
+                {
+                    var url = jsonObject["data"][0]["url"].ToString();
+                    SKBitmap img = await DownloadImageAsync(url);
+                    var path = IOUtils.SDImageFolder + $"test{config.Seed}.png";
+                    IOUtils.SaveLocalImage(img, path);
+                    result = path;
+                }
+                else if(jsonObject.ContainsKey("error"))
+                {
+                    result = jsonObject["error"].ToString();
+                }
             }
             catch (Exception ex)
             {

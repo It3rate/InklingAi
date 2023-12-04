@@ -491,23 +491,23 @@
         //    return result;
         //}
 
-        //public static Bitmap? GetLocalImage(string folder, string filename = "")
-        //{
-        //    Bitmap? result = null;
-        //    var path = folder + filename; // folder can hold the full file path is filename is ""
-        //    try
-        //    {
-        //        if (File.Exists(path))
-        //        {
-        //            result = new Bitmap(path);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Trace.WriteLine("Error getting local image. " + ex.Message);
-        //    }
-        //    return result;
-        //}
+        public static SKBitmap? GetLocalImage(string folder, string filename = "")
+        {
+            SKBitmap? result = null;
+            var path = folder + filename; // folder can hold the full file path is filename is ""
+            try
+            {
+                if (File.Exists(path))
+                {
+                    result = SKBitmap.Decode(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Error getting local image. " + ex.Message);
+            }
+            return result;
+        }
         public static string SaveLocalImage(SKBitmap? img, string? filename, StableDiffusionConfig? exifData = null)
         {
             var success = false;

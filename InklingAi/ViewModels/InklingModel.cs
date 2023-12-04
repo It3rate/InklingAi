@@ -18,6 +18,7 @@ using System.Windows.Input;
 using AIEnv.Clients.StableDiffusion;
 using AIEnv.Utils;
 using Avalonia.Controls.Shapes;
+using System.Diagnostics;
 
 public partial class InklingModel : ViewModelBase
 {
@@ -44,6 +45,7 @@ public partial class InklingModel : ViewModelBase
         ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
         GenerateCommand = new RelayCommand(OnGenerate);
         DeleteCommand = new RelayCommand(OnDelete);
+        OnChangeModel("mnRevAnimated");
     }
 
     #region Commands
@@ -54,16 +56,18 @@ public partial class InklingModel : ViewModelBase
     private DalleClient _dalle = new();
     public async void OnGenerate()
     {
-        var image = await _dalle.RequestImageAsync("Photorealistic Christmas ornament of a beautifully colorfully wrapped gift box.");
-        var path = IOUtils.SDImageFolder + $"test{SDConfig.Seed}.png";
-
-        InklingIOUtils.SaveLocalImage(image, path);
+        var path = await _dalle.RequestImageAsync(SDConfig);
         RandomizeSeed();
         //var path = sdController.Generate(SDConfig);
         GalleryData.LoadNextPage(0);
     }
     public void OnDelete()
     {
+    }
+
+    public void OnChangeModel(string modelName)
+    {
+        InfluenceData.AllowControlNet(modelName != "mnDalle3");
     }
 
     public double AspectRatio => SDConfig.AspectSize.Width / SDConfig.AspectSize.Height;
@@ -78,14 +82,9 @@ public partial class InklingModel : ViewModelBase
     }
     #endregion
 
-
-
-
-
     private void OnGenerateUpdate(int currentIndex, SkiaSharp.SKBitmap? img)
     {
     }
-
 
     public StableDiffusionConfig SDConfig
     {
@@ -109,7 +108,6 @@ public partial class InklingModel : ViewModelBase
         }
     }
 
-
     public static InklingModel? GetRootDataContext(Visual? control)
     {
         InklingModel? result = null;
@@ -124,6 +122,7 @@ public partial class InklingModel : ViewModelBase
         }
         return result;
     }
+
     //public void EnableLoadedModelsThreadCheck()
     //{
     //    //if (InvokeRequired) // tofo:check for UI thread

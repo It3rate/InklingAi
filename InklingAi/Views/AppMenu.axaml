@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="250"
+             xmlns:vm="clr-namespace:InklingAi.ViewModels"
              x:Class="InklingAi.Views.AppMenu">
 	
 			<Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top" 
@@ -29,10 +30,11 @@
 
 				<!-- Model Menu -->
 				<MenuItem Header="Model" Name="mnModel" >
-					<MenuItem Header="RevAutomated" Name="mnRevAutomated" Click="OnMenuItemClicked" />
-					<MenuItem Header="Deliberate" Name="mnDeliberate" Click="OnMenuItemClicked" />
-					<MenuItem Header="Realistic Vision" Name="mnRealisticVision" Click="OnMenuItemClicked" />
-					<MenuItem Header="DreamShaper" Name="mnDreamShaper" Click="OnMenuItemClicked" />
+          <MenuItem Header="DALL·E 3" Name="mnDalle3" Click="OnModelClicked" />
+          <MenuItem Header="RevAutomated" Name="mnRevAnimated" Click="OnModelClicked" />
+          <MenuItem Header="Deliberate" Name="mnDeliberate" Click="OnModelClicked" />
+					<MenuItem Header="Realistic Vision" Name="mnRealisticVision" Click="OnModelClicked" />
+					<MenuItem Header="DreamShaper" Name="mnDreamShaper" Click="OnModelClicked" />
 				</MenuItem>
 				
 				<!-- Help Menu -->

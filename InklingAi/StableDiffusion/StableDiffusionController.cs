@@ -7,12 +7,12 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using InklingAi.Onnx;
     using InklingAi.Utils;
     using SkiaSharp;
     using InklingAi.ViewModels;
     using AIEnv.Clients.StableDiffusion;
     using AIEnv.Utils;
+    using AIEnv.Onnx;
 
     public class StableDiffusionController
     {
