@@ -2,6 +2,7 @@ namespace InklingAi.Views
 {
     using Avalonia;
     using Avalonia.Controls;
+    using Avalonia.Input;
     using InklingAi.ViewModels;
     using System.Diagnostics;
 
@@ -23,6 +24,7 @@ namespace InklingAi.Views
         }
 
 
+
         private void OnExpanded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             if (ItemData != null)
@@ -31,6 +33,7 @@ namespace InklingAi.Views
                 var mvm = InklingModel.GetRootDataContext(this);
                 if (mvm != null)
                 {
+                    mvm.InfluenceData.FocusedItem = ItemData;
                     mvm.InfluenceData.ResetActiveItems();
                 }
             }
@@ -44,6 +47,17 @@ namespace InklingAi.Views
                 if (mvm != null)
                 {
                     mvm.InfluenceData.ResetActiveItems();
+                }
+            }
+        }
+        private void OnGotFocus(object? sender, PointerPressedEventArgs e)
+        {
+            if(ItemData != null && ItemData.IsActive)
+            {
+                var mvm = InklingModel.GetRootDataContext(this);
+                if (mvm != null)
+                {
+                    mvm.InfluenceData.FocusedItem = ItemData;
                 }
             }
         }

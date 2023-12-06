@@ -54,7 +54,7 @@
             <Border Grid.Row="2" Grid.Column="2"  
                     Name="_border" Classes="image">	
 				<Grid>
-					<controls:CompositeImage ImageDataItems="{Binding InfluenceData.ActiveItems}"/>
+					<controls:CompositeImage ImageDataItems="{Binding InfluenceData.CompositedItems}"/>
 					<controls:PaintableImage Name="_mainPaintableImage"/>
 				</Grid>
 			</Border>

@@ -11,18 +11,17 @@
 		<vm:DesignTimeInputItem/>
 	</Design.DataContext>
 
-	<Expander Name="_expander" Header="{Binding InputTitle}" IsExpanded="{Binding IsActive}">
+	<Expander Name="_expander" PointerPressed="OnGotFocus"
+            Header="{Binding InputTitle}" IsExpanded="{Binding IsActive}">
 		<Grid ColumnDefinitions="Auto,*">
-			<Grid RowDefinitions="*,*,*" Grid.Column="0" Margin="4,0,0,0">
+      <!--<Grid RowDefinitions="*,*,*" Grid.Column="0" Margin="4,0,0,0">
 				<Button Grid.Row="0" Margin="0,4" Width="60" >Active</Button>
 				<Button Grid.Row="1" Margin="0,4" Width="60" >Show</Button>
 				<Button Grid.Row="2" Margin="0,4" Width="60" >Edit</Button>
-
-			</Grid>
-			<controls:SingleImage Grid.Column="1" Margin="2" Width="160"
-					ImageDataItem="{Binding}"/>
+			</Grid>-->
+			<controls:SingleImage Grid.Column="1" Margin="2" Width="160" ImageDataItem="{Binding}"/>
 		</Grid>
-		
-		
 	</Expander>
 </UserControl>					
+
+      

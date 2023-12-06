@@ -16,7 +16,7 @@
 			<ControlTemplate TargetType="Expander">
 				<Grid RowDefinitions="Auto,*">
 					<!-- Header -->
-					<Grid Grid.Row="0" ColumnDefinitions="*,Auto"
+					<Grid Grid.Row="0" ColumnDefinitions="*,Auto" Background="Transparent"
 						  VerticalAlignment="Top" Height="25">
 						<Label Grid.Column="0" Content="{TemplateBinding Header}"/>
 						<CheckBox Grid.Column="1" Margin="4,0"
@@ -30,7 +30,8 @@
 										ContentTemplate="{TemplateBinding ContentTemplate}"
 										HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
 										VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-										Padding="{TemplateBinding Padding}"/>
+										Padding="{TemplateBinding Padding}"
+                    Background="Transparent"/>
 				</Grid>
 			</ControlTemplate>
 		</Setter>

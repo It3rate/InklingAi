@@ -16,7 +16,7 @@
 			<Label>Influencing Images</Label>
 		</Grid>
 		<Grid Grid.Row="1">
-			<ListBox ItemsSource="{Binding InfluenceData.InputItems}">
+			<ListBox ItemsSource="{Binding InfluenceData.InputItems}" >
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<controls:InputControl ItemData="{Binding}"/>

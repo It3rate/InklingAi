@@ -1,6 +1,7 @@
 ﻿namespace InklingAi.ViewModels
 {
-	using InklingAi.Utils;
+    using DynamicData;
+    using InklingAi.Utils;
 	using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -28,11 +29,32 @@
         public ObservableCollection<ImageData> ActiveItems
         {
             get => _activeItems;
-            set => SetProperty(ref _activeItems, value);
+            set => SetProperty(ref _activeItems, value);    
         }
         public void ResetActiveItems()
         {
             ActiveItems = new ObservableCollection<ImageData>(InputItems.Where(item => item.IsActive));
+            if(FocusedItem != null)
+            {
+                CompositedItems = new ObservableCollection<ImageData>(new ImageData[] { FocusedItem });
+            }
+        }
+
+        private ObservableCollection<ImageData> _compositedItems = new();
+        public ObservableCollection<ImageData> CompositedItems
+        {
+            get => _compositedItems;
+            set => SetProperty(ref _compositedItems, value);
+        }
+        private ImageData? _focusedItem;
+        public ImageData? FocusedItem
+        {
+            get => _focusedItem;
+            set
+            {
+                _focusedItem = value;
+                ResetActiveItems();
+            }
         }
 
         public void LoadInputControls()

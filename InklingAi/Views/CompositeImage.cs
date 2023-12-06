@@ -34,16 +34,16 @@
         {
             base.OnLoaded(sender, e);
 
-            var mvm = InklingModel.GetRootDataContext(this);
-            if (mvm != null)
-            {
-                var binding = new Binding("InfluenceData.ActiveItems")
-                {
-                    Mode = BindingMode.OneWay,
-                    Source = mvm
-                };
-                this.Bind(ImageDataItemsProperty, binding);
-            }
+            //var mvm = InklingModel.GetRootDataContext(this);
+            //if (mvm != null)
+            //{
+            //    var binding = new Binding("InfluenceData.CompositedItems")
+            //    {
+            //        Mode = BindingMode.OneWay,
+            //        Source = mvm
+            //    };
+            //    this.Bind(ImageDataItemsProperty, binding);
+            //}
         }
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {

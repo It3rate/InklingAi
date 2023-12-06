@@ -15,14 +15,6 @@
 
     public class ImageData : IDisposable
     {
-        public string Folder { get; set; }
-        public ImageKind ImageKind { get; set; }
-        public string InputTitle { get; set; }
-        public bool IsActive { get; set; } = false;
-        public bool IsApplicable { get; set; } = true;
-
-        private IImage? _undoImage;
-        private IImage? _resetImage;
         //private IImage? _latentImage;
         // transform matrix
         // source rect
@@ -43,6 +35,14 @@
         // gen vs overlay
 
 
+        public string Folder { get; set; }
+        public ImageKind ImageKind { get; set; }
+        public string InputTitle { get; set; }
+        public bool IsActive { get; set; } = false;
+        public bool IsApplicable { get; set; } = true;
+
+        private IImage? _undoImage;
+        private IImage? _resetImage;
         public string InputPath { get; set; }
         private SKBitmap? _inputImage;
         public SKBitmap? InputImage {
@@ -118,7 +118,7 @@
             Dictionary<string, ImageData> result = new();
             foreach (var kind in inputKinds.Keys)
             {
-                result[kind.Name()] = new ImageData(kind, inputKinds[kind], folder);
+                result[kind.Name()] = new ImageData(kind, inputKinds[kind].Name, folder);
             }
             return result;
         }
@@ -147,24 +147,46 @@
             }
         }
 
-        public static readonly Dictionary<ImageKind, string> inputKinds = new ()
+        public static readonly Dictionary<ImageKind, ImageConstraints> inputKinds = new ()
         {
             //{ "main", "Main Image" },
-            { ImageKind.Input, "Input Image" },
-            { ImageKind.Mask, "Mask" },
+            { ImageKind.Input, new (){Name="Input Image" } },
+            { ImageKind.Mask, new (){Name="Mask", ColorAllowance = ColorAllowance.Grayscale } },
             //{ "scratch0", "Scratch 1" },
             //{ "scratch1", "Scratch 2" },
             //{ "scratch2", "Scratch 3" },
-            { ImageKind.Canny, "Edges" },
-            { ImageKind.Depth, "Depth M" },
-            { ImageKind.Leres, "Depth LR" },
-            { ImageKind.Hed, "Outline" },
-            { ImageKind.Openpose, "Pose" },
-            { ImageKind.Normal, "Normals" },
-            { ImageKind.Mlsd, "Lines" },
-            { ImageKind.Pidinet, "Sketch" },
-            { ImageKind.Uniformer, "Segment" },
+            { ImageKind.Canny, new (){Name="Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
+            { ImageKind.Depth, new (){Name="Depth M", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Leres, new (){Name="Depth LR", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Hed, new (){Name="Outline", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Openpose, new (){Name="Pose", ColorAllowance = ColorAllowance.None, MaxWidth=0, FeatherMax=0,  AlphaMin=255 }},
+            { ImageKind.Normal, new (){Name="Normals", ColorAllowance = ColorAllowance.Normal, AlphaMin=255 }},
+            { ImageKind.Mlsd, new (){Name="Lines", ColorAllowance = ColorAllowance.Lines, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
+            { ImageKind.Pidinet, new (){Name="Sketch", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Uniformer, new (){Name="Segment", ColorAllowance = ColorAllowance.ColorSeg, FeatherMax=0,  AlphaMin=255 }},
         };
     }
+    // ColorAllowance = ColorAllowance.Color, MinWidth=1, MaxWidth=100, FeatherMin=0, FeatherMax=50
+    public class ImageConstraints
+    {
+        public string Name;
+        public ColorAllowance ColorAllowance = ColorAllowance.Color;
+        public int MinWidth = 1;
+        public int MaxWidth = 100;
+        public int FeatherMin = 0;
+        public int FeatherMax = 100;
+        public int AlphaMin = 0;
+        public int AlphaMax = 255;
+    }
 
+    public enum ColorAllowance
+    {
+        None, // pose etc
+        BlackAndWhite,
+        Grayscale,
+        Color,
+        Normal,
+        Lines,
+        ColorSeg,
+    }
 }
