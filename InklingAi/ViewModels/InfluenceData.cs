@@ -35,29 +35,25 @@
         {
             ActiveItems = new ObservableCollection<ImageData>(InputItems.Where(item => item.IsActive));
         }
-
-        private ObservableCollection<ImageData> _compositedItems = new();
-        public ObservableCollection<ImageData> CompositedItems
-        {
-            get => _compositedItems;
-            set => SetProperty(ref _compositedItems, value);
-        }
         private ImageData? _focusedItem;
         public ImageData? FocusedItem
         {
             get => _focusedItem;
             set
             {
-                _focusedItem = value;
-                if (_focusedItem != null)
-                {
-                    CompositedItems = new ObservableCollection<ImageData>(new ImageData[] { _focusedItem });
-                }
-                else
-                {
-                    CompositedItems = new ObservableCollection<ImageData>();
-                }
+                SetProperty(ref _focusedItem, value);
+                PaintableImage = _focusedItem != null ? _focusedItem.PaintableImage : null;
                 ResetActiveItems();
+            }
+        }
+        //public PaintableImage? PaintableImage => FocusedItem != null ? FocusedItem.PaintableImage : null;
+        private PaintableImage? _paintableImage;
+        public PaintableImage? PaintableImage
+        {
+            get => _paintableImage;
+            set
+            {
+                SetProperty(ref _paintableImage, value);
             }
         }
 

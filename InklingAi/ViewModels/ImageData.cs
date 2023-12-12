@@ -75,9 +75,12 @@
             set { _processedImage = value; }
         }
 
+        public PaintableImage PaintableImage { get; set; } = new PaintableImage();
 
         public ImageData(ImageKind kind, string title, string folder) 
-        { 
+        {
+            PaintableImage.Name = title;
+
             ImageKind = kind;
             InputTitle = title;
             Folder = folder;
@@ -88,6 +91,7 @@
         public ImageData(ImageKind kind, string path)
         {
             ImageKind = kind;
+            InputTitle = "";
             Folder = Path.GetPathRoot(path) ?? "";
             InputPath = path;
             ProcessedPath = path;

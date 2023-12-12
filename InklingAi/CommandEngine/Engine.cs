@@ -17,7 +17,6 @@ public class Engine
     public Runner Runner { get; } = new();
 
     public KeyboardData KeyboardData => KeyboardData.Instance;
-    public PaintableImage? FocusedCommandTarget { get; set; }
 
     private Engine(){}
 

@@ -43,19 +43,20 @@
             
             <controls:BrushToolbar
               Grid.Row="1" Grid.Column="1"
-			  PaintableImage="{Binding #_mainPaintableImage}"
-			  Background="#303033" Margin="0,0,0,4" />
+							PaintableImage="{Binding #_mainPaintableImage}"
+							Background="#303033" Margin="0,0,0,4" />
             
             <controls:DrawingToolbar
               Grid.Row="2" Grid.Column="0"
-			  PaintableImage="{Binding #_mainPaintableImage}"
-			  Background="#303033" Margin="0,0,4,0" />
+							PaintableImage="{Binding #_mainPaintableImage}"
+							Background="#303033" Margin="0,0,4,0" />
 
             <Border Grid.Row="2" Grid.Column="2"  
                     Name="_border" Classes="image">	
 				<Grid>
-					<controls:CompositeImage ImageDataItems="{Binding InfluenceData.CompositedItems}"/>
-					<controls:PaintableImage Name="_mainPaintableImage"/>
+          <!--<controls:CompositeImage ImageDataItems="{Binding InfluenceData.CompositedItems}"/>-->
+          <controls:SingleImage ImageDataItem="{Binding InfluenceData.FocusedItem}"/>
+          <ContentControl Name="_mainPaintableImage" Content="{Binding InfluenceData.PaintableImage}"/>
 				</Grid>
 			</Border>
               

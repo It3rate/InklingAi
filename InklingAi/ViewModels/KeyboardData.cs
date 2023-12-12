@@ -2,6 +2,7 @@
 using Avalonia.Input;
 using InklingAi.CommandEngine;
 using InklingAi.Commands;
+using InklingAi.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,7 +31,10 @@ public class KeyboardData
 	{
 	}
 
-	public void Cut()
+    private ImageData? FocusedImage => _model.InfluenceData.FocusedItem;
+
+
+    public void Cut()
 	{
 	}
 	public void Copy()
@@ -49,19 +53,31 @@ public class KeyboardData
     }
     public void Delete()
     {
-        _engine.FocusedCommandTarget?.DeleteSelected();
+        if(FocusedImage != null)
+        {
+            FocusedImage.PaintableImage.DeleteSelected();
+        }
 	}
 	public void Move(SelectionTransformKind transformKind)
-	{
-		_engine.FocusedCommandTarget?.Move(transformKind, IsControlDown, IsShiftDown);
+    {
+        if (FocusedImage != null)
+        {
+            FocusedImage.PaintableImage.Move(transformKind, IsControlDown, IsShiftDown);
+        }
 	}
 	public void Rotate(SelectionTransformKind transformKind)
-	{
-		_engine.FocusedCommandTarget?.Rotate(transformKind, IsControlDown, IsShiftDown);
+    {
+        if (FocusedImage != null)
+        {
+            FocusedImage.PaintableImage.Rotate(transformKind, IsControlDown, IsShiftDown);
+        }
 	}
 	public void Scale(SelectionTransformKind transformKind)
-	{
-		_engine.FocusedCommandTarget?.Scale(transformKind, IsControlDown, IsShiftDown);
+    {
+        if (FocusedImage != null)
+        {
+            FocusedImage.PaintableImage.Scale(transformKind, IsControlDown, IsShiftDown);
+        }
 	}
 
 	private Key[] _alwaysCaptureKeys = new Key[] { Key.Left, Key.Right, Key.Up, Key.Down, 

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Skia;
 using InklingAi.CommandEngine;
@@ -26,10 +27,9 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
     public DrawMode DrawMode { get; set; } = DrawMode.Paint;
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
+    public string Name;
 	public PaintableImage()
     {
-        _engine.FocusedCommandTarget = this; // todo: there will be multiple instances of this eventually
-
         Selection = new Selection(this);
         _prevBrushStateSource = BrushState;
         _canDrag = false;
@@ -40,6 +40,10 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
         BrushState.FeatherChanged += OnFeatherChanged;
         BrushState.TransparencyChanged += OnTransparencyChanged;
         BrushState.ColorValueChanged += OnColorValueChanged;
+    }
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
     }
 
     #region Elements
