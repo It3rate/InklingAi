@@ -1,7 +1,9 @@
 ﻿namespace InklingAi.Utils
 {
     using AIEnv.Utils;
+    using Avalonia.Media;
     using InklingAi.Utils;
+    using SkiaSharp;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,15 +23,15 @@
 
         public static float[] AverageWith(this float[] left, float[] right) => left.Zip(right, (a, b) => (a + b) / 2.0f).ToArray();
 
-        public static float[] Add(this float[] left, float[] right) =>      FloatUtils.Add(left, right);
+        public static float[] Add(this float[] left, float[] right) => FloatUtils.Add(left, right);
         public static float[] Subtract(this float[] left, float[] right) => FloatUtils.Subtract(left, right);
         public static float[] Multiply(this float[] left, float[] right) => FloatUtils.Multiply(left, right);
-        public static float[] Divide(this float[] left, float[] right) =>   FloatUtils.Divide(left, right);
+        public static float[] Divide(this float[] left, float[] right) => FloatUtils.Divide(left, right);
 
-        public static float[] Add(this float[] left, float right) =>      FloatUtils.Add(left, right);
+        public static float[] Add(this float[] left, float right) => FloatUtils.Add(left, right);
         public static float[] Subtract(this float[] left, float right) => FloatUtils.Subtract(left, right);
         public static float[] Multiply(this float[] left, float right) => FloatUtils.Multiply(left, right);
-        public static float[] Divide(this float[] left, float right) =>   FloatUtils.Divide(left, right);
+        public static float[] Divide(this float[] left, float right) => FloatUtils.Divide(left, right);
 
         public static double DotProduct(this float[] left, float[] right) => FloatUtils.DotProduct(left, right);
         public static double CosineSimilarity(this float[] left, float[] right) => FloatUtils.CosineSimilarity(left, right);

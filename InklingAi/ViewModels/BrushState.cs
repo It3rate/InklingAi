@@ -27,6 +27,7 @@
         public BrushState(VectorImage vectorImage) 
         {
             _parentImage = vectorImage;
+            _brushData.ColorValue = _brushSettings.DefaultColor;
             SetWithBrushData(_brushData); // trigger clamping as needed
         }
         public BrushData GetBrushDataClone() => _brushData.Clone();
@@ -34,8 +35,8 @@
         {
             BrushSize = brushData.BrushSize;
             Feather = brushData.Feather;
+            ColorValue = brushData.ColorValue; // color must come first as transparency will overwrite the color val with existing color. (fix?)
             Transparency = brushData.Transparency;
-            ColorValue = brushData.ColorValue;
         }
 
         public float BrushSize
@@ -86,7 +87,6 @@
             set
             {
                 SelColor = Color.FromUInt32(value);
-                // todo: clamp color
                 if (!_pauseEvents)
                 {
                     ColorValueChanged?.Invoke(this, EventArgs.Empty);
@@ -100,7 +100,8 @@
             get => _selColor;
             set
             {
-                SetProperty(ref _selColor, new Color(_brushData.Transparency, value.R, value.G, value.B));
+                var val = _brushSettings.ColorAllowance.Clamp(value);
+                SetProperty(ref _selColor, new Color(_brushData.Transparency, val.R, val.G, val.B));
                 _brushData.ColorValue = _selColor.ToUInt32();
                 if (!_pauseEvents)
                 {

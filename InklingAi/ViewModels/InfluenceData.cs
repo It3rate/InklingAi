@@ -95,15 +95,15 @@ namespace InklingAi.ViewModels
         {
             //{ "main", "Main Image" },
             { ImageKind.Input, new (){     Name="Input Image" } },
-            { ImageKind.Mask, new (){      Name="Mask", ColorAllowance = ColorAllowance.Grayscale } },
-            { ImageKind.Canny, new (){     Name="Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
-            { ImageKind.Depth, new (){     Name="Depth M", ColorAllowance = ColorAllowance.Grayscale }},
-            { ImageKind.Leres, new (){     Name="Depth LR", ColorAllowance = ColorAllowance.Grayscale }},
-            { ImageKind.Hed, new (){       Name="Outline", ColorAllowance = ColorAllowance.Grayscale }},
-            { ImageKind.Openpose, new (){  Name="Pose", ColorAllowance = ColorAllowance.None, MaxWidth=0, FeatherMax=0,  AlphaMin=255 }},
+            { ImageKind.Mask, new (){      Name="Mask", ColorAllowance = ColorAllowance.Grayscale, DefaultColor=0xFFFFFFFF } },
+            { ImageKind.Canny, new (){     Name="Edges", ColorAllowance = ColorAllowance.BlackAndWhite, DefaultColor=0xFFFFFFFF, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
+            { ImageKind.Depth, new (){     Name="Depth M", ColorAllowance = ColorAllowance.Grayscale, DefaultColor=0xFFDDDDDD }},
+            { ImageKind.Leres, new (){     Name="Depth LR", ColorAllowance = ColorAllowance.Grayscale, DefaultColor=0xFFDDDDDD }},
+            { ImageKind.Hed, new (){       Name="Outline", ColorAllowance = ColorAllowance.Grayscale, DefaultColor=0xFFFFFFFF }},
+            { ImageKind.Openpose, new (){  Name="Pose", ColorAllowance = ColorAllowance.None, MaxWidth=4, FeatherMax=0,  AlphaMin=255 }},
             { ImageKind.Normal, new (){    Name="Normals", ColorAllowance = ColorAllowance.Normal, AlphaMin=255 }},
-            { ImageKind.Mlsd, new (){      Name="Lines", ColorAllowance = ColorAllowance.Lines, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
-            { ImageKind.Pidinet, new (){   Name="Sketch", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Mlsd, new (){      Name="Lines", ColorAllowance = ColorAllowance.Lines, DefaultColor=0xFFFFFFFF, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
+            { ImageKind.Pidinet, new (){   Name="Sketch", ColorAllowance = ColorAllowance.Grayscale, DefaultColor=0xFFFFFFFF }},
             { ImageKind.Uniformer, new (){ Name="Segment", ColorAllowance = ColorAllowance.ColorSeg, FeatherMax=0,  AlphaMin=255 }},
         };
     }
