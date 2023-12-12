@@ -5,6 +5,7 @@
     using Avalonia.Media;
     using Avalonia.Media.Imaging;
     using DynamicData;
+    using InklingAi.Views;
     using SkiaSharp;
     using System;
     using System.Collections.Generic;
@@ -27,13 +28,15 @@
         // Images[]
         // Blend stack
         // Blend percents
-        
+
         // Text:
         // letters, styles, font, size, spans etc
         // path, matrix etc
         // ocr
         // gen vs overlay
 
+
+        public InputControl? InputControl { get; set; }
 
         public string Folder { get; set; }
         public ImageKind ImageKind { get; set; }

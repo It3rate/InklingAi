@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "InklingAi.Desktop": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
