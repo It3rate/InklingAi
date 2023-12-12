@@ -39,8 +39,6 @@
         public InputControl? InputControl { get; set; }
 
         public string Folder { get; set; }
-        public ImageKind ImageKind { get; set; }
-        public string InputTitle { get; set; }
         public bool IsActive { get; set; } = false;
         public bool IsApplicable { get; set; } = true;
 
@@ -77,21 +75,29 @@
 
         public PaintableImage PaintableImage { get; set; } = new PaintableImage();
 
-        public ImageData(ImageKind kind, string title, string folder) 
-        {
-            PaintableImage.Name = title;
+        private ImageConstraints _imageContraints;
+        public ImageKind ImageKind => _imageContraints.ImageKind;
+        public string InputTitle => _imageContraints.Name;
+        public int MinWidth => _imageContraints.MinWidth;
+        public int MaxWidth => _imageContraints.MaxWidth;
+        public int FeatherMin => _imageContraints.FeatherMin;
+        public int FeatherMax => _imageContraints.FeatherMax;
+        public int AlphaMin => _imageContraints.AlphaMin;
+        public int AlphaMax => _imageContraints.AlphaMax;
 
-            ImageKind = kind;
-            InputTitle = title;
+        public ImageData(ImageConstraints imageContraints, string folder) 
+        {
+            _imageContraints = imageContraints;
+            PaintableImage.Name = InputTitle;
+
             Folder = folder;
-            InputPath = folder + kind.Name() + "_input.png";
-            ProcessedPath = folder + kind.Name() + ".png";
+            InputPath = folder + ImageKind.Name() + "_input.png";
+            ProcessedPath = folder + ImageKind.Name() + ".png";
             LoadImage(ProcessedPath);
         }
         public ImageData(ImageKind kind, string path)
         {
-            ImageKind = kind;
-            InputTitle = "";
+            _imageContraints = new ImageConstraints() { ImageKind = kind };
             Folder = Path.GetPathRoot(path) ?? "";
             InputPath = path;
             ProcessedPath = path;
@@ -120,16 +126,6 @@
             return result;
         }
 
-        public static Dictionary<string, ImageData> GenerateInputItems(string folder)
-        {
-            Dictionary<string, ImageData> result = new();
-            foreach (var kind in inputKinds.Keys)
-            {
-                result[kind.Name()] = new ImageData(kind, inputKinds[kind].Name, folder);
-            }
-            return result;
-        }
-
         public void Dispose()
         {
             if (_inputImage is IDisposable disposableInput)
@@ -154,46 +150,5 @@
             }
         }
 
-        public static readonly Dictionary<ImageKind, ImageConstraints> inputKinds = new ()
-        {
-            //{ "main", "Main Image" },
-            { ImageKind.Input, new (){Name="Input Image" } },
-            { ImageKind.Mask, new (){Name="Mask", ColorAllowance = ColorAllowance.Grayscale } },
-            //{ "scratch0", "Scratch 1" },
-            //{ "scratch1", "Scratch 2" },
-            //{ "scratch2", "Scratch 3" },
-            { ImageKind.Canny, new (){Name="Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
-            { ImageKind.Depth, new (){Name="Depth M", ColorAllowance = ColorAllowance.Grayscale }},
-            { ImageKind.Leres, new (){Name="Depth LR", ColorAllowance = ColorAllowance.Grayscale }},
-            { ImageKind.Hed, new (){Name="Outline", ColorAllowance = ColorAllowance.Grayscale }},
-            { ImageKind.Openpose, new (){Name="Pose", ColorAllowance = ColorAllowance.None, MaxWidth=0, FeatherMax=0,  AlphaMin=255 }},
-            { ImageKind.Normal, new (){Name="Normals", ColorAllowance = ColorAllowance.Normal, AlphaMin=255 }},
-            { ImageKind.Mlsd, new (){Name="Lines", ColorAllowance = ColorAllowance.Lines, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
-            { ImageKind.Pidinet, new (){Name="Sketch", ColorAllowance = ColorAllowance.Grayscale }},
-            { ImageKind.Uniformer, new (){Name="Segment", ColorAllowance = ColorAllowance.ColorSeg, FeatherMax=0,  AlphaMin=255 }},
-        };
-    }
-    // ColorAllowance = ColorAllowance.Color, MinWidth=1, MaxWidth=100, FeatherMin=0, FeatherMax=50
-    public class ImageConstraints
-    {
-        public string Name;
-        public ColorAllowance ColorAllowance = ColorAllowance.Color;
-        public int MinWidth = 1;
-        public int MaxWidth = 100;
-        public int FeatherMin = 0;
-        public int FeatherMax = 100;
-        public int AlphaMin = 0;
-        public int AlphaMax = 255;
-    }
-
-    public enum ColorAllowance
-    {
-        None, // pose etc
-        BlackAndWhite,
-        Grayscale,
-        Color,
-        Normal,
-        Lines,
-        ColorSeg,
     }
 }

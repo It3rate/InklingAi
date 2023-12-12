@@ -12,7 +12,9 @@
 
     public class DesignTimeInputItem : ImageData
     {
-        public DesignTimeInputItem() : base(ImageKind.Scratch0, "Scratch 1", @"C:\Users\Robin\InklingAI\SD\working\")
+        public DesignTimeInputItem() : base(
+            new ImageConstraints() { Name = "Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth = 1, FeatherMax = 0, AlphaMin = 255 },
+            @"C:\Users\Robin\InklingAI\SD\working\")
         {
         }
     }

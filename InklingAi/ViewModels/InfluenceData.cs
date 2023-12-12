@@ -1,4 +1,6 @@
-﻿namespace InklingAi.ViewModels
+﻿using InklingAi.ViewModels;
+
+namespace InklingAi.ViewModels
 {
     using InklingAi.Utils;
     using InklingAi.Views;
@@ -61,7 +63,7 @@
         {
             _inputItems.Clear();
             string dirPath = InklingIOUtils.SDWorkingFolder;// @"C:\Users\Robin\InklingAI\SD\working\";
-            _allItemsMap = ImageData.GenerateInputItems(dirPath);
+            _allItemsMap = GenerateInputItems(dirPath);
             ResetInputItems();
         }
         public void AllowControlNet(bool allowControlNet)
@@ -76,5 +78,43 @@
             ResetInputItems();
             ResetActiveItems();
         }
+
+        public static Dictionary<string, ImageData> GenerateInputItems(string folder)
+        {
+            Dictionary<string, ImageData> result = new();
+            foreach (var kind in inputKinds.Keys)
+            {
+                var contraints = inputKinds[kind];
+                contraints.ImageKind = kind;
+                result[kind.Name()] = new ImageData(contraints, folder);
+            }
+            return result;
+        }
+
+        public static readonly Dictionary<ImageKind, ImageConstraints> inputKinds = new()
+        {
+            //{ "main", "Main Image" },
+            { ImageKind.Input, new (){     Name="Input Image" } },
+            { ImageKind.Mask, new (){      Name="Mask", ColorAllowance = ColorAllowance.Grayscale } },
+            { ImageKind.Canny, new (){     Name="Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
+            { ImageKind.Depth, new (){     Name="Depth M", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Leres, new (){     Name="Depth LR", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Hed, new (){       Name="Outline", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Openpose, new (){  Name="Pose", ColorAllowance = ColorAllowance.None, MaxWidth=0, FeatherMax=0,  AlphaMin=255 }},
+            { ImageKind.Normal, new (){    Name="Normals", ColorAllowance = ColorAllowance.Normal, AlphaMin=255 }},
+            { ImageKind.Mlsd, new (){      Name="Lines", ColorAllowance = ColorAllowance.Lines, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},
+            { ImageKind.Pidinet, new (){   Name="Sketch", ColorAllowance = ColorAllowance.Grayscale }},
+            { ImageKind.Uniformer, new (){ Name="Segment", ColorAllowance = ColorAllowance.ColorSeg, FeatherMax=0,  AlphaMin=255 }},
+        };
     }
 }
+
+
+
+
+
+
+
+
+
+

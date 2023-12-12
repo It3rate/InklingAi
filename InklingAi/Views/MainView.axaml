@@ -43,12 +43,12 @@
             
             <controls:BrushToolbar
               Grid.Row="1" Grid.Column="1"
-							PaintableImage="{Binding #_mainPaintableImage}"
+							PaintableImage="{Binding InfluenceData.PaintableImage}"
 							Background="#303033" Margin="0,0,0,4" />
             
             <controls:DrawingToolbar
               Grid.Row="2" Grid.Column="0"
-							PaintableImage="{Binding #_mainPaintableImage}"
+							PaintableImage="{Binding InfluenceData.PaintableImage}"
 							Background="#303033" Margin="0,0,4,0" />
 
             <Border Grid.Row="2" Grid.Column="2"  
