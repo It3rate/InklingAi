@@ -27,16 +27,25 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
     public DrawPanelMode DrawPanelMode { get; set; } = DrawPanelMode.Paint;
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
+    public BrushState BrushState { get; private set; }
+    public BrushSettings BrushSettings { get; private set; }
+    private BrushState _unSelBrushState { get; set; }
+
+    private IBrushState _prevBrushStateSource;
+
     private List<ISelectableElement> _paths { get; } = new List<ISelectableElement>();
 
-    public string Name;
-	public VectorImage()
+	public VectorImage(BrushSettings brushSettings)
     {
+        BrushSettings = brushSettings;
+        _unSelBrushState = new BrushState(this);
+        BrushState  = new BrushState(this);
         Selection = new Selection(this);
+        _selectionHandles = new SelectionHandles(this);
+
         _prevBrushStateSource = BrushState;
         _canDrag = false;
 		_curPath = CreateNewPath();
-        _selectionHandles = new SelectionHandles(this);
         Selection.ContentChanged += Selection_ContentChanged;
         BrushState.BrushSizeChanged += OnBrushSizeChanged;
         BrushState.FeatherChanged += OnFeatherChanged;
@@ -414,17 +423,14 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
     #endregion
 
     #region BrushState
+    public IBrushState? SingleSelection => Selection.Count == 1 ? Selection[0] : null;
+    public IBrushState BrushStateSource => SingleSelection ?? _unSelBrushState;
+
     public BrushData GetBrushDataClone() => BrushState.GetBrushDataClone();
     public void SetWithBrushData(BrushData brushData)
     {
         BrushState.SetWithBrushData(brushData);
     }
-    private BrushState _unSelBrushState { get; set; } = new BrushState();
-    public BrushState BrushState { get; set; } = new BrushState();
-
-    private IBrushState _prevBrushStateSource;
-    public IBrushState? SingleSelection => Selection.Count == 1 ? Selection[0] : null;
-    public IBrushState BrushStateSource => SingleSelection ?? _unSelBrushState;
 
     #endregion
 

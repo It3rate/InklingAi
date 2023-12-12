@@ -1,28 +1,11 @@
 ﻿namespace InklingAi.Views
 {
     using Avalonia;
-    using Avalonia.Media;
-    using Avalonia.Skia;
     using Avalonia.Input;
-    using Avalonia.Platform;
-    using Avalonia.Platform.Storage;
-    using Avalonia.Media.Imaging;
-    using Avalonia.Rendering.SceneGraph;
-    using Avalonia.Controls;
-    using Avalonia.Metadata;
     using SkiaSharp;
-
-    using System;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Collections.Generic;
     using InklingAi.ViewModels;
-    using System.IO;
-    using Avalonia.Interactivity;
     using Avalonia.Data;
-    using MathNet.Numerics;
-    using Avalonia.Threading;
 
     public class SingleImage : BaseImage
     {

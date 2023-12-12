@@ -73,21 +73,20 @@
             set { _processedImage = value; }
         }
 
-        public VectorImage VectorImage { get; set; } = new VectorImage();
+        public VectorImage VectorImage { get; private set; }
 
-        private BrushSettings _brushSettings;
-        public ImageKind ImageKind => _brushSettings.ImageKind;
-        public string InputTitle => _brushSettings.Name;
-        public int MinWidth => _brushSettings.MinWidth;
-        public int MaxWidth => _brushSettings.MaxWidth;
-        public int FeatherMin => _brushSettings.FeatherMin;
-        public int FeatherMax => _brushSettings.FeatherMax;
-        public int AlphaMin => _brushSettings.AlphaMin;
-        public int AlphaMax => _brushSettings.AlphaMax;
+        public ImageKind ImageKind => VectorImage.BrushSettings.ImageKind;
+        public string InputTitle => VectorImage.BrushSettings.Name;
+        public int MinWidth => VectorImage.BrushSettings.MinWidth;
+        public int MaxWidth => VectorImage.BrushSettings.MaxWidth;
+        public int FeatherMin => VectorImage.BrushSettings.FeatherMin;
+        public int FeatherMax => VectorImage.BrushSettings.FeatherMax;
+        public int AlphaMin => VectorImage.BrushSettings.AlphaMin;
+        public int AlphaMax => VectorImage.BrushSettings.AlphaMax;
 
-        public ImageData(BrushSettings imageContraints, string folder) 
+        public ImageData(BrushSettings brushSettings, string folder) 
         {
-            _brushSettings = imageContraints;
+            VectorImage = new VectorImage(brushSettings);
             VectorImage.Name = InputTitle;
 
             Folder = folder;
@@ -97,7 +96,8 @@
         }
         public ImageData(ImageKind kind, string path)
         {
-            _brushSettings = new BrushSettings() { ImageKind = kind };
+            var brushSettings = new BrushSettings() { ImageKind = kind };
+            VectorImage = new VectorImage(brushSettings);
             Folder = Path.GetPathRoot(path) ?? "";
             InputPath = path;
             ProcessedPath = path;

@@ -6,12 +6,12 @@
     using System.Text;
     using System.Threading.Tasks;
     using Avalonia.Media;
+    using InklingAi.Views;
     using InkPad.Adapters;
     using SkiaSharp;
 
     public class BrushState : ViewModelBase, IBrushState
     {
-
         private BrushData _brushData { get; } = new BrushData();
 
         public event EventHandler BrushSizeChanged;
@@ -19,10 +19,16 @@
         public event EventHandler TransparencyChanged;
         public event EventHandler ColorValueChanged;
         private bool _pauseEvents = false;
+        private VectorImage _parentImage;
+        private BrushSettings _brushSettings => _parentImage.BrushSettings;
 
         public SKPoint CurrentPosition { get; set; }
 
-        public BrushState() { }
+        public BrushState(VectorImage vectorImage) 
+        {
+            _parentImage = vectorImage;
+            SetWithBrushData(_brushData); // trigger clamping as needed
+        }
         public BrushData GetBrushDataClone() => _brushData.Clone();
         public void SetWithBrushData(BrushData brushData)
         {
@@ -37,7 +43,8 @@
             get => _brushData.BrushSize;
             set
             {
-                SetProperty(ref _brushData.BrushSize, value);
+                var val = value > _brushSettings.MaxWidth ? _brushSettings.MaxWidth : value < _brushSettings.MinWidth ? _brushSettings.MinWidth : value;
+                SetProperty(ref _brushData.BrushSize, val);
                 if (!_pauseEvents)
                 {
                     BrushSizeChanged?.Invoke(this, EventArgs.Empty);
@@ -49,7 +56,8 @@
             get => _brushData.Feather;
             set
             {
-                SetProperty(ref _brushData.Feather, value);
+                var val = value > _brushSettings.FeatherMax ? _brushSettings.FeatherMax : value < _brushSettings.FeatherMin ? _brushSettings.FeatherMin : value;
+                SetProperty(ref _brushData.Feather, val);
                 if (!_pauseEvents)
                 {
                     FeatherChanged?.Invoke(this, EventArgs.Empty);
@@ -62,7 +70,8 @@
             get => _brushData.Transparency;
             set
             {
-                SetProperty(ref _brushData.Transparency, value);
+                var val = value > _brushSettings.AlphaMax ? (byte)_brushSettings.AlphaMax : value < _brushSettings.AlphaMin ? (byte)_brushSettings.AlphaMin : value;
+                SetProperty(ref _brushData.Transparency, val);
                 SelColor = new Color(_brushData.Transparency, _selColor.R, _selColor.G, _selColor.B); // set both so UI reflects changes
                 if (!_pauseEvents)
                 {
@@ -77,6 +86,7 @@
             set
             {
                 SelColor = Color.FromUInt32(value);
+                // todo: clamp color
                 if (!_pauseEvents)
                 {
                     ColorValueChanged?.Invoke(this, EventArgs.Empty);
