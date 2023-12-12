@@ -13,7 +13,7 @@
     public class DesignTimeInputItem : ImageData
     {
         public DesignTimeInputItem() : base(
-            new ImageConstraints() { Name = "Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth = 1, FeatherMax = 0, AlphaMin = 255 },
+            new BrushSettings() { Name = "Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth = 1, FeatherMax = 0, AlphaMin = 255 },
             @"C:\Users\Robin\InklingAI\SD\working\")
         {
         }

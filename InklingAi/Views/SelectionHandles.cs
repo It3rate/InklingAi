@@ -12,7 +12,7 @@
 
 	public class SelectionHandles
     {
-        public PaintableImage Paintable { get; }
+        public VectorImage Paintable { get; }
         Selection Selection => Paintable.Selection;
         public SKMatrix Matrix { get; set; }
         public SKPoint TransformAnchor { get; set; } = SKPoint.Empty;
@@ -28,7 +28,7 @@
 		private Dictionary<RectPosition, SKSvg> _assetMap = new Dictionary<RectPosition, SKSvg>();
         private Dictionary<RectPosition, SKRect> _dragHandleHitAreas = new Dictionary<RectPosition, SKRect>();
 
-		public SelectionHandles(PaintableImage paintable)
+		public SelectionHandles(VectorImage paintable)
         {
             Paintable = paintable;
             LoadAssets();

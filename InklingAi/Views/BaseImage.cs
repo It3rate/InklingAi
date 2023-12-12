@@ -23,7 +23,6 @@ public abstract class BaseImage : UserControl
 {
     protected RenderingLogic renderingLogic;
 
-    protected List<ImageData> _imageDataList = new();
     public float _widthExtra = 2f;
 
     #region Avalonia Properties
@@ -164,9 +163,12 @@ public abstract class BaseImage : UserControl
 	private async Task DoDrag(object? sender, PointerEventArgs e)
     {
         var dragData = new DataObject();
-        dragData.Set(DataFormats.Files, _imageDataList);
+        SetDragContents(dragData);
         var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
         _startPosition = null;
+    }
+    protected virtual void SetDragContents(DataObject dataObject)
+    {
     }
     protected virtual void AcceptImageDrop(IDataObject dataObject)
     {

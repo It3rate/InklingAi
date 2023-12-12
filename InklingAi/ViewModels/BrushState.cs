@@ -5,8 +5,9 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-	using Avalonia.Media;
-	using SkiaSharp;
+    using Avalonia.Media;
+    using InkPad.Adapters;
+    using SkiaSharp;
 
     public class BrushState : ViewModelBase, IBrushState
     {
@@ -111,7 +112,7 @@
         public Color CurrentGray { get; set; } = Colors.Gray;
     }
 
-    public enum BrushMode
+    public enum BrushPanelMode
     {
         None,
         Size,
@@ -122,7 +123,7 @@
         CloneAnchor,
     }
 
-    public enum DrawMode
+    public enum DrawPanelMode
     {
         None,
         Arrow,

@@ -19,8 +19,8 @@ public class CreateSKPolylineCommand : CommandBase
     public CreateSKPolylineTask? CreateTask;
 
     private SkPolyline _polyline;
-    private PaintableImage _target;
-    public CreateSKPolylineCommand(SkPolyline polyline, PaintableImage target)
+    private VectorImage _target;
+    public CreateSKPolylineCommand(SkPolyline polyline, VectorImage target)
     {
         _polyline = polyline;
         _target = target;

@@ -13,9 +13,9 @@ public class SelectElementTask : TaskBase
 {
     public List<ISelectableElement> NewSelection { get; private set; } = new();
     public List<ISelectableElement> PreviousSelection { get; private set; } = new();
-    public PaintableImage Target { get; }
+    public VectorImage Target { get; }
     public override bool IsValid => true;
-    public SelectElementTask(PaintableImage target, params ISelectableElement[] newSelection)
+    public SelectElementTask(VectorImage target, params ISelectableElement[] newSelection)
     {
         NewSelection = newSelection.ToList();
         Target = target;

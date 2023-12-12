@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
 
     // ColorAllowance = ColorAllowance.Color, MinWidth=1, MaxWidth=100, FeatherMin=0, FeatherMax=50
-    public class ImageConstraints
+    public class BrushSettings
     {
         public ImageKind ImageKind = ImageKind.None;
         public string Name = "";

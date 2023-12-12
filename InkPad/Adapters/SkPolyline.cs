@@ -1,5 +1,4 @@
-﻿using InklingAi.ViewModels;
-using InkPad.Renderer;
+﻿using InkPad.Renderer;
 using InkPad.Utils;
 using Nums.Composites;
 using Nums.CoreConcepts.CoreTraits;

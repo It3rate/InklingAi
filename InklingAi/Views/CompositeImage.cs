@@ -16,6 +16,7 @@
 
     public class CompositeImage : BaseImage
     {
+        protected List<ImageData> _imageDataList = new();
 
         public static readonly StyledProperty<ObservableCollection<ImageData>> ImageDataItemsProperty =
             AvaloniaProperty.Register<SingleImage, ObservableCollection<ImageData>>(nameof(ImageDataItems));
@@ -63,6 +64,10 @@
             }
         }
 
+        protected override void SetDragContents(DataObject dataObject)
+        {
+            dataObject.Set(DataFormats.Files, _imageDataList);
+        }
         protected override void OnDrop(object? sender, DragEventArgs e)
         {
         }

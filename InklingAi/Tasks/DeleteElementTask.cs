@@ -14,9 +14,9 @@ public class DeleteElementTask : TaskBase
 {
     public List<ISelectableElement> ElementsToDelete { get; } = new();
     public List<int> DeletionIndexes { get; } = new ();
-    public PaintableImage Target { get; }
+    public VectorImage Target { get; }
     public override bool IsValid => true;
-    public DeleteElementTask(PaintableImage target, params ISelectableElement[] elementsToDelete)
+    public DeleteElementTask(VectorImage target, params ISelectableElement[] elementsToDelete)
     {
         Target = target;
         ElementsToDelete.AddRange(elementsToDelete);

@@ -15,27 +15,27 @@ public class TransformElementCommand : CommandBase
 {
     public TransformElementTask TransformTask;
     public SKMatrix NewMatrix => TransformTask.NewMatrix;
-    private PaintableImage _target;
+    private VectorImage _target;
 
-    private TransformElementCommand(PaintableImage target)
+    private TransformElementCommand(VectorImage target)
     {
         _target = target;
 	}
-	public static TransformElementCommand CreateTranslationCommand(PaintableImage target, float dx, float dy, SKPoint? anchor = null, bool isIncremental = false)
+	public static TransformElementCommand CreateTranslationCommand(VectorImage target, float dx, float dy, SKPoint? anchor = null, bool isIncremental = false)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateTranslationTask(target, dx, dy, anchor);
         result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateRotationCommand(PaintableImage target, float degrees, SKPoint? anchor = null, bool isIncremental = false)
+	public static TransformElementCommand CreateRotationCommand(VectorImage target, float degrees, SKPoint? anchor = null, bool isIncremental = false)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateRotationTask(target, degrees, anchor);
 		result.TransformTask.IsIncremental = isIncremental;
 		return result;
 	}
-	public static TransformElementCommand CreateScaleCommand(PaintableImage target, float scaleX, float scaleY, SKPoint? anchor = null, bool isIncremental = false)
+	public static TransformElementCommand CreateScaleCommand(VectorImage target, float scaleX, float scaleY, SKPoint? anchor = null, bool isIncremental = false)
 	{
 		var result = new TransformElementCommand(target);
 		result.TransformTask = TransformElementTask.CreateScaleTask(target, scaleX, scaleY, anchor);

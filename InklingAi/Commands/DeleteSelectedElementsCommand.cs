@@ -14,8 +14,8 @@ using Nums.CoreConcepts.Time;
 public class DeleteSelectedElementsCommand : CommandBase
 { 
     public DeleteElementTask? DeleteTask;
-    private PaintableImage _target;
-    public DeleteSelectedElementsCommand(PaintableImage target)
+    private VectorImage _target;
+    public DeleteSelectedElementsCommand(VectorImage target)
     {
         _target = target;
     }

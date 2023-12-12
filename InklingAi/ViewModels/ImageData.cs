@@ -73,22 +73,22 @@
             set { _processedImage = value; }
         }
 
-        public PaintableImage PaintableImage { get; set; } = new PaintableImage();
+        public VectorImage VectorImage { get; set; } = new VectorImage();
 
-        private ImageConstraints _imageContraints;
-        public ImageKind ImageKind => _imageContraints.ImageKind;
-        public string InputTitle => _imageContraints.Name;
-        public int MinWidth => _imageContraints.MinWidth;
-        public int MaxWidth => _imageContraints.MaxWidth;
-        public int FeatherMin => _imageContraints.FeatherMin;
-        public int FeatherMax => _imageContraints.FeatherMax;
-        public int AlphaMin => _imageContraints.AlphaMin;
-        public int AlphaMax => _imageContraints.AlphaMax;
+        private BrushSettings _brushSettings;
+        public ImageKind ImageKind => _brushSettings.ImageKind;
+        public string InputTitle => _brushSettings.Name;
+        public int MinWidth => _brushSettings.MinWidth;
+        public int MaxWidth => _brushSettings.MaxWidth;
+        public int FeatherMin => _brushSettings.FeatherMin;
+        public int FeatherMax => _brushSettings.FeatherMax;
+        public int AlphaMin => _brushSettings.AlphaMin;
+        public int AlphaMax => _brushSettings.AlphaMax;
 
-        public ImageData(ImageConstraints imageContraints, string folder) 
+        public ImageData(BrushSettings imageContraints, string folder) 
         {
-            _imageContraints = imageContraints;
-            PaintableImage.Name = InputTitle;
+            _brushSettings = imageContraints;
+            VectorImage.Name = InputTitle;
 
             Folder = folder;
             InputPath = folder + ImageKind.Name() + "_input.png";
@@ -97,7 +97,7 @@
         }
         public ImageData(ImageKind kind, string path)
         {
-            _imageContraints = new ImageConstraints() { ImageKind = kind };
+            _brushSettings = new BrushSettings() { ImageKind = kind };
             Folder = Path.GetPathRoot(path) ?? "";
             InputPath = path;
             ProcessedPath = path;

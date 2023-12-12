@@ -15,8 +15,8 @@ public class SelectElementCommand : CommandBase
 {
     public List<ISelectableElement> Elements { get; private set; } = new();
     public SelectElementTask? SelectTask;
-    private PaintableImage _target;
-    public SelectElementCommand(PaintableImage target, params ISelectableElement?[]? elements)
+    private VectorImage _target;
+    public SelectElementCommand(VectorImage target, params ISelectableElement?[]? elements)
     {
         if (elements != null)
         {

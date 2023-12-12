@@ -17,14 +17,17 @@
       <Svg Path="/Assets/drawBrushSize.svg" Stretch="Uniform"/>
     </Button>
 	  <NumericUpDown Grid.Column="1" 
-				     Value="{Binding $parent[UserControl].PaintableImage.BrushState.BrushSize, Mode=TwoWay}" 
-				     Width="50" Name="nudBrushSize" Minimum="0" Maximum="60" Increment="2" AllowSpin="True"/>
+			Value="{Binding $parent[UserControl].VectorImage.BrushState.BrushSize, Mode=TwoWay}" 
+			Width="50" Name="nudBrushSize" 
+      Minimum="{Binding InfluenceData.FocusedItem.MinWidth}" 
+      Maximum="{Binding InfluenceData.FocusedItem.MaxWidth}" 
+      Increment="2" AllowSpin="True"/>
     
     <Button Grid.Column="2" Classes="image" Margin="20,0,0,0" CommandParameter="Transparency">
       <Svg Path="/Assets/drawTransparent.svg" Stretch="Uniform"/>
     </Button>
     <NumericUpDown Grid.Column="3"
-				    Value="{Binding $parent[UserControl].PaintableImage.BrushState.Transparency, Mode=TwoWay}" 
+				    Value="{Binding $parent[UserControl].VectorImage.BrushState.Transparency, Mode=TwoWay}" 
 				    Width="56" Name="nudTransparent" Minimum="0" Maximum="255" Increment="20" AllowSpin="True"/>
     
     <Button Grid.Column="4" Classes="image" Margin="20,0,0,0"
@@ -32,7 +35,7 @@
       <Svg Path="/Assets/drawFeather.svg" Stretch="Uniform"/>
     </Button>
     <NumericUpDown Grid.Column="5" 
-				    Value="{Binding $parent[UserControl].PaintableImage.BrushState.Feather, Mode=TwoWay}"
+				    Value="{Binding $parent[UserControl].VectorImage.BrushState.Feather, Mode=TwoWay}"
 				    Width="50" Name="nudFeather" Minimum="0" Maximum="100" Increment="2" AllowSpin="True"/>
     
     <Button Grid.Column="6" Classes="image" Margin="20,0,0,0"

@@ -21,10 +21,10 @@ public class TransformElementTask : TaskBase
     public SKPoint Anchor { get; private set; }
     public List<ISelectableElement> PreviousSelection { get; } = new();
     public List<SKMatrix> PreviousMatricies { get; } = new();
-    public PaintableImage Target { get; }
+    public VectorImage Target { get; }
     public bool IsIncremental { get; set; } = true;
     public override bool IsValid => true;
-    private TransformElementTask(PaintableImage target, SKPoint? anchor = null)
+    private TransformElementTask(VectorImage target, SKPoint? anchor = null)
     {
         NewMatrix = SKMatrix.Identity;
         Target = target;
@@ -39,7 +39,7 @@ public class TransformElementTask : TaskBase
             Anchor = new SKPoint(bnds.MidX, bnds.MidY);
         }
 	}
-	public TransformElementTask(PaintableImage target, float dx, float dy, float rotate, float scaleX, float scaleY, SKPoint? anchor = null) : this(target, anchor)
+	public TransformElementTask(VectorImage target, float dx, float dy, float rotate, float scaleX, float scaleY, SKPoint? anchor = null) : this(target, anchor)
 	{
         if (rotate != 0)
 		{
@@ -57,12 +57,12 @@ public class TransformElementTask : TaskBase
         }
     }
 
-	public static TransformElementTask CreateTranslationTask(PaintableImage target, float dx, float dy, SKPoint? anchor = null)
+	public static TransformElementTask CreateTranslationTask(VectorImage target, float dx, float dy, SKPoint? anchor = null)
 	{
 		var result = new TransformElementTask(target, dx, dy, 0, 1f, 1f, anchor);
 		return result;
 	}
-	public static TransformElementTask CreateRotationTask(PaintableImage target, float degrees, SKPoint? anchor = null)
+	public static TransformElementTask CreateRotationTask(VectorImage target, float degrees, SKPoint? anchor = null)
 	{
 		//var result = new TransformElementTask(target);
 		//var selected = target.Selection ?? throw new ArgumentNullException(nameof(target.Selection));
@@ -71,7 +71,7 @@ public class TransformElementTask : TaskBase
         var result = new TransformElementTask(target, 0, 0, degrees, 1f, 1f, anchor);
         return result;
 	}
-	public static TransformElementTask CreateScaleTask(PaintableImage target, float scaleX, float scaleY, SKPoint? anchor = null)
+	public static TransformElementTask CreateScaleTask(VectorImage target, float scaleX, float scaleY, SKPoint? anchor = null)
     {
         var result = new TransformElementTask(target, 0, 0, 0, scaleX, scaleY, anchor);
 

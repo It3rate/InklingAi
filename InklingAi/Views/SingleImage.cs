@@ -22,6 +22,7 @@
     using Avalonia.Interactivity;
     using Avalonia.Data;
     using MathNet.Numerics;
+    using Avalonia.Threading;
 
     public class SingleImage : BaseImage
     {
@@ -37,12 +38,17 @@
             set => SetValue(SourceProperty, value);
         }
 
+        private ImageData? _imageDataItem;
         public static readonly StyledProperty<ImageData?> ImageDataItemProperty =
             AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(ImageDataItem));
         public ImageData? ImageDataItem
         {
             get => GetValue(ImageDataItemProperty);
-            set => SetValue(ImageDataItemProperty, value);
+            set
+            {
+                _imageDataItem = value; 
+                SetValue(ImageDataItemProperty, value);
+            }
         }
         #endregion
 
@@ -57,10 +63,9 @@
             switch (prop.Name)
             {
                 case nameof(ImageDataItem):
-                    _imageDataList.Clear();
                     if (change != null && change.NewValue != null && change.NewValue is ImageData imageData)
                     {
-                        _imageDataList.Add(imageData);
+                        ImageDataItem = imageData;
                     }
                     InvalidateMeasure();
                     InvalidateVisual();
@@ -76,19 +81,26 @@
         }
         protected override void SetImage(ImageData? imageData)
         {
-            if(_imageDataList.Count > 0)
-            {
-                _imageDataList[0].ProcessedImage = imageData?.ProcessedImage;
-                InklingModel.GetRootDataContext(this)?.InfluenceData.ResetActiveItems();
-                InvalidateMeasure();
-                InvalidateVisual();
-            }
-            else
-			{
+   //         if(_imageData != null)
+   //         {
+   //             _imageData.ProcessedImage = imageData?.ProcessedImage;
+   //             InklingModel.GetRootDataContext(this)?.InfluenceData.ResetActiveItems();
+   //             InvalidateMeasure();
+   //             InvalidateVisual();
+   //         }
+   //         else
+			//{
                 if (imageData?.InputPath != ImageDataItem?.InputPath)
                 {
                     ImageDataItem = imageData;
                 }
+            //}
+        }
+        protected override void SetDragContents(DataObject dataObject)
+        {
+            if (ImageDataItem != null)
+            {
+                dataObject.Set(DataFormats.Files, new List<ImageData>() { ImageDataItem });
             }
         }
 
@@ -108,8 +120,8 @@
 
         protected override void RenderSkia(SKCanvas canvas)
         {
-            var bmp = _imageDataList.Count > 0 ? _imageDataList[0].ProcessedImage : null;
-            DrawImage(canvas, bmp);
+                var bmp = _imageDataItem?.ProcessedImage;
+                DrawImage(canvas, bmp);
         }
 
     }

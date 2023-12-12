@@ -20,12 +20,12 @@ using InklingAi.ViewModels;
 public partial class BrushToolbar : UserControl
 {
 
-	public static readonly StyledProperty<PaintableImage> PaintableImageProperty =
-		AvaloniaProperty.Register<BrushToolbar, PaintableImage>(nameof(PaintableImage));
-	public PaintableImage PaintableImage
+	public static readonly StyledProperty<VectorImage> VectorImageProperty =
+		AvaloniaProperty.Register<BrushToolbar, VectorImage>(nameof(VectorImage));
+	public VectorImage VectorImage
 	{
-		get => GetValue(PaintableImageProperty);
-		set => SetValue(PaintableImageProperty, value);
+		get => GetValue(VectorImageProperty);
+		set => SetValue(VectorImageProperty, value);
 	}
 
 	private ColorButton<InklingColorPickerWindow> _colBtn;
@@ -42,7 +42,7 @@ public partial class BrushToolbar : UserControl
 			Width = 50,
 			Height = 30
 		};
-		var binding = new Binding("PaintableImage.BrushState.SelColor")
+		var binding = new Binding("VectorImage.BrushState.SelColor")
 		{
 			Mode = BindingMode.TwoWay,
 			RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)

@@ -44,18 +44,18 @@ namespace InklingAi.ViewModels
             set
             {
                 SetProperty(ref _focusedItem, value);
-                PaintableImage = _focusedItem != null ? _focusedItem.PaintableImage : null;
+                VectorImage = _focusedItem != null ? _focusedItem.VectorImage : null;
                 ResetActiveItems();
             }
         }
-        //public PaintableImage? PaintableImage => FocusedItem != null ? FocusedItem.PaintableImage : null;
-        private PaintableImage? _paintableImage;
-        public PaintableImage? PaintableImage
+
+        private VectorImage? _vectorImage;
+        public VectorImage? VectorImage
         {
-            get => _paintableImage;
+            get => _vectorImage;
             set
             {
-                SetProperty(ref _paintableImage, value);
+                SetProperty(ref _vectorImage, value);
             }
         }
 
@@ -91,7 +91,7 @@ namespace InklingAi.ViewModels
             return result;
         }
 
-        public static readonly Dictionary<ImageKind, ImageConstraints> inputKinds = new()
+        public static readonly Dictionary<ImageKind, BrushSettings> inputKinds = new()
         {
             //{ "main", "Main Image" },
             { ImageKind.Input, new (){     Name="Input Image" } },

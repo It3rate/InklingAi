@@ -14,10 +14,10 @@ public class CreateSKPolylineTask : TaskBase, ICreateTask
 {
     public SkPolyline CreatedPolyline { get; }
     public ISelectableElement[] PreviousSelection { get; private set; }
-    public PaintableImage Target { get; } // will be selected element etc
+    public VectorImage Target { get; } // will be selected element etc
 
     public override bool IsValid => true;
-    public CreateSKPolylineTask(SkPolyline polyline, PaintableImage target)
+    public CreateSKPolylineTask(SkPolyline polyline, VectorImage target)
     {
         CreatedPolyline = polyline;
         Target = target;

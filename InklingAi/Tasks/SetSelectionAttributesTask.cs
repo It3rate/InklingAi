@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using InklingAi.ViewModels;
     using InklingAi.Views;
     using InkPad.Adapters;
     using InkPad.CommandEngine;
@@ -14,9 +13,9 @@
     {
         public BrushData NewBrushData;
         public BrushData? PreviousBrushData;
-        public PaintableImage Target { get; }
+        public VectorImage Target { get; }
         public override bool IsValid => true;
-        public SetSelectionAttributesTask(PaintableImage target, BrushData newBrushData)
+        public SetSelectionAttributesTask(VectorImage target, BrushData newBrushData)
         {
             Target = target;
             NewBrushData = newBrushData;

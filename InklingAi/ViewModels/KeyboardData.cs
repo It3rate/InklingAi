@@ -55,28 +55,28 @@ public class KeyboardData
     {
         if(FocusedImage != null)
         {
-            FocusedImage.PaintableImage.DeleteSelected();
+            FocusedImage.VectorImage.DeleteSelected();
         }
 	}
 	public void Move(SelectionTransformKind transformKind)
     {
         if (FocusedImage != null)
         {
-            FocusedImage.PaintableImage.Move(transformKind, IsControlDown, IsShiftDown);
+            FocusedImage.VectorImage.Move(transformKind, IsControlDown, IsShiftDown);
         }
 	}
 	public void Rotate(SelectionTransformKind transformKind)
     {
         if (FocusedImage != null)
         {
-            FocusedImage.PaintableImage.Rotate(transformKind, IsControlDown, IsShiftDown);
+            FocusedImage.VectorImage.Rotate(transformKind, IsControlDown, IsShiftDown);
         }
 	}
 	public void Scale(SelectionTransformKind transformKind)
     {
         if (FocusedImage != null)
         {
-            FocusedImage.PaintableImage.Scale(transformKind, IsControlDown, IsShiftDown);
+            FocusedImage.VectorImage.Scale(transformKind, IsControlDown, IsShiftDown);
         }
 	}
 

@@ -43,12 +43,12 @@
             
             <controls:BrushToolbar
               Grid.Row="1" Grid.Column="1"
-							PaintableImage="{Binding InfluenceData.PaintableImage}"
+							VectorImage="{Binding InfluenceData.VectorImage}"
 							Background="#303033" Margin="0,0,0,4" />
             
             <controls:DrawingToolbar
               Grid.Row="2" Grid.Column="0"
-							PaintableImage="{Binding InfluenceData.PaintableImage}"
+							VectorImage="{Binding InfluenceData.VectorImage}"
 							Background="#303033" Margin="0,0,4,0" />
 
             <Border Grid.Row="2" Grid.Column="2"  
@@ -56,7 +56,7 @@
 				<Grid>
           <!--<controls:CompositeImage ImageDataItems="{Binding InfluenceData.CompositedItems}"/>-->
           <controls:SingleImage ImageDataItem="{Binding InfluenceData.FocusedItem}"/>
-          <ContentControl Name="_mainPaintableImage" Content="{Binding InfluenceData.PaintableImage}"/>
+          <ContentControl Name="_mainVectorImage" Content="{Binding InfluenceData.VectorImage}"/>
 				</Grid>
 			</Border>
               

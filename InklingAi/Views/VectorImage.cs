@@ -17,18 +17,20 @@ using InkPad.Adapters;
 using InkPad.Utils;
 using SkiaSharp;
 
-public class PaintableImage : BaseImage, INotifyPropertyChanged
+public class VectorImage : BaseImage, INotifyPropertyChanged
 {
 	private InklingModel _model => InklingModel.Instance;
 	private Engine _engine => _model.Engine;
-	private KeyboardData _keyboardData => _model.KeyboardData;
+    private KeyboardData _keyboardData => _model.KeyboardData;
 
-    public BrushMode BrushMode { get; set; } = BrushMode.None;
-    public DrawMode DrawMode { get; set; } = DrawMode.Paint;
+    public BrushPanelMode BrushPanelMode { get; set; } = BrushPanelMode.None;
+    public DrawPanelMode DrawPanelMode { get; set; } = DrawPanelMode.Paint;
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
 
+    private List<ISelectableElement> _paths { get; } = new List<ISelectableElement>();
+
     public string Name;
-	public PaintableImage()
+	public VectorImage()
     {
         Selection = new Selection(this);
         _prevBrushStateSource = BrushState;
@@ -95,7 +97,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
     private bool _isDraggingHandle = false;
     protected override void OnMouseDown(Point currentPosition)
 	{
-        if (DrawMode == DrawMode.Arrow)
+        if (DrawPanelMode == DrawPanelMode.Arrow)
         {
             if (CheckHandlesHit(currentPosition))
             {
@@ -125,7 +127,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
     {
         BrushState.CurrentPosition = currentPosition.ToSKPoint();
 
-		if (DrawMode == DrawMode.Arrow)
+		if (DrawPanelMode == DrawPanelMode.Arrow)
         {
 
         }
@@ -137,7 +139,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
     protected override void OnMouseDownDrag(Point currentPosition, Point diff)
 	{
 		_hasDragged = true;
-		if (DrawMode == DrawMode.Arrow)
+		if (DrawPanelMode == DrawPanelMode.Arrow)
         {
 			if (_madeSelection)
 			{
@@ -183,7 +185,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
     }
     protected override void OnMouseUp(Point currentPosition, Point diff)
     {
-        if (DrawMode == DrawMode.Arrow)
+        if (DrawPanelMode == DrawPanelMode.Arrow)
 		{
 			if (_choseExistingSelection && !_hasDragged)
 			{
@@ -397,7 +399,6 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
 
     #region Selection
     public Selection Selection { get; }
-    private List<ISelectableElement> _paths { get; } = new List<ISelectableElement>();
     private SkPolyline _curPath;
     private SelectionHandles _selectionHandles;
     private void Selection_ContentChanged(object? sender, EventArgs e)
@@ -437,7 +438,7 @@ public class PaintableImage : BaseImage, INotifyPropertyChanged
             _renderUtil.DrawShape(canvas, _paths[i]);
         }
 
-        if (DrawMode == DrawMode.Arrow)
+        if (DrawPanelMode == DrawPanelMode.Arrow)
         {
             if (_selectionHandles.IsHandlePressed)
             {

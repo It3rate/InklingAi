@@ -17,12 +17,12 @@ public class Selection : IEnumerable<ISelectableElement>
 {
     public event EventHandler ContentChanged;
     private readonly List<ISelectableElement> _internalList = new();
-    protected PaintableImage _target;
+    protected VectorImage _target;
 	public TransformKind TransformKind { get; set; } = TransformKind.Scale;
     public bool HasSelection => _internalList.Count > 0;
 	int[] _prevIds = new int[0];
 
-	public Selection(PaintableImage target) 
+	public Selection(VectorImage target) 
     {
         _target = target;
     }

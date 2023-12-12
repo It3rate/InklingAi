@@ -6,7 +6,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using InklingAi.Tasks;
-    using InklingAi.ViewModels;
     using InklingAi.Views;
     using InkPad.Adapters;
     using InkPad.CommandEngine;
@@ -15,10 +14,10 @@
     public class SetSelectionAttributesCommand : CommandBase
     {
         public SetSelectionAttributesTask? SetSelectionAttributesTask;
-        private PaintableImage _target;
+        private VectorImage _target;
         private BrushData _newBrushData;
 
-        public SetSelectionAttributesCommand(PaintableImage target, BrushData newBrushData)
+        public SetSelectionAttributesCommand(VectorImage target, BrushData newBrushData)
         {
             _target = target;
             _newBrushData = newBrushData;
