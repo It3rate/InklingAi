@@ -19,7 +19,7 @@
         public static SKColor ToGrayscale(this SKColor color)
         {
             color.ToHsv(out float _, out _, out float v);
-            var brightness = (byte)(v * 255);
+            var brightness = (byte)(v * 2.55f);
             return new SKColor(brightness, brightness, brightness, color.Alpha);
         }
 

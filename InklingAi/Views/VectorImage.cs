@@ -3,11 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-//using System.ComponentModel;
 using System.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Skia;
 using InklingAi.CommandEngine;
@@ -51,10 +52,6 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
         BrushState.FeatherChanged += OnFeatherChanged;
         BrushState.TransparencyChanged += OnTransparencyChanged;
         BrushState.ColorValueChanged += OnColorValueChanged;
-    }
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
     }
 
     #region Elements
@@ -276,11 +273,45 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
 
 		return result;
 	}
-	protected override void OnDrop(object? sender, DragEventArgs e) { }
-	#endregion
 
-	#region Keyboard Events
-	private bool IsShiftDown() => _keyboardData.IsShiftDown;
+    public override void OnDragOver(object? sender, DragEventArgs e)
+    {
+        var underlay = GetUnderlayImage();
+        if(underlay != null)
+        {
+            underlay.OnDragOver(sender, e);
+        }
+    }
+    public override void OnDrop(object? sender, DragEventArgs e)
+    {
+        var underlay = GetUnderlayImage();
+        if (underlay != null)
+        {
+            underlay.OnDrop(sender, e);
+        }
+    }
+    #endregion
+
+    private SingleImage? GetUnderlayImage()
+    {
+        SingleImage? result = null;
+
+        var sibs = Parent?.GetLogicalSiblings();
+        if (sibs != null)
+        {
+            foreach (var ctrl in sibs)
+            {
+                if (ctrl is SingleImage si && si.Name == "_editImageControl")
+                {
+                    result = si;
+                }
+            }
+        }
+        return result;
+    }
+
+    #region Keyboard Events
+    private bool IsShiftDown() => _keyboardData.IsShiftDown;
 	private bool IsControlDown() => _keyboardData.IsControlDown;
 	private bool IsKeyDown(Key key) => _keyboardData.IsDown(key);
     #endregion

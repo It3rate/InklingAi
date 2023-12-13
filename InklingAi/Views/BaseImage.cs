@@ -18,9 +18,12 @@ using Avalonia.Skia;
 using SkiaSharp;
 using InklingAi.Utils;
 using AIEnv.Utils;
+using Avalonia.Interactivity;
 
 public abstract class BaseImage : UserControl
 {
+    protected InklingModel _model => InklingModel.Instance;
+
     protected RenderingLogic renderingLogic;
 
     public float _widthExtra = 2f;
@@ -55,9 +58,6 @@ public abstract class BaseImage : UserControl
 		PointerEntered += OnPointerEntered;
 		PointerExited += OnPointerExited;
 
-		AddHandler(DragDrop.DropEvent, OnDrop);
-        AddHandler(DragDrop.DragOverEvent, OnDragOver);
-
         AttachedToVisualTree += OnLoaded;
 	}
 
@@ -73,7 +73,16 @@ public abstract class BaseImage : UserControl
             };
             this.Bind(AspectSizeProperty, binding);
         }
+        AddHandler(DragDrop.DropEvent, OnDrop);
+        AddHandler(DragDrop.DragOverEvent, OnDragOver);
     }
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+        RemoveHandler(DragDrop.DropEvent, OnDrop);
+        RemoveHandler(DragDrop.DragOverEvent, OnDragOver);
+    }
+
 
     Stretch _stretch = Stretch.UniformToFill;
 	protected virtual void SetImage(ImageData? imageData) { }
@@ -105,8 +114,8 @@ public abstract class BaseImage : UserControl
 	protected virtual void OnMouseMove(Point currentPosition) { }
 	protected virtual void OnMouseDownDrag(Point currentPosition, Point diff) { }
 	protected virtual void OnMouseUp(Point currentPosition, Point diff) { }
-	protected virtual void OnDragOver(object? sender, DragEventArgs e) { }
-	protected virtual void OnDrop(object? sender, DragEventArgs e) { }
+    public virtual void OnDragOver(object? sender, DragEventArgs e) { }
+    public virtual void OnDrop(object? sender, DragEventArgs e) { }
 
     protected bool IsMouseDown => _startPosition.HasValue;
 

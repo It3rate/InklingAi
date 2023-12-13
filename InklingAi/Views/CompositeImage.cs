@@ -68,9 +68,6 @@
         {
             dataObject.Set(DataFormats.Files, _imageDataList);
         }
-        protected override void OnDrop(object? sender, DragEventArgs e)
-        {
-        }
 
         protected override void RenderSkia(SKCanvas canvas)
         {

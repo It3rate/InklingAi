@@ -9,6 +9,7 @@
     using SkiaSharp;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -35,8 +36,10 @@
         // ocr
         // gen vs overlay
 
+        public event Action ResetSource;
 
         public InputControl? InputControl { get; set; }
+
 
         public string Folder { get; set; }
         public bool IsActive { get; set; } = false;
@@ -58,7 +61,17 @@
             set { _inputImage = value; }
         }
 
-        public string ProcessedPath { get; set; }
+        private string _processedPath;
+        public string ProcessedPath 
+        { 
+            get => _processedPath;
+            set
+            {
+                _processedPath = value;
+                _processedImage = null;
+                DoResetSource();
+            } 
+        }
         private SKBitmap? _processedImage;
         public SKBitmap? ProcessedImage
         {
@@ -70,9 +83,16 @@
                 }
                 return _processedImage;
             }
-            set { _processedImage = value; }
+            set 
+            {
+                _processedImage = value;
+                DoResetSource();
+            }
         }
-
+        public void DoResetSource()
+        {
+            ResetSource?.Invoke();
+        }
         public VectorImage VectorImage { get; private set; }
 
         public ImageKind ImageKind => VectorImage.BrushSettings.ImageKind;

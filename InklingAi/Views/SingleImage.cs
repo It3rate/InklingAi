@@ -6,6 +6,14 @@
     using System.Collections.Generic;
     using InklingAi.ViewModels;
     using Avalonia.Data;
+    using Avalonia.Interactivity;
+    using Avalonia.Platform.Storage;
+    using System.Linq;
+    using System.IO;
+    using Avalonia.Controls.Shapes;
+    using System.ComponentModel;
+    using System;
+    using System.Reflection;
 
     public class SingleImage : BaseImage
     {
@@ -29,9 +37,28 @@
             get => GetValue(ImageDataItemProperty);
             set
             {
-                _imageDataItem = value; 
+                if (value != _imageDataItem)
+                {
+                    if(_imageDataItem != null)
+                    {
+                        _imageDataItem.ResetSource -= OnRequestRedraw;
+                    }
+
+                    _imageDataItem = value;
+
+                    if (_imageDataItem != null)
+                    {
+                        _imageDataItem.ResetSource += OnRequestRedraw;
+                    }
+                }
                 SetValue(ImageDataItemProperty, value);
             }
+        }
+
+        private void OnRequestRedraw()
+        {
+            Source = _imageDataItem.ProcessedPath;
+            InvalidateVisual();
         }
         #endregion
 
@@ -56,7 +83,7 @@
                 case nameof(Source):
                     if(change.NewValue is string source)
                     {
-                        var imgData = new ImageData(ImageKind.File, source);
+                        var imgData = ImageDataItem ?? new ImageData(ImageKind.File, source);
                         SetValue(ImageDataItemProperty, imgData);
                     }
                     break;
@@ -87,20 +114,59 @@
             }
         }
 
-        protected override void OnDragOver(object? sender, DragEventArgs e)
+        public override void OnDragOver(object? sender, DragEventArgs e)
         {
             e.DragEffects = DragDropEffects.Copy;
             e.Handled = true;
         }
-        protected override void OnDrop(object? sender, DragEventArgs e)
+        public override void OnDrop(object? sender, DragEventArgs e)
         {
             var result = e.DragEffects;
             if ((result & DragDropEffects.Copy) != DragDropEffects.None)
             {
                 AcceptImageDrop(e.Data);
+                if(Name == "_editImageControl")
+                {
+                    if (_model.InfluenceData.FocusedItem != null)
+                    {
+                        _model.InfluenceData.FocusedItem.DoResetSource();
+                    }
+                }
             }
         }
 
+        protected override void AcceptImageDrop(IDataObject dataObject)
+        {
+            if (dataObject.Contains(DataFormats.Files))
+            {
+                var data = dataObject.Get(DataFormats.Files);
+                if (data is IEnumerable<IStorageItem> dataList)
+                {
+                    var firstFile = dataList.FirstOrDefault();
+                    var path = firstFile?.Path.AbsolutePath ?? "";
+                    if (path != "" && File.Exists(path))
+                    {
+                        Source = path;
+                        //SetImage(new ImageData(ImageKind.File, path));
+                    }
+                }
+                else if (data is IEnumerable<ImageData> stringList)
+                {
+                    var first = stringList.First();
+                    if (first != null)
+                    {
+                        Source = first.ProcessedPath;
+                        ImageDataItem.ProcessedPath = first.ProcessedPath;
+                        //SetImage(first);
+                    }
+                }
+                else if (data is string filename)
+                {
+                    Source = filename;
+                    //SetImage(new ImageData(ImageKind.File, filename));
+                }
+            }
+        }
         protected override void RenderSkia(SKCanvas canvas)
         {
                 var bmp = _imageDataItem?.ProcessedImage;
