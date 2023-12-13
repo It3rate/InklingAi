@@ -55,13 +55,13 @@
             }
         }
 
+        #endregion
+
         private void OnRequestRedraw()
         {
             Source = _imageDataItem.ProcessedPath;
             InvalidateVisual();
         }
-        #endregion
-
         public SingleImage()
         {
         }
@@ -73,9 +73,16 @@
             switch (prop.Name)
             {
                 case nameof(ImageDataItem):
-                    if (change != null && change.NewValue != null && change.NewValue is ImageData imageData)
+                    if (change != null) 
                     {
-                        ImageDataItem = imageData;
+                        if (change.NewValue == null)
+                        {
+                            ImageDataItem = null;
+                        }
+                        else if(change.NewValue is ImageData imageData)
+                        {
+                            ImageDataItem = imageData;
+                        }
                     }
                     InvalidateMeasure();
                     InvalidateVisual();
