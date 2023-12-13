@@ -13,10 +13,10 @@ namespace InklingAi.Views
 {
     public class UIRenderUtils
     {
-        public static SKPaint BlackOutinePen = SKRenderUtils.CreatePen(0xFF000000, .5f);
-        public static SKPaint BrushOutinePen = SKRenderUtils.CreatePen(0xFFDDDD00, 1);
-        public static SKPaint FramePen = SKRenderUtils.CreatePen(0x44BBDDFF, 1);
-        public static SKPaint SelectionPen = SKRenderUtils.CreatePen(0xAA99DDFF, 1);
+        public static SKPaint BlackOutinePen = SKRenderUtils.CreatePen(0xFF000000, .5f, 0);
+        public static SKPaint BrushOutinePen = SKRenderUtils.CreatePen(0xFFDDDD00, 1, 0);
+        public static SKPaint FramePen = SKRenderUtils.CreatePen(0x44BBDDFF, 1, 0);
+        public static SKPaint SelectionPen = SKRenderUtils.CreatePen(0xAA99DDFF, 1, 0);
         public static SKPaint SelectionBrush = SKRenderUtils.CreateBrush(0xAA5588BB);
 
         public static SKPaint _highlight = new SKPaint

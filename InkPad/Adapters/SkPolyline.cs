@@ -128,7 +128,7 @@ public class SkPolyline : SkiaShapeAdapter, ISelectableElement
             if (_brushDirty)
             {
                 _paint.Dispose();
-                _paint = SKRenderUtils.CreatePen(ColorValue, BrushSize);
+                _paint = SKRenderUtils.CreatePen(ColorValue, BrushSize, Feather);
                 _brushDirty = false;
             }
             return _paint;
