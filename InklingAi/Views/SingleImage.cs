@@ -123,20 +123,30 @@
 
         public override void OnDragOver(object? sender, DragEventArgs e)
         {
-            e.DragEffects = DragDropEffects.Copy;
+            if (ImageDataItem != null)
+            {
+                e.DragEffects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.DragEffects = DragDropEffects.None;
+            }
             e.Handled = true;
         }
         public override void OnDrop(object? sender, DragEventArgs e)
         {
-            var result = e.DragEffects;
-            if ((result & DragDropEffects.Copy) != DragDropEffects.None)
+            if (ImageDataItem != null)
             {
-                AcceptImageDrop(e.Data);
-                if(Name == "_editImageControl")
+                var result = e.DragEffects;
+                if ((result & DragDropEffects.Copy) != DragDropEffects.None)
                 {
-                    if (_model.InfluenceData.FocusedItem != null)
+                    AcceptImageDrop(e.Data);
+                    if (Name == "_editImageControl")
                     {
-                        _model.InfluenceData.FocusedItem.DoResetSource();
+                        if (_model.InfluenceData.FocusedItem != null)
+                        {
+                            _model.InfluenceData.FocusedItem.DoResetSource();
+                        }
                     }
                 }
             }
