@@ -114,11 +114,59 @@ public class SkPolyline : SkiaShapeAdapter, ISelectableElement
     public void AddPoint(double x, double y)
     {
         Polyset.AddValue(x, y);
+        _isShape = false;
         _pathDirty = true;
     }
     public void RemovePoint()
     {
         Polyset.RemoveLastValue();
+    }
+
+    private bool _isShape = false;
+    public void SetRect(SKPoint p0, SKPoint p1)
+    {
+        Reset();
+        Polyset.AddValue(p0.X, p0.Y);
+        Polyset.AddValue(p1.X, p0.Y);
+        Polyset.AddValue(p1.X, p1.Y);
+        Polyset.AddValue(p0.X, p1.Y);
+        Polyset.AddValue(p0.X, p0.Y);
+        _isShape = true;
+        _pathDirty = true;
+    }
+
+    public void SetOval(SKPoint p0, SKPoint p1)
+    {
+        Reset();
+        var center = p0.MidPoint(p1);
+        var xr = center.X - p0.X;
+        var yr = center.Y - p0.Y;
+        var num = (int)(p0.UnsignedDistanceTo(p1) * .3); // steps in polyline
+        var step = (MathF.PI * 2) / num;
+        for (int i = 0; i < num + 1; i ++)
+        {
+            Polyset.AddValue(center.X + MathF.Sin(i * step) * xr, center.Y + MathF.Cos(i * step) * yr);
+        }
+        _isShape = true;
+        _pathDirty = true;
+    }
+    public void SetStar(SKPoint p0, SKPoint p1)
+    {
+        Reset();
+        var center = p0.MidPoint(p1);
+        var xr = center.X - p0.X;
+        var yr = center.Y - p0.Y;
+        var innerRatio = 0.5f;
+        var num = 5 * 2; // star points
+        var step = (MathF.PI * 2) / num;
+        for (int i = 0; i < num + 1; i++)
+        {
+            var curXr = (i % 2 == 1) ? xr : xr * innerRatio;
+            var curYr = (i % 2 == 1) ? yr : yr * innerRatio;
+            Polyset.AddValue(center.X + MathF.Sin(i * step) * curXr, center.Y + MathF.Cos(i * step) * curYr);
+        }
+        _isShape = true;
+        _pathDirty = true;
     }
 
     public SKPaint Paint
@@ -149,7 +197,14 @@ public class SkPolyline : SkiaShapeAdapter, ISelectableElement
         {
             if (_pathDirty || _path.PointCount == 0)
             {
-                _optimizedPath = ToOptimizedCurve(false);
+                if (_isShape)
+                {
+                    _optimizedPath = ToPolyline(false);
+                }
+                else
+                {
+                    _optimizedPath = ToOptimizedCurve(false);
+                }
                 _path = Paint.GetFillPath(_optimizedPath);
                 _pathDirty = false;
             }

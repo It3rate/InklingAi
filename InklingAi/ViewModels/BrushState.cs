@@ -134,24 +134,4 @@
         CloneAnchor,
     }
 
-    public enum DrawPanelMode
-    {
-        None,
-        Arrow,
-        Paint,
-        Erase,
-        Pen,
-        Shape,
-        Mask,
-        EraseMask,
-        Noise,
-        FilterBrush,
-        Text,
-
-        ZoomPan,
-        NodeEdit,
-        Shadow,
-        Contour,
-        Envelope,
-    }
 }

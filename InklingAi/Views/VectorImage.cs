@@ -101,113 +101,117 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
     private bool _madeSelection = false;
     private bool _choseExistingSelection = false;
     private bool _isDraggingHandle = false;
+    private SKPoint _startDragPoint = SKPoint.Empty;
+    private SKPoint _curDragPoint = SKPoint.Empty;
+    private SKPoint _endDragPoint = SKPoint.Empty;
     protected override void OnMouseDown(Point currentPosition)
 	{
-        if (DrawPanelMode == DrawPanelMode.Arrow)
+        _startDragPoint = currentPosition.ToSKPoint();
+        _curPath.ColorValue = BrushState.SelColor.ToUInt32();
+        _curPath.BrushSize = BrushState.BrushSize;
+        _curPath.Feather = BrushState.Feather;
+        _curPath.Reset();
+
+        switch (DrawPanelMode)
         {
-            if (CheckHandlesHit(currentPosition))
-            {
-                _isDraggingHandle = true;
-            }
-            else
-            {
-                if (CheckSelectionHit(currentPosition))
+            case DrawPanelMode.Arrow:
+                if (CheckHandlesHit(currentPosition))
                 {
+                    _isDraggingHandle = true;
                 }
                 else
                 {
-                    Selection.Clear();
+                    if (CheckSelectionHit(currentPosition))
+                    {
+                    }
+                    else
+                    {
+                        Selection.Clear();
+                    }
                 }
-            }
-        }
-        else
-        {
-            _curPath.ColorValue = BrushState.SelColor.ToUInt32();
-            _curPath.BrushSize = BrushState.BrushSize;
-            _curPath.Feather = BrushState.Feather;
-            _curPath.Reset();
-            _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+                break;
+            case DrawPanelMode.Rect:
+            case DrawPanelMode.Oval:
+            case DrawPanelMode.Star:
+                break;
+            case DrawPanelMode.Paint:
+                _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+                break;
         }
     }
     protected override void OnMouseMove(Point currentPosition)
     {
         BrushState.CurrentPosition = currentPosition.ToSKPoint();
 
-		if (DrawPanelMode == DrawPanelMode.Arrow)
+        switch (DrawPanelMode)
         {
-
-        }
-        else
-        {
-            InvalidateVisual();
+            case DrawPanelMode.Arrow:
+                break;
+            default:
+                InvalidateVisual();
+                break;
         }
 	}
     protected override void OnMouseDownDrag(Point currentPosition, Point diff)
 	{
 		_hasDragged = true;
-		if (DrawPanelMode == DrawPanelMode.Arrow)
-        {
-			if (_madeSelection)
-			{
-                _selectionHandles.Matrix = Move(diff.X, diff.Y, _selectionHandles.Center);
-            }
-            else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Scale)
-            {
-                var ta = _selectionHandles.TransformAnchor;
-                var startDiff = _startPosition.Value.ToSKPoint() - ta;
-                var curDiff = currentPosition.ToSKPoint() - ta;
-                var anchor = _selectionHandles.TransformAnchor;
-                _selectionHandles.Matrix = Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor);
-            }
-            else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Rotate)
-            {
-                var ta = _selectionHandles.TransformAnchor;
-                var startDiff = _startPosition.Value.ToSKPoint() - ta;
-                var curDiff = currentPosition.ToSKPoint() - ta;
+        _curDragPoint = currentPosition.ToSKPoint();
 
-                var startRadians = Math.Atan2(startDiff.Y, startDiff.X);
-                var curRadians = Math.Atan2(curDiff.Y, curDiff.X);
-
-                var deltaRadians = curRadians - startRadians;
-                if (deltaRadians > Math.PI)
-                {
-                    deltaRadians -= 2 * Math.PI;
-                }
-                else if (deltaRadians < -Math.PI)
-                {
-                    deltaRadians += 2 * Math.PI;
-                }
-                _selectionHandles.Matrix = Rotate(deltaRadians * 180f / MathF.PI, ta);
-            }
-        }
-        else
+        switch (DrawPanelMode)
         {
-            _curPath.AddPoint(currentPosition.X, currentPosition.Y);
-            if (_curPath.PointCount > 1)
-            {
-                InvalidateVisual();
-            }
+            case DrawPanelMode.Arrow:
+                OnDownDrag_Arrow(currentPosition, diff);
+                break;
+            case DrawPanelMode.Rect:
+                _curPath.SetRect(_startDragPoint, _curDragPoint);
+                break;
+            case DrawPanelMode.Oval:
+                _curPath.SetOval(_startDragPoint, _curDragPoint);
+                break;
+            case DrawPanelMode.Star:
+                _curPath.SetStar(_startDragPoint, _curDragPoint);
+                break;
+            case DrawPanelMode.Paint:
+                _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+                break;
         }
+
+        InvalidateVisual();
     }
     protected override void OnMouseUp(Point currentPosition, Point diff)
     {
-        if (DrawPanelMode == DrawPanelMode.Arrow)
-		{
-			if (_choseExistingSelection && !_hasDragged)
-			{
-				var tk = Selection.TransformKind;
-				Selection.TransformKind = (tk == TransformKind.Scale) ?
-					TransformKind.Rotate : TransformKind.Scale;
-				InvalidateVisual();
-			}
-            else if (_hasDragged && _engine.Stack.PreviousCommand() is TransformElementCommand tec)
-            {
-               tec.IsSealed = true;
-            }
-		}
-        else
+        _endDragPoint = currentPosition.ToSKPoint();
+        switch (DrawPanelMode)
         {
-            _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+            case DrawPanelMode.Arrow:
+                if (_choseExistingSelection && !_hasDragged)
+                {
+                    var tk = Selection.TransformKind;
+                    Selection.TransformKind = (tk == TransformKind.Scale) ?
+                        TransformKind.Rotate : TransformKind.Scale;
+                    InvalidateVisual();
+                }
+                else if (_hasDragged && _engine.Stack.PreviousCommand() is TransformElementCommand tec)
+                {
+                    tec.IsSealed = true;
+                }
+                break;
+            case DrawPanelMode.Rect:
+                _curPath.SetRect(_startDragPoint, _curDragPoint);
+                break;
+            case DrawPanelMode.Oval:
+                _curPath.SetOval(_startDragPoint, _curDragPoint);
+                break;
+            case DrawPanelMode.Star:
+                _curPath.SetStar(_startDragPoint, _curDragPoint);
+                break;
+            case DrawPanelMode.Paint:
+                _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+                break;
+        }
+
+        if (DrawPanelMode.IsDrawMode())
+        {
             if (_curPath.PointCount > 2)
             {
                 var cmd = new CreateSKPolylineCommand(_curPath, this);
@@ -226,6 +230,41 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
         _isDraggingHandle = false;
         _selectionHandles.EndDragHandle();
         InvalidateVisual();
+    }
+    private void OnDownDrag_Arrow(Point currentPosition, Point diff)
+    {
+        if (_madeSelection)
+        {
+            _selectionHandles.Matrix = Move(diff.X, diff.Y, _selectionHandles.Center);
+        }
+        else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Scale)
+        {
+            var ta = _selectionHandles.TransformAnchor;
+            var startDiff = _startPosition.Value.ToSKPoint() - ta;
+            var curDiff = currentPosition.ToSKPoint() - ta;
+            var anchor = _selectionHandles.TransformAnchor;
+            _selectionHandles.Matrix = Scale(curDiff.X / startDiff.X, curDiff.Y / startDiff.Y, anchor);
+        }
+        else if (_isDraggingHandle && Selection.TransformKind == TransformKind.Rotate)
+        {
+            var ta = _selectionHandles.TransformAnchor;
+            var startDiff = _startPosition.Value.ToSKPoint() - ta;
+            var curDiff = currentPosition.ToSKPoint() - ta;
+
+            var startRadians = Math.Atan2(startDiff.Y, startDiff.X);
+            var curRadians = Math.Atan2(curDiff.Y, curDiff.X);
+
+            var deltaRadians = curRadians - startRadians;
+            if (deltaRadians > Math.PI)
+            {
+                deltaRadians -= 2 * Math.PI;
+            }
+            else if (deltaRadians < -Math.PI)
+            {
+                deltaRadians += 2 * Math.PI;
+            }
+            _selectionHandles.Matrix = Rotate(deltaRadians * 180f / MathF.PI, ta);
+        }
     }
     private SkPolyline CreateNewPath()
     {

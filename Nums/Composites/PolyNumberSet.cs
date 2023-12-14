@@ -35,18 +35,26 @@ public class PolyNumberSet
     }
 
     public void AddValue(params double[] values)
-	{
-		if(values.Length == Dimensions)
-		{
-			for (int i = 0; i < Dimensions; i++)
-			{
-				_polynumbers[i].AddValue(values[i]);
-			}
-		}
-		else
-		{
-			throw new ArgumentException("Values count must match underlying Polynumber array.");
-		}
+    {
+        if (values.Length == Dimensions)
+        {
+            for (int i = 0; i < Dimensions; i++)
+            {
+                _polynumbers[i].AddValue(values[i]);
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Values count must match underlying Polynumber array.");
+        }
+    }
+    public void AddValues(double[] xValues, double[] yValues) // todo: use a 'copyInto' type method to ensure dimensionality.
+    {
+        for (int i = 0; i < xValues.Length; i++)
+        {
+            _polynumbers[0].AddValue(xValues[i]);
+            _polynumbers[1].AddValue(yValues[i]);
+        }
     }
     public void RemoveLastValue()
     {

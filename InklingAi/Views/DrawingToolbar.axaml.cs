@@ -24,7 +24,11 @@ namespace InklingAi.Views
                 { btErase, DrawPanelMode.Erase },
                 { btPaint, DrawPanelMode.Paint },
                 { btPen, DrawPanelMode.Pen },
-                { btResize, DrawPanelMode.ZoomPan }
+                { btResize, DrawPanelMode.ZoomPan },
+                { btRect, DrawPanelMode.Rect },
+                { btOval, DrawPanelMode.Oval },
+                { btStar, DrawPanelMode.Star },
+                { btText, DrawPanelMode.Text }
                 };
         }
 
