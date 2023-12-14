@@ -2,11 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="50"
+             mc:Ignorable="d" d:DesignWidth="50" d:DesignHeight="700"
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
              x:Class="InklingAi.Views.DrawingToolbar">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+  <Grid RowDefinitions="Auto, Auto, Auto, Auto,Auto,Auto,Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
     <Button Grid.Row="0" Classes="image" Name="btArrow" Click="OnClick"
 				CommandParameter="Arrow">
       <Svg Path="/Assets/drawArrow.svg" Stretch="Uniform"/>
@@ -26,6 +26,18 @@
     <Button Grid.Row="8" Classes="image" Name="btResize" Click="OnClick"
 				CommandParameter="Resize">
       <Svg Path="/Assets/drawResize.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="9" Classes="image" Name="btRect" Click="OnClick"
+				CommandParameter="Resize">
+      <Svg Path="/Assets/drawRect.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="10" Classes="image" Name="btOval" Click="OnClick"
+				CommandParameter="Resize">
+      <Svg Path="/Assets/drawOval.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="11" Classes="image" Name="btStar" Click="OnClick"
+				CommandParameter="Resize">
+      <Svg Path="/Assets/drawStar.svg" Stretch="Uniform"/>
     </Button>
   </Grid>
   
