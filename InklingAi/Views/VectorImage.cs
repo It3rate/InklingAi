@@ -197,13 +197,13 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
                 }
                 break;
             case DrawPanelMode.Rect:
-                _curPath.SetRect(_startDragPoint, _curDragPoint);
+                _curPath.SetRect(_startDragPoint, _endDragPoint);
                 break;
             case DrawPanelMode.Oval:
-                _curPath.SetOval(_startDragPoint, _curDragPoint);
+                _curPath.SetOval(_startDragPoint, _endDragPoint);
                 break;
             case DrawPanelMode.Star:
-                _curPath.SetStar(_startDragPoint, _curDragPoint);
+                _curPath.SetStar(_startDragPoint, _endDragPoint);
                 break;
             case DrawPanelMode.Paint:
                 _curPath.AddPoint(currentPosition.X, currentPosition.Y);
@@ -212,19 +212,22 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
 
         if (DrawPanelMode.IsDrawMode())
         {
-            if (_curPath.PointCount > 2)
+            if (_curPath.PointCount > 2 && _hasDragged)
             {
                 var cmd = new CreateSKPolylineCommand(_curPath, this);
                 _engine.Stack.Do(cmd);
-                _curPath = CreateNewPath();
             }
             else
             {
                 Selection.Clear();
             }
+            _curPath = CreateNewPath();
         }
+        _startDragPoint = SKPoint.Empty;
+        _curDragPoint = SKPoint.Empty;
+        _endDragPoint = SKPoint.Empty;
 
-		_hasDragged = false;
+        _hasDragged = false;
         _madeSelection = false;
         _choseExistingSelection = false;
         _isDraggingHandle = false;
