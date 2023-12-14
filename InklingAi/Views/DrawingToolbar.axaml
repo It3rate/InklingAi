@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
              x:Class="InklingAi.Views.DrawingToolbar">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto,Auto,Auto,Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+  <Grid RowDefinitions="Auto, Auto, Auto, Auto,Auto,Auto,Auto,Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
     <Button Grid.Row="0" Classes="image" Name="btArrow" Click="OnClick"
 				CommandParameter="Arrow">
       <Svg Path="/Assets/drawArrow.svg" Stretch="Uniform"/>
@@ -28,16 +28,20 @@
       <Svg Path="/Assets/drawResize.svg" Stretch="Uniform"/>
     </Button>
     <Button Grid.Row="9" Classes="image" Name="btRect" Click="OnClick"
-				CommandParameter="Resize">
+				CommandParameter="Rect">
       <Svg Path="/Assets/drawRect.svg" Stretch="Uniform"/>
     </Button>
     <Button Grid.Row="10" Classes="image" Name="btOval" Click="OnClick"
-				CommandParameter="Resize">
+				CommandParameter="Oval">
       <Svg Path="/Assets/drawOval.svg" Stretch="Uniform"/>
     </Button>
     <Button Grid.Row="11" Classes="image" Name="btStar" Click="OnClick"
-				CommandParameter="Resize">
+				CommandParameter="Star">
       <Svg Path="/Assets/drawStar.svg" Stretch="Uniform"/>
+    </Button>
+    <Button Grid.Row="12" Classes="image" Name="btText" Click="OnClick"
+				CommandParameter="Text">
+      <Svg Path="/Assets/drawText.svg" Stretch="Uniform"/>
     </Button>
   </Grid>
   
