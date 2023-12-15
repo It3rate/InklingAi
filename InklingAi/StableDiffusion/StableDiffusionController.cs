@@ -42,7 +42,7 @@
             _vaeDecoder = new VaeDecoder();
         }
 
-        public SKBitmap? Generate(StableDiffusionConfig config)
+        public string? Generate(StableDiffusionConfig config)
         {
             var latents = GenerateLatents(config);
             var image = _vaeDecoder.Decode(latents);
@@ -53,7 +53,7 @@
             InklingAi.Utils.InklingIOUtils.SaveLocalImage(image, path);
             //var path = IOUtils.IterationStepPath(999);
             //IOUtils.SaveLocalImage(image, path);
-            return image;
+            return path;
         }
 
         private DenseTensor<Float16> GenerateLatents(StableDiffusionConfig config)

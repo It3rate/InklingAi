@@ -93,7 +93,7 @@ namespace InklingAi.ViewModels
 
         public static readonly Dictionary<ImageKind, BrushSettings> inputKinds = new()
         {
-            //{ "main", "Main Image" },
+            //{ ImageKind.Main, new (){      Name="Main Image", ColorAllowance = ColorAllowance.None } },
             { ImageKind.Input, new (){     Name="Input Image" } },
             { ImageKind.Mask, new (){      Name="Mask", ColorAllowance = ColorAllowance.Grayscale, DefaultColor=0xFFFFFFFF } },
             { ImageKind.Canny, new (){     Name="Edges", ColorAllowance = ColorAllowance.BlackAndWhite, DefaultColor=0xFFFFFFFF, MaxWidth=1, FeatherMax=0, AlphaMin=255 }},

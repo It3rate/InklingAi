@@ -13,17 +13,9 @@
 
     public class GalleryData : ViewModelBase
     {
-        private int itemsPerRow = 3;
+        private int itemsPerRow = 4;
         private int currentPage = 0;
         private const int itemsPerPage = 31;
-
-
-        private string _mainImagePath = InklingIOUtils.SDWorkingFolder + @"main.png";
-        public string MainImagePath
-        {
-            get => _mainImagePath;
-            set => SetProperty(ref _mainImagePath, value);
-        }
 
         private ObservableCollection<string[]> _imageTuplePaths = new();
         public ObservableCollection<string[]> ImageTuplePaths
@@ -42,8 +34,6 @@
             var allFiles = Directory.GetFiles(dirPath, "*.png")
                              .OrderByDescending(file => new FileInfo(file).LastWriteTime)
                              .ToArray();
-
-            MainImagePath = allFiles.Length > 0 ? allFiles[0] : "";
 
             var filesToLoad = allFiles.Skip(currentPage * itemsPerPage + 1).Take(itemsPerPage);
 

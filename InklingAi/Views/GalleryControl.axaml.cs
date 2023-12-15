@@ -12,7 +12,6 @@ namespace InklingAi.Views
 
     public partial class GalleryControl : UserControl
     {
-        public SingleImage Main => imgMain;
 
         public static readonly StyledProperty<int> HalfWidthProperty =
             AvaloniaProperty.Register<GalleryControl, int>(nameof(HalfWidth));
@@ -34,7 +33,8 @@ namespace InklingAi.Views
 
         private void UpdateHalfWidth()
         {
-            HalfWidth = (int)(Math.Floor(lbGallery.Bounds.Width / 3f)-(8/3f));
+            var itemsPerRow = 4f;// (float)lbGallery.Items.Count;
+            HalfWidth = (int)(Math.Floor(lbGallery.Bounds.Width / itemsPerRow) -( 6f));
         }
         private Avalonia.Point? _startPoint;
 

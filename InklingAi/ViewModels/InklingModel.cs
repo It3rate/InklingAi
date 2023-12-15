@@ -35,8 +35,17 @@ public partial class InklingModel : ViewModelBase
 	public KeyboardData KeyboardData => KeyboardData.Instance;
 	public Engine Engine => Engine.Instance;
 
+
+    private ImageData? _mainImage;
+    public ImageData? MainImage
+    {
+        get => _mainImage;
+        set => SetProperty(ref _mainImage, value);
+    }
+
     public InklingModel() // this needs to be public for design time access in MainView.
     {
+        MainImage = new ImageData(ImageKind.Main, IOUtils.ImagePath("main"));
         GalleryData.LoadNextPage();
         InfluenceData.LoadInputControls();
         sdController = new StableDiffusionController();
@@ -59,15 +68,18 @@ public partial class InklingModel : ViewModelBase
     public async void OnGenerate()
     {
         RandomizeSeed();
+        string? path = null;
         if (_useDalle)
         {
-            var _ = await _dalle.RequestImageAsync(SDConfig); // saves to image folder automatically
+            path = await _dalle.RequestImageAsync(SDConfig); // saves to image folder automatically
         }
         else
         {
-            var bmp = sdController.Generate(SDConfig);
+            path = sdController.Generate(SDConfig);
         }
-        
+
+        MainImage = path != null ? new ImageData(ImageKind.Main, path) : null;
+
         GalleryData.LoadNextPage(0);
     }
     public void OnDelete()

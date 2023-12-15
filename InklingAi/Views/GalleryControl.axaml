@@ -38,15 +38,8 @@
 	</UserControl.Styles>
 
 
-	<Grid RowDefinitions="Auto, *">
-		<Border Classes="image">
-			<controls:SingleImage Grid.Row="0" Margin="0,0,0,4" Name="imgMain"
-				Source="{Binding GalleryData.MainImagePath}"
-				Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-				/>
-		</Border>
 
-		<ListBox Grid.Row="1"
+		<ListBox
 			Name="lbGallery"
 			Padding="0"
 			ItemsSource="{Binding GalleryData.ImageTuplePaths}"
@@ -59,19 +52,25 @@
 					<StackPanel Orientation="Horizontal" Background="Transparent">
 						<Border Classes="image" >
 							<controls:SingleImage
-								Source="{Binding Path=[0]}" Margin="2,0,0,0"
+								Source="{Binding Path=[0]}" Margin="0.5,0,0,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
 						</Border>
-						<Border Classes="image" >
-							<controls:SingleImage
-								Source="{Binding Path=[1]}" Margin="2,2,2,0"
+            <Border Classes="image" >
+              <controls:SingleImage
+								Source="{Binding Path=[1]}" Margin="0.5,0.5,0.5,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
-						</Border>
+            </Border>
+            <Border Classes="image" >
+              <controls:SingleImage
+								Source="{Binding Path=[2]}" Margin="0.5,0.5,0.5,0"
+								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
+							   />
+            </Border>
 						<Border Classes="image" >
 							<controls:SingleImage
-								Source="{Binding Path=[2]}"
+								Source="{Binding Path=[3]}" Margin="0,0.5,0,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
 						</Border>
@@ -100,6 +99,5 @@
 			</ListBox.ItemTemplate>
 
 		</ListBox>
-	</Grid>
 
 </UserControl>
