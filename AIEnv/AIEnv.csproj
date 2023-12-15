@@ -6,9 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ApplicationIcon>iconEnv.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="iconEnv.ico" />
     <Content Include="python\.vscode\launch.json" />
     <Content Include="python\.vscode\settings.json" />
   </ItemGroup>

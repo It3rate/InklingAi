@@ -49,7 +49,8 @@
                 {
                     var url = jsonObject["data"][0]["url"].ToString();
                     SKBitmap img = await DownloadImageAsync(url);
-                    var path = IOUtils.SDImageFolder + $"test{config.Seed}.png";
+                    var name = config.GenerateImageName;
+                    var path = IOUtils.SDImageFolder + $"dalle_{name}.png";
                     IOUtils.SaveLocalImage(img, path);
                     result = path;
                 }

@@ -54,11 +54,20 @@ public partial class InklingModel : ViewModelBase
     public ICommand ChangeAspectSizeCommand { get; }
 
     private DalleClient _dalle = new();
+
+    private bool _useDalle = false;
     public async void OnGenerate()
     {
-        var path = await _dalle.RequestImageAsync(SDConfig);
         RandomizeSeed();
-        //var path = sdController.Generate(SDConfig);
+        if (_useDalle)
+        {
+            var _ = await _dalle.RequestImageAsync(SDConfig); // saves to image folder automatically
+        }
+        else
+        {
+            var bmp = sdController.Generate(SDConfig);
+        }
+        
         GalleryData.LoadNextPage(0);
     }
     public void OnDelete()
