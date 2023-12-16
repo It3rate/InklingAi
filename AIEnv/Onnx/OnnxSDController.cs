@@ -1,20 +1,14 @@
-﻿namespace InklingAi.StableDiffusion
+﻿namespace AIEnv.Onnx
 {
     using Microsoft.ML.OnnxRuntime.Tensors;
     using Microsoft.ML.OnnxRuntime;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using InklingAi.Utils;
     using SkiaSharp;
-    using InklingAi.ViewModels;
     using AIEnv.Clients.StableDiffusion;
     using AIEnv.Utils;
-    using AIEnv.Onnx;
 
-    public class StableDiffusionController
+    public class OnnxSDController
     {
         public Tokenizer _tokenizer;
         public TextEncoder _textEncoder;
@@ -26,12 +20,12 @@
         public delegate void UpdateStepCallback(int currentIndex, SKBitmap? img);
         public event UpdateStepCallback? OnUpdateStep;
 
-        public StableDiffusionController(UpdateStepCallback? callback = null)
+        public OnnxSDController(UpdateStepCallback? callback = null)
         {
             OnUpdateStep = callback;
-            CreateModels();
+            //CreateOnnxModels();
         }
-        public void CreateModels()
+        public void CreateOnnxModels()
         {
             _tokenizer = new Tokenizer();
             _textEncoder = new TextEncoder();
@@ -50,7 +44,7 @@
             //IOUtils.SaveLocalImage(image, path);
 
             var path = config.GenerateImageName();
-            InklingAi.Utils.InklingIOUtils.SaveLocalImage(image, path);
+            IOUtils.SaveLocalImage(image, path);
             //var path = IOUtils.IterationStepPath(999);
             //IOUtils.SaveLocalImage(image, path);
             return path;

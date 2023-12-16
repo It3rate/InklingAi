@@ -146,10 +146,11 @@ class LatentConversion():
         image = self.decode_latent(latents)
         pil_image = self.numpy_to_pil(image)
 
-        imagex = self.vae.decode_latent_onnx( latents ).cpu().numpy()
-        pil_imagex = Image.fromarray(imagex)
-        path = f"{self.working_folder}_testx.png"
-        ImageUtils.save_image(pil_imagex, path)
+        # imagex = self.vae.decode_latent_onnx( latents ).cpu().numpy()
+        # pil_imagex = Image.fromarray(imagex)
+        # path = f"{self.working_folder}_testx.png"
+        # ImageUtils.save_image(pil_imagex, path)
+        
         # path = f"{self.working_folder}_test.png"
         # ImageUtils.save_image(pil_image, path)
 

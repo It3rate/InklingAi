@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="400"
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
              x:DataType="vm:InklingModel"
 		     xmlns:controls="using:InklingAi.Views"
@@ -27,7 +27,7 @@
 					<ColumnDefinition Width="*" MinWidth="250" MaxWidth="500" />
 					<ColumnDefinition Width="260"/>
 					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="420"/>
+					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
       
 				<Grid Grid.Column="0">

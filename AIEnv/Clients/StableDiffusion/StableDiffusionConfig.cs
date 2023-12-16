@@ -28,9 +28,11 @@
         private int _startInferenceStep = 0;
         private string _initialImageSource = "";
 
-        [JsonProperty("promptName")]
+        [JsonProperty("prompt")]
         public string Prompt { get => _prompt; set => _prompt = value; }
-        [JsonProperty("style_prompt_name")]
+
+        //[JsonProperty("style_prompt_name")]
+        [JsonIgnore]
         public string StylePrompt { get => _stylePrompt; set => _stylePrompt = value; }
         [JsonProperty("negative_prompt")]
         public string NegativePrompt { get => _negativePrompt; set => _negativePrompt = value; }
@@ -70,12 +72,14 @@
 
         [JsonIgnore]
         public IntSize _aspectSize = new IntSize(640, 512);
-        [JsonProperty("aspect_size")]
+        [JsonIgnore]
+        //[JsonProperty("aspect_size")]
         public IntSize AspectSize { get => _aspectSize; set => _aspectSize = value; }
 
         [JsonIgnore]
         private bool _seedUnlocked = true;
-        [JsonProperty("seed_unlocked")]
+        [JsonIgnore]
+        //[JsonProperty("seed_unlocked")]
         public bool SeedUnlocked
         {
             get => _seedUnlocked;
@@ -83,7 +87,8 @@
         }
 
 
-        [JsonProperty("controlnet")]
+        //[JsonProperty("controlnet")]
+        [JsonIgnore]
         public List<ControlNetConfig> ControlNetConfigs = new List<ControlNetConfig>();
 
         [JsonIgnore]
@@ -138,6 +143,7 @@
             var filename = IOUtils.SDImageFolder + promptName + Seed.ToString() + ".png";
             return filename;
         }
+        [JsonIgnore]
         public bool HasRegion => MaskBounds.Length == 4 && MaskBounds[2] > 0 && MaskBounds[3] > 0;
         public System.Drawing.Size GeneratedSize()
         {

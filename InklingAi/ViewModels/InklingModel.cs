@@ -1,6 +1,5 @@
 ﻿namespace InklingAi.ViewModels;
 
-using InklingAi.StableDiffusion;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
@@ -19,6 +18,7 @@ using AIEnv.Clients.StableDiffusion;
 using AIEnv.Utils;
 using Avalonia.Controls.Shapes;
 using System.Diagnostics;
+using AIEnv.Onnx;
 
 public partial class InklingModel : ViewModelBase
 {
@@ -28,7 +28,8 @@ public partial class InklingModel : ViewModelBase
     public static InklingModel Instance => _instance;
 
     public StableDiffusionConfig _sdConfig = new();
-    public StableDiffusionController sdController;
+    //public OnnxSDController sdController;
+    public StableDiffusionClient sdController;
 
     public GalleryData GalleryData { get; } = new();
     public InfluenceData InfluenceData { get; } = new();
@@ -48,8 +49,11 @@ public partial class InklingModel : ViewModelBase
         MainImage = new ImageData(ImageKind.Main, IOUtils.ImagePath("main"));
         GalleryData.LoadNextPage();
         InfluenceData.LoadInputControls();
-        sdController = new StableDiffusionController();
-        sdController.OnUpdateStep += OnGenerateUpdate;
+
+        //sdController = new OnnxSDController();
+        //sdController.OnUpdateStep += OnGenerateUpdate;
+        sdController = StableDiffusionClient.Instance;
+        //sdController.OnUpdateStep += OnGenerateUpdate;
 
         ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
         GenerateCommand = new RelayCommand(OnGenerate);
@@ -75,7 +79,7 @@ public partial class InklingModel : ViewModelBase
         }
         else
         {
-            path = sdController.Generate(SDConfig);
+            path = await sdController.Generate(SDConfig);
         }
 
         MainImage = path != null ? new ImageData(ImageKind.Main, path) : null;

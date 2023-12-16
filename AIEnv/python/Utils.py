@@ -22,7 +22,7 @@ class ImageUtils:
     def get_root_folder(cls) -> str:
         current_directory = os.getcwd()
         # for testing, use the default install location rather than the bin/debug folder.
-        if "PersonalAI" in current_directory and "PAI2" in current_directory:
+        if "InklingAi" in current_directory and "AIEnv" in current_directory:
             home_dir = os.path.expanduser("~")
             converted_path = home_dir.replace("\\", "/")
             current_directory = f"{converted_path}/InklingAI"
