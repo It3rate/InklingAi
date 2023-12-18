@@ -39,7 +39,7 @@
         {
             string? result = null;
             var route = Route(_modelName);
-            var jsonContent = GetRequestJson(config.Prompt + " " + config.StylePrompt);
+            var jsonContent = GetRequestJson(config.BasePrompt + " " + config.StylePrompt);
             try
             {
                 var response = await _httpClient.PostAsync(route, jsonContent);

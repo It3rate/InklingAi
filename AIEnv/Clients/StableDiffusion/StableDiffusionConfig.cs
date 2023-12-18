@@ -10,7 +10,7 @@
 
     public class StableDiffusionConfig 
     {
-        private string _prompt = "Gunslinger, wild west";
+        private string _basePrompt = "Gunslinger, wild west";
         private string _stylePrompt = "colorful, Victorian illustration, decorative border, style of Alphonse Mucha, Turner";
         private string _negativePrompt = "lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature";
         private int _numInferenceSteps = 25;
@@ -29,7 +29,11 @@
         private string _initialImageSource = "";
 
         [JsonProperty("prompt")]
-        public string Prompt { get => _prompt; set => _prompt = value; }
+        public string Prompt { get => BasePrompt + ", " + StylePrompt; }
+
+        [JsonIgnore]
+        public string BasePrompt { get => _basePrompt; set => _basePrompt = value; }
+
 
         //[JsonProperty("style_prompt_name")]
         [JsonIgnore]
@@ -96,7 +100,7 @@
 
         [JsonConstructor]
         public StableDiffusionConfig(
-            string prompt = "", string stylePrompt = "", string negativePrompt = "", int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
+            string basePrompt = "", string stylePrompt = "", string negativePrompt = "", int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
             int seed = -1, int callbackSteps = 5, float imagePreservation = 1f,
             string initialImageName = "", string initialLatentsName = "",
             string generatedImageName = "", string maskImageName = "", int[]? maskBounds = null,
@@ -104,7 +108,7 @@
             string[]? activeInputs = null, string initialImageSource = "", ControlNetConfig[]? cnetConfigs = null,
             int[]? generatedRegionSize = null)
         {
-            Prompt = prompt != "" ? prompt : Prompt;
+            BasePrompt = basePrompt != "" ? basePrompt : BasePrompt;
             StylePrompt = stylePrompt != "" ? stylePrompt : StylePrompt;
             NegativePrompt = negativePrompt != "" ? negativePrompt : NegativePrompt;
             NumInferenceSteps = steps;
@@ -136,7 +140,7 @@
 
         public string GenerateImageName()
         {
-            var promptName = Prompt;
+            var promptName = BasePrompt;
             promptName = promptName.Trim();
             promptName = Regex.Replace(promptName, @"[^\w-]+", "_");
             promptName = promptName.Substring(0, Math.Min(64, promptName.Length));
@@ -225,7 +229,7 @@
         public string GetExifString()
         {
             var sb = new System.Text.StringBuilder();
-            sb.Append(Prompt + "\n");
+            sb.Append(BasePrompt + "\n");
             sb.Append("Style promptName: " + StylePrompt + "\n");
             sb.Append("Negative promptName: " + NegativePrompt + "\n");
 
@@ -257,7 +261,7 @@
                 switch (name)
                 {
                     case "parameters":
-                        Prompt = value;
+                        BasePrompt = value;
                         break;
                     case "Style promptName":
                         StylePrompt = value;

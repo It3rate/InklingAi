@@ -1,7 +1,7 @@
-﻿using InklingAi.ViewModels;
-
-namespace InklingAi.ViewModels
+﻿namespace InklingAi.ViewModels
 {
+    using AIEnv.Clients.StableDiffusion;
+    using AIEnv.Utils;
     using InklingAi.Utils;
     using InklingAi.Views;
     using System;
@@ -79,14 +79,23 @@ namespace InklingAi.ViewModels
             ResetActiveItems();
         }
 
-        public static Dictionary<string, ImageData> GenerateInputItems(string folder)
+        public Dictionary<string, ImageData> GenerateInputItems(string folder)
         {
             Dictionary<string, ImageData> result = new();
             foreach (var kind in inputKinds.Keys)
             {
                 var contraints = inputKinds[kind];
                 contraints.ImageKind = kind;
-                result[kind.Name()] = new ImageData(contraints, folder);
+                var imageData = new ImageData(contraints, folder);
+                result[kind.Name()] = imageData;
+                if (kind.IsControlNet())
+                {
+                    imageData.ControlNetConfig = new ControlNetConfig(kind);
+                }
+                else if (kind == ImageKind.Mask) // || kind == ImageKind.ScratchPad)
+                {
+                    //_maskScratchPbs.Add(pb);
+                }
             }
             return result;
         }

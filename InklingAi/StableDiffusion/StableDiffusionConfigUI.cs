@@ -17,12 +17,12 @@
 
         public string Prompt
         {
-            get => Config.Prompt;
+            get => Config.BasePrompt;
             set
             {
-                if (Config.Prompt != value)
+                if (Config.BasePrompt != value)
                 {
-                    Config.Prompt = value;
+                    Config.BasePrompt = value;
                     OnPropertyChanged(nameof(Prompt));
                 }
             }

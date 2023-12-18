@@ -1,6 +1,4 @@
-﻿using InklingAi.ViewModels;
-
-namespace InklingAi.ViewModels
+﻿namespace AIEnv.Utils
 {
 
     using System.Collections.Generic;

@@ -47,6 +47,8 @@
             ImagePath = IOUtils.ImagePath(Module, false);
             UploadPath = IOUtils.SDUploadsFolder + IOUtils.ImageName(Module, false);
         }
+
+        public ControlNetConfig(ImageKind kind) : this(kind.Name()) { }
         public ControlNetConfig(string moduleName) : this(moduleName, "x")
         {
             switch (moduleName)
@@ -133,6 +135,17 @@
             ImagePath = config.ImagePath;
             UploadPath = config.UploadPath;
         }
+        public override async Task<string> RunFilter(string source, string destination)
+        {
+            var client = StableDiffusionClient.Instance;
+            var success = await client.RunControlNetFilter(this, source, destination);
+            return success;
+        }
+        public override async Task<string> RunFilter()
+        {
+            var client = StableDiffusionClient.Instance;
+            return await client.RunControlNetFilters(new string[] { Module });
+        }
 
         public void SetParam(int index, float value)
         {
@@ -154,6 +167,23 @@
             return result;
         }
 
+        //public Dictionary<string, object> ConfigDict()
+        //{
+        //    return new Dictionary<string, object>
+        //    {
+        //        {"enabled", Enabled },
+        //        {"module", Module },
+        //        {"model", Model },
+        //        {"weight", Weight },
+        //        {"guidance_start", GuidanceStart },
+        //        {"guidance_end", GuidanceEnd },
+        //        {"extra_params", ExtraParamValues },
+        //        {"extra_param_names", ExtraParamNames },
+        //        {"input_path", InputPath },
+        //        {"image_path", ImagePath },
+        //        {"upload_path", UploadPath },
+        //    };
+        //}
         public Dictionary<string, object>? GetConfigDictionary()
         {
             var jsonString = GetJson();

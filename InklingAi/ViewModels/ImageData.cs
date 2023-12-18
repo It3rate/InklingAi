@@ -1,5 +1,7 @@
 ﻿namespace InklingAi.ViewModels
 {
+    using AIEnv.Clients.StableDiffusion;
+    using AIEnv.Utils;
     using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Media;
@@ -40,6 +42,7 @@
 
         public InputControl? InputControl { get; set; }
 
+        public ControlNetConfig? ControlNetConfig { get; set; }
 
         public string Folder { get; set; }
         public bool IsActive { get; set; } = false;

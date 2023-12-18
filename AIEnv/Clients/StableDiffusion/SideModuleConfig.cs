@@ -25,8 +25,8 @@
         public float[] ExtraParamSteps { get; set; } = new float[0];
         public string[] ExtraParamAPINames { get; set; } = new string[0];
 
-        //public abstract Task<string> RunFilter();
-        //public abstract Task<string> RunFilter(string source, string destination);
+        public abstract Task<string> RunFilter();
+        public abstract Task<string> RunFilter(string source, string destination);
     }
 
 }

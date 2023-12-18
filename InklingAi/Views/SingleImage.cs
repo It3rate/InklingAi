@@ -14,6 +14,7 @@
     using System.ComponentModel;
     using System;
     using System.Reflection;
+    using AIEnv.Utils;
 
     public class SingleImage : BaseImage
     {
@@ -82,6 +83,10 @@
                         else if(change.NewValue is ImageData imageData)
                         {
                             ImageDataItem = imageData;
+                            if(imageData.ControlNetConfig != null)
+                            {
+                                imageData.ControlNetConfig.RunFilter();
+                            }
                         }
                     }
                     InvalidateMeasure();

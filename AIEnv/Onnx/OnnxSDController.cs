@@ -53,7 +53,7 @@
         private DenseTensor<Float16> GenerateLatents(StableDiffusionConfig config)
         {
             //return IOUtils.LoadEncoding(@"C:\Users\Robin\InklingAI\SD\working\latent_10.bin", new int[] { 1, 4, 80, 64 });
-            var positiveTokens = _tokenizer.TokenizeText(config.Prompt + "," + config.StylePrompt);
+            var positiveTokens = _tokenizer.TokenizeText(config.BasePrompt + "," + config.StylePrompt);
             var positiveEmbed = _textEncoder.EncodeText(positiveTokens);
 
             var negativeTokens = _tokenizer.TokenizeText(config.NegativePrompt);

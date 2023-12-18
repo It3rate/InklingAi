@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using AIEnv.Utils;
     using Avalonia.Media;
     using Avalonia.Skia;
     using InklingAi.Utils;

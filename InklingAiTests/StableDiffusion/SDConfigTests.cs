@@ -19,7 +19,7 @@
         {
             var config = new StableDiffusionConfig
             {
-                Prompt = "Test Prompt",
+                BasePrompt = "Test BasePrompt",
                 Seed = 12345
             };
             var expectedFileName = InklingIOUtils.SDImageFolder + "Test_Prompt12345.png";
@@ -31,7 +31,7 @@
         {
             var config = new StableDiffusionConfig
             {
-                Prompt = "Test",
+                BasePrompt = "Test",
                 StylePrompt = "StyleTest",
                 NegativePrompt = "NegativeTest",
                 NumInferenceSteps = 25,
@@ -52,7 +52,7 @@
         {
             var config = new StableDiffusionConfig
             {
-                Prompt = "Test",
+                BasePrompt = "Test",
                 StylePrompt = "StyleTest",
                 NegativePrompt = "NegativeTest",
                 NumInferenceSteps = 25,
@@ -64,7 +64,7 @@
             var loadedConfig = StableDiffusionConfig.LoadFromJson(path);
             File.Delete(path);
 
-            Assert.Equal(config.Prompt, loadedConfig?.Prompt);
+            Assert.Equal(config.BasePrompt, loadedConfig?.BasePrompt);
             Assert.Equal(config.StylePrompt, loadedConfig?.StylePrompt);
             Assert.Equal(config.NegativePrompt, loadedConfig?.NegativePrompt);
             Assert.Equal(config.NumInferenceSteps, loadedConfig?.NumInferenceSteps);
@@ -77,7 +77,7 @@
         {
             var config = new StableDiffusionConfig
             {
-                Prompt = "Test",
+                BasePrompt = "Test",
                 StylePrompt = "StyleTest",
                 NegativePrompt = "NegativeTest",
                 NumInferenceSteps = 25,
@@ -98,23 +98,23 @@
         {
             var original = new StableDiffusionConfig
             {
-                Prompt = "Original Prompt",
+                BasePrompt = "Original BasePrompt",
                 Seed = 54321
             };
             var clone = original.Clone();
 
-            Assert.Equal(original.Prompt, clone.Prompt);
+            Assert.Equal(original.BasePrompt, clone.BasePrompt);
             Assert.Equal(original.Seed, clone.Seed);
         }
 
         [Fact]
         public void ParseExif_CreatesConfigFromExifString()
         {
-            string exifString = "Test Prompt\nStyle promptName: StyleTest\nNegative promptName: NegativeTest\nSteps: 25, Sampler: DDIM, CFG scale: 6.5, Seed: 12345, SDSize: 512x512, Model hash: 81761151, Batch size: 1, Batch pos: 1, Denoising strength: 1.00, Mask blur: 0";
+            string exifString = "Test BasePrompt\nStyle promptName: StyleTest\nNegative promptName: NegativeTest\nSteps: 25, Sampler: DDIM, CFG scale: 6.5, Seed: 12345, SDSize: 512x512, Model hash: 81761151, Batch size: 1, Batch pos: 1, Denoising strength: 1.00, Mask blur: 0";
             var config = StableDiffusionConfig.ParseExif(exifString);
 
             Assert.NotNull(config);
-            Assert.Equal("Test Prompt", config.Prompt);
+            Assert.Equal("Test BasePrompt", config.BasePrompt);
             Assert.Equal("StyleTest", config.StylePrompt);
             Assert.Equal("NegativeTest", config.NegativePrompt);
             Assert.Equal(25, config.NumInferenceSteps);
@@ -127,7 +127,7 @@
         {
             var config = new StableDiffusionConfig
             {
-                Prompt = "Test",
+                BasePrompt = "Test",
                 StylePrompt = "StyleTest",
                 NegativePrompt = "NegativeTest",
                 NumInferenceSteps = 25,
@@ -194,7 +194,7 @@
             // Arrange
             var originalConfig = new StableDiffusionConfig
             {
-                Prompt = "Original Prompt",
+                BasePrompt = "Original BasePrompt",
                 StylePrompt = "Original StylePrompt",
                 NegativePrompt = "Original NegativePrompt",
                 NumInferenceSteps = 20,
@@ -216,7 +216,7 @@
 
             var newConfig = new StableDiffusionConfig
             {
-                Prompt = "New Prompt",
+                BasePrompt = "New BasePrompt",
                 StylePrompt = "New StylePrompt",
                 NegativePrompt = "New NegativePrompt",
                 NumInferenceSteps = 25,
@@ -240,7 +240,7 @@
             originalConfig.CopyPropertiesFrom(newConfig);
 
             // Assert
-            Assert.Equal(newConfig.Prompt, originalConfig.Prompt);
+            Assert.Equal(newConfig.BasePrompt, originalConfig.BasePrompt);
             Assert.Equal(newConfig.StylePrompt, originalConfig.StylePrompt);
             Assert.Equal(newConfig.NegativePrompt, originalConfig.NegativePrompt);
             Assert.Equal(newConfig.NumInferenceSteps, originalConfig.NumInferenceSteps);
