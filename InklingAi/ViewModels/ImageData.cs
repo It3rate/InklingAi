@@ -17,6 +17,14 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    public enum ImageOrigin
+    {
+        Input,
+        Processed,
+        Composite,
+        Masked,
+    }
+
     public class ImageData : IDisposable
     {
         //private IImage? _latentImage;
@@ -39,66 +47,48 @@
         // gen vs overlay
 
         public event Action ResetSource;
-
         public InputControl? InputControl { get; set; }
-
         public ControlNetConfig? ControlNetConfig { get; set; }
-
         public string Folder { get; set; }
         public bool IsActive { get; set; } = false;
         public bool IsApplicable { get; set; } = true;
+        public ImageOrigin Origin { get; set; }
 
-        private IImage? _undoImage;
-        private IImage? _resetImage;
-        public string InputPath { get; set; }
-        private SKBitmap? _inputImage;
-        public SKBitmap? InputImage {
-            get
+        private string? _inputPath;
+        public SKBitmap? InputImage { get; private set; }
+        public string? InputPath 
+        { 
+            get => _inputPath;
+            set
             {
-                if (_inputImage == null)
-                {
-                    _inputImage = LoadSKImage(InputPath);
-                }
-                return _inputImage;
+                _inputPath = value;
+                InputImage = _inputPath != null ? LoadSKImage(_inputPath) : null;
             }
-            set { _inputImage = value; }
         }
-
-        private string _processedPath;
-        public string ProcessedPath 
+        private string? _processedPath;
+        public SKBitmap? ProcessedImage { get; private set; }
+        public string? ProcessedPath 
         { 
             get => _processedPath;
             set
             {
                 _processedPath = value;
-                _processedImage = null;
-                DoResetSource();
+                ProcessedImage = _processedPath != null ? LoadSKImage(_processedPath) : null;
             } 
         }
-        private SKBitmap? _processedImage;
-        public SKBitmap? ProcessedImage
+        public VectorImage VectorImage { get; private set; }
+
+        private IImage? _undoImage;
+        private IImage? _resetImage;
+        public ImageKind ImageKind
         {
-            get
-            {
-                if (_processedImage == null)
-                {
-                    _processedImage = LoadSKImage(ProcessedPath);
-                }
-                return _processedImage;
-            }
-            set 
-            {
-                _processedImage = value;
-                DoResetSource();
-            }
+            get => VectorImage.BrushSettings.ImageKind;
+            set => VectorImage.BrushSettings.ImageKind = value;
         }
         public void DoResetSource()
         {
             ResetSource?.Invoke();
         }
-        public VectorImage VectorImage { get; private set; }
-
-        public ImageKind ImageKind => VectorImage.BrushSettings.ImageKind;
         public string InputTitle => VectorImage.BrushSettings.Name;
         public int MinWidth => VectorImage.BrushSettings.MinWidth;
         public int MaxWidth => VectorImage.BrushSettings.MaxWidth;
@@ -151,22 +141,22 @@
 
         public void Dispose()
         {
-            if (_inputImage is IDisposable disposableInput)
+            if (InputImage != null && InputImage is IDisposable disposableInput)
             {
                 disposableInput.Dispose();
-                _inputImage = null;
+                InputImage = null;
             }
-            if (_processedImage is IDisposable disposableProcessed)
+            if (ProcessedImage != null && ProcessedImage is IDisposable disposableProcessed)
             {
                 disposableProcessed.Dispose();
-                _processedImage = null;
+                ProcessedImage = null;
             }
-            if (_undoImage is IDisposable disposableUndo)
+            if (_undoImage != null && _undoImage is IDisposable disposableUndo)
             {
                 disposableUndo.Dispose();
                 _undoImage = null;
             }
-            if (_resetImage is IDisposable disposableReset)
+            if (_resetImage != null && _resetImage is IDisposable disposableReset)
             {
                 disposableReset.Dispose();
                 _resetImage = null;

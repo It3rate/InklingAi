@@ -51,20 +51,6 @@
             {ImageKind.Uniformer, "cn_uniformer" },
         };
         public static string Name(this ImageKind kind) => inputKindNames.ContainsKey(kind) ? inputKindNames[kind] : "";
-
-        public static ImageKind KindFromName(string name)
-        {
-            var result = ImageKind.None;
-            foreach (var kind in inputKindNames)
-            {
-                if (kind.Value == name)
-                {
-                    result = kind.Key;
-                    break;
-                }
-            }
-            return result;
-        }
         public static bool IsControlNet(this ImageKind kind)
         {
             var result = false;
@@ -81,6 +67,31 @@
                 case ImageKind.Uniformer:
                     result = true;
                     break;
+            }
+            return result;
+        }
+        public static bool NoFixedPath(this ImageKind kind)
+        {
+            return kind == ImageKind.None || kind == ImageKind.File;
+        }
+        public static bool HasFixedPath(this ImageKind kind)
+        {
+            return !kind.NoFixedPath();
+        }
+        public static bool IsScratch(this ImageKind kind)
+        {
+            return kind <= ImageKind.Scratch0 && kind <= ImageKind.Scratch2;
+        }
+        public static ImageKind KindFromName(string name)
+        {
+            var result = ImageKind.None;
+            foreach (var kind in inputKindNames)
+            {
+                if (kind.Value == name)
+                {
+                    result = kind.Key;
+                    break;
+                }
             }
             return result;
         }
