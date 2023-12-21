@@ -11,10 +11,10 @@ namespace InklingAi.Views
 
     public partial class InputControl : UserControl
     {
-        public static readonly StyledProperty<ImageData> ItemDataProperty =
-            AvaloniaProperty.Register<InputControl, ImageData>(nameof(ItemData));
+        public static readonly StyledProperty<ProcessedImageData> ItemDataProperty =
+            AvaloniaProperty.Register<InputControl, ProcessedImageData>(nameof(ItemData));
 
-        public ImageData? ItemData
+        public ProcessedImageData? ItemData
         {
             get { return GetValue(ItemDataProperty); }
             set { SetValue(ItemDataProperty, value); }

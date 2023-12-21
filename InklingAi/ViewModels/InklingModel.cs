@@ -46,7 +46,7 @@ public partial class InklingModel : ViewModelBase
 
     public InklingModel() // this needs to be public for design time access in MainView.
     {
-        MainImage = new ImageData(ImageKind.Main, IOUtils.ImagePath("main"));
+        MainImage = new ImageData(IOUtils.ImagePath("main"));
         GalleryData.LoadNextPage();
         InfluenceData.LoadInputControls();
 
@@ -82,7 +82,7 @@ public partial class InklingModel : ViewModelBase
             path = await sdController.Generate(SDConfig);
         }
 
-        MainImage = path != null ? new ImageData(ImageKind.Main, path) : null;
+        MainImage = path != null ? new ImageData(path) : null;
 
         GalleryData.LoadNextPage(0);
     }

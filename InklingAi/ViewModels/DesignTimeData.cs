@@ -10,7 +10,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class DesignTimeInputItem : ImageData
+    public class DesignTimeInputItem : ProcessedImageData
     {
         public DesignTimeInputItem() : base(
             new BrushSettings() { Name = "Edges", ColorAllowance = ColorAllowance.BlackAndWhite, MaxWidth = 1, FeatherMax = 0, AlphaMin = 255 },

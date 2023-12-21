@@ -14,31 +14,31 @@
 
     public class InfluenceData : ViewModelBase
     {
-        private Dictionary<string, ImageData> _allItemsMap = new();
+        private Dictionary<string, ProcessedImageData> _allItemsMap = new();
 
-        private ObservableCollection<ImageData> _inputItems = new();
-        public ObservableCollection<ImageData> InputItems
+        private ObservableCollection<ProcessedImageData> _inputItems = new();
+        public ObservableCollection<ProcessedImageData> InputItems
         {
             get => _inputItems;
             set => SetProperty(ref _inputItems, value);
         }
         public void ResetInputItems()
         {
-            InputItems = new ObservableCollection<ImageData>(_allItemsMap.Values.Where(item => item.IsApplicable));
+            InputItems = new ObservableCollection<ProcessedImageData>(_allItemsMap.Values.Where(item => item.IsApplicable));
         }
 
-        private ObservableCollection<ImageData> _activeItems = new();
-        public ObservableCollection<ImageData> ActiveItems
+        private ObservableCollection<ProcessedImageData> _activeItems = new();
+        public ObservableCollection<ProcessedImageData> ActiveItems
         {
             get => _activeItems;
             set => SetProperty(ref _activeItems, value);    
         }
         public void ResetActiveItems()
         {
-            ActiveItems = new ObservableCollection<ImageData>(InputItems.Where(item => item.IsActive));
+            ActiveItems = new ObservableCollection<ProcessedImageData>(InputItems.Where(item => item.IsActive));
         }
-        private ImageData? _focusedItem;
-        public ImageData? FocusedItem
+        private ProcessedImageData? _focusedItem;
+        public ProcessedImageData? FocusedItem
         {
             get => _focusedItem;
             set
@@ -79,14 +79,14 @@
             ResetActiveItems();
         }
 
-        public Dictionary<string, ImageData> GenerateInputItems(string folder)
+        public Dictionary<string, ProcessedImageData> GenerateInputItems(string folder)
         {
-            Dictionary<string, ImageData> result = new();
+            Dictionary<string, ProcessedImageData> result = new();
             foreach (var kind in inputKinds.Keys)
             {
                 var contraints = inputKinds[kind];
                 contraints.ImageKind = kind;
-                var imageData = new ImageData(contraints, folder);
+                var imageData = new ProcessedImageData(contraints, folder);
                 result[kind.Name()] = imageData;
                 if (kind.IsControlNet())
                 {

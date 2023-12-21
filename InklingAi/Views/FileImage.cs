@@ -16,14 +16,10 @@
 
     public class FileImage : BaseImage
     {
-        public static readonly StyledProperty<string> SourceProperty =
-            AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
-                defaultBindingMode: BindingMode.TwoWay);
-
-        public string Source
+        public override SKBitmap? SourceImage
         {
-            get => GetValue(SourceProperty);
-            set => SetValue(SourceProperty, value);
+            get => _data?.SourceImage;
+            protected set { if (_data != null) _data.SourceImage = value; }
         }
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
@@ -34,8 +30,8 @@
                 case nameof(Source):
                     if (change.NewValue is string source)
                     {
-                        //var imgData = ImageDataItem ?? new ImageData(ImageKind.File, source);
-                        //SetValue(ImageDataItemProperty, imgData);
+                        var imgData = Data ?? new ImageData(source);
+                        SetValue(DataProperty, imgData);
                     }
                     break;
             }

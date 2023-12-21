@@ -137,7 +137,7 @@ public class ControlNetConfigTests
             Weight = 1f,
             GuidanceStart = 0f,
             GuidanceEnd = 1f,
-            InputPath = "InputPath",
+            InputPath = "SourcePath",
             ImagePath = "ImagePath",
             UploadPath = "UploadPath"
         };

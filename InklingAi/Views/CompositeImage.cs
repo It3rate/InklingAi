@@ -25,6 +25,25 @@
             get => GetValue(ImageDataItemsProperty);
             set => SetValue(ImageDataItemsProperty, value);
         }
+        public static readonly StyledProperty<ImageData?> DataProperty =
+            AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
+        public override ImageData? Data
+        {
+            get => GetValue(DataProperty);
+            set
+            {
+                if (value != null)
+                {
+                    _imageDataList.Add(value);
+                    SetValue(DataProperty, value);
+                }
+            }
+        }
+        public override SKBitmap? SourceImage
+        {
+            get => _imageDataList[0].SourceImage;
+            protected set => _imageDataList [0].SourceImage = value;
+        }
 
 
         public CompositeImage()
@@ -76,7 +95,7 @@
                 for (int i = 0; i < _imageDataList.Count; i++)
                 {
                     var alpha = 1.0 / (i + 1.0);
-                    DrawImage(canvas, _imageDataList[i].ProcessedImage, alpha);
+                    DrawImage(canvas, _imageDataList[i].SourceImage, alpha);
                 }
             }
         }

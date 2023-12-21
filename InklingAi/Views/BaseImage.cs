@@ -40,35 +40,23 @@ public abstract class BaseImage : UserControl
         set => SetValue(SourceProperty, value);
     }
 
-    private ImageData? _data;
+    public virtual SKBitmap? SourceImage
+    {
+        get => _data?.SourceImage;
+        protected set { if (_data != null) _data.SourceImage = value; }
+    }
+
+    protected ImageData? _data;
     public static readonly StyledProperty<ImageData?> DataProperty =
         AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
-    public ImageData? Data
+    public virtual ImageData? Data
     {
         get => GetValue(DataProperty);
         set
         {
-            if (value != _data)
-            {
-                if (_data != null)
-                {
-                    _data.ResetLinked -= OnRedrawLinked;
-                }
-
-                _data = value;
-
-                if (_data != null)
-                {
-                    _data.ResetLinked += OnRedrawLinked;
-                }
-            }
+            _data = value;
             SetValue(DataProperty, value);
         }
-    }
-    private void OnRedrawLinked()
-    {
-        Source = _data.ProcessedPath;
-        InvalidateVisual();
     }
 
     public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.UniformToFill);
@@ -125,7 +113,7 @@ public abstract class BaseImage : UserControl
     }
     protected virtual void SetImage(ImageData? imageData)
     {
-        if (imageData?.InputPath != Data?.InputPath)
+        if (imageData?.SourcePath != Data?.SourcePath)
         {
             Data = imageData;
         }
@@ -155,10 +143,6 @@ public abstract class BaseImage : UserControl
                     else if (change.NewValue is ImageData imageData)
                     {
                         Data = imageData;
-                        if (imageData.ControlNetConfig != null)
-                        {
-                            imageData.ControlNetConfig.RunFilter();
-                        }
                     }
                 }
                 InvalidateMeasure();
@@ -168,8 +152,9 @@ public abstract class BaseImage : UserControl
             case nameof(Source):
                 if (change.NewValue is string source)
                 {
-                    var imgData = Data ?? new ImageData(ImageKind.File, source);
-                    SetValue(DataProperty, imgData);
+                    var imgData = Data ?? new ImageData(source);
+                    Data = imgData;
+                    //SetValue(DataProperty, imgData);
                 }
                 break;
         }
@@ -305,8 +290,8 @@ public abstract class BaseImage : UserControl
                 var first = stringList.First();
                 if (first != null)
                 {
-                    Source = first.ProcessedPath;
-                    Data.ProcessedPath = first.ProcessedPath;
+                    Source = first.SourcePath;
+                    Data.SourcePath = first.SourcePath;
                     //SetImage(first);
                 }
             }
@@ -321,8 +306,7 @@ public abstract class BaseImage : UserControl
 
     protected virtual void RenderSkia(SKCanvas canvas)
     {
-        var bmp = _data?.ProcessedImage;
-        DrawImage(canvas, bmp);
+        DrawImage(canvas, SourceImage);
     }
     public override void Render(DrawingContext context)
     {

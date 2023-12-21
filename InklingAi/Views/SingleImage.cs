@@ -22,12 +22,51 @@
         {
         }
 
+        public static readonly StyledProperty<ImageData?> DataProperty =
+            AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
+        public override ImageData? Data
+        {
+            get => GetValue(DataProperty);
+            set
+            {
+                if (value != _data)
+                {
+                    if (_data != null)
+                    {
+                        _data.ResetLinked -= OnRedrawLinked;
+                    }
+                    _data = value;
+                }
+                SetValue(DataProperty, value);
+
+                if (_data != null)
+                {
+                    _data.ResetLinked += OnRedrawLinked;
+                    if (_data is ProcessedImageData pid && pid.ControlNetConfig != null)
+                    {
+                        pid.ControlNetConfig.RunFilter();
+                    }
+                }
+            }
+        }
+    private void OnRedrawLinked()
+    {
+        Source = _data?.SourcePath ?? "";
+        InvalidateVisual();
+    }
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             base.OnPropertyChanged(change);
             var prop = change.Property;
             switch (prop.Name)
             {
+                case nameof(Source):
+                    if (change.NewValue is string source)
+                    {
+                        var imgData = Data ?? new ImageData(source);
+                        SetValue(DataProperty, imgData);
+                    }
+                    break;
             }
         }
 
