@@ -15,7 +15,7 @@
     {
         private int itemsPerRow = 4;
         private int currentPage = 0;
-        private const int itemsPerPage = 50;
+        private const int itemsPerPage = 8;// 50;
 
         private ObservableCollection<string[]> _imageTuplePaths = new();
         public ObservableCollection<string[]> ImageTuplePaths

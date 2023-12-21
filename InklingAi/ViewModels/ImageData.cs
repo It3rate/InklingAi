@@ -7,6 +7,7 @@
     using Avalonia.Media;
     using Avalonia.Media.Imaging;
     using DynamicData;
+    using InklingAi.Utils;
     using InklingAi.Views;
     using SkiaSharp;
     using System;
@@ -46,7 +47,7 @@
         // ocr
         // gen vs overlay
 
-        public event Action ResetSource;
+        public event Action ResetLinked;
         public InputControl? InputControl { get; set; }
         public ControlNetConfig? ControlNetConfig { get; set; }
         public string Folder { get; set; }
@@ -62,7 +63,7 @@
             set
             {
                 _inputPath = value;
-                InputImage = _inputPath != null ? LoadSKImage(_inputPath) : null;
+                InputImage = _inputPath != null ? InklingIOUtils.LoadSKImage(_inputPath) : null;
             }
         }
         private string? _processedPath;
@@ -73,7 +74,7 @@
             set
             {
                 _processedPath = value;
-                ProcessedImage = _processedPath != null ? LoadSKImage(_processedPath) : null;
+                ProcessedImage = _processedPath != null ? InklingIOUtils.LoadSKImage(_processedPath) : null;
             } 
         }
         public VectorImage VectorImage { get; private set; }
@@ -87,7 +88,7 @@
         }
         public void DoResetSource()
         {
-            ResetSource?.Invoke();
+            ResetLinked?.Invoke();
         }
         public string InputTitle => VectorImage.BrushSettings.Name;
         public int MinWidth => VectorImage.BrushSettings.MinWidth;
@@ -105,7 +106,7 @@
             Folder = folder;
             InputPath = folder + ImageKind.Name() + "_input.png";
             ProcessedPath = folder + ImageKind.Name() + ".png";
-            LoadImage(ProcessedPath);
+            InklingIOUtils.LoadImage(ProcessedPath);
         }
         public ImageData(ImageKind kind, string path)
         {
@@ -114,29 +115,7 @@
             Folder = Path.GetPathRoot(path) ?? "";
             InputPath = path;
             ProcessedPath = path;
-            LoadImage(ProcessedPath);
-        }
-
-        private SKBitmap? LoadSKImage(string? path)
-        {
-            SKBitmap? result = null;
-            if (path != null &&  path != "" && File.Exists(path))
-            {
-                using (SKFileStream stream = new SKFileStream(path))
-                {
-                    result = SKBitmap.Decode(stream);
-                }
-            }
-            return result;
-        }
-        private IImage? LoadImage(string? path)
-        {
-            IImage? result = null;
-            if (path != null &&  path != "" && File.Exists(path))
-            {
-                result = new Bitmap(path);
-            }
-            return result;
+            InklingIOUtils.LoadImage(ProcessedPath);
         }
 
         public void Dispose()

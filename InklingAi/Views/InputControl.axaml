@@ -20,7 +20,7 @@
 				<Button Grid.Row="2" Margin="0,4" Width="60" >Edit</Button>
 			</Grid>-->
 			<controls:SingleImage Grid.Column="1" Margin="2" Width="160" 
-                            ImageDataItem="{Binding}"/>
+                            Data="{Binding}"/>
 		</Grid>
 	</Expander>
 </UserControl>					

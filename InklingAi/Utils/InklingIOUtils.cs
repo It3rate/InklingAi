@@ -395,6 +395,27 @@
             return success ? filename : "";
         }
 
+        public static SKBitmap? LoadSKImage(string? path)
+        {
+            SKBitmap? result = null;
+            if (path != null && path != "" && File.Exists(path))
+            {
+                using (SKFileStream stream = new SKFileStream(path))
+                {
+                    result = SKBitmap.Decode(stream);
+                }
+            }
+            return result;
+        }
+        public static IImage? LoadImage(string? path)
+        {
+            IImage? result = null;
+            if (path != null && path != "" && File.Exists(path))
+            {
+                result = new Bitmap(path);
+            }
+            return result;
+        }
         public static DenseTensor<byte> GetTensorFromImage(SKBitmap sourceBmp)
         {
             //var bmp = GraphicUtils.ConvertToRGBIfNeeded(sourceBmp);

@@ -27,8 +27,49 @@ public abstract class BaseImage : UserControl
     protected RenderingLogic renderingLogic;
 
     public float _widthExtra = 2f;
+    private Stretch _stretch = Stretch.UniformToFill;
 
     #region Avalonia Properties
+
+    public static readonly StyledProperty<string> SourceProperty =
+        AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
+            defaultBindingMode: BindingMode.TwoWay);
+    public string Source
+    {
+        get => GetValue(SourceProperty);
+        set => SetValue(SourceProperty, value);
+    }
+
+    private ImageData? _data;
+    public static readonly StyledProperty<ImageData?> DataProperty =
+        AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
+    public ImageData? Data
+    {
+        get => GetValue(DataProperty);
+        set
+        {
+            if (value != _data)
+            {
+                if (_data != null)
+                {
+                    _data.ResetLinked -= OnRedrawLinked;
+                }
+
+                _data = value;
+
+                if (_data != null)
+                {
+                    _data.ResetLinked += OnRedrawLinked;
+                }
+            }
+            SetValue(DataProperty, value);
+        }
+    }
+    private void OnRedrawLinked()
+    {
+        Source = _data.ProcessedPath;
+        InvalidateVisual();
+    }
 
     public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.UniformToFill);
     public Stretch Stretch
@@ -82,11 +123,14 @@ public abstract class BaseImage : UserControl
         RemoveHandler(DragDrop.DropEvent, OnDrop);
         RemoveHandler(DragDrop.DragOverEvent, OnDragOver);
     }
-
-
-    Stretch _stretch = Stretch.UniformToFill;
-	protected virtual void SetImage(ImageData? imageData) { }
-	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    protected virtual void SetImage(ImageData? imageData)
+    {
+        if (imageData?.InputPath != Data?.InputPath)
+        {
+            Data = imageData;
+        }
+    }
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         var prop = change.Property;
@@ -100,6 +144,34 @@ public abstract class BaseImage : UserControl
             case nameof(Stretch):
                 _stretch = Stretch;
                 break;
+
+            case nameof(Data):
+                if (change != null)
+                {
+                    if (change.NewValue == null)
+                    {
+                        Data = null;
+                    }
+                    else if (change.NewValue is ImageData imageData)
+                    {
+                        Data = imageData;
+                        if (imageData.ControlNetConfig != null)
+                        {
+                            imageData.ControlNetConfig.RunFilter();
+                        }
+                    }
+                }
+                InvalidateMeasure();
+                InvalidateVisual();
+                break;
+
+            case nameof(Source):
+                if (change.NewValue is string source)
+                {
+                    var imgData = Data ?? new ImageData(ImageKind.File, source);
+                    SetValue(DataProperty, imgData);
+                }
+                break;
         }
     }
 
@@ -110,13 +182,42 @@ public abstract class BaseImage : UserControl
 	protected int _minDragDistance = 10;
 	protected bool _canDrag = true;
 
-	protected virtual void OnMouseDown(Point currentPosition) { }
+
+
+    protected virtual void OnMouseDown(Point currentPosition) { }
 	protected virtual void OnMouseMove(Point currentPosition) { }
 	protected virtual void OnMouseDownDrag(Point currentPosition, Point diff) { }
 	protected virtual void OnMouseUp(Point currentPosition, Point diff) { }
-    public virtual void OnDragOver(object? sender, DragEventArgs e) { }
-    public virtual void OnDrop(object? sender, DragEventArgs e) { }
-
+    public virtual void OnDragOver(object? sender, DragEventArgs e)
+    {
+        if (Data != null)
+        {
+            e.DragEffects = DragDropEffects.Copy;
+        }
+        else
+        {
+            e.DragEffects = DragDropEffects.None;
+        }
+        e.Handled = true;
+    }
+    public virtual void OnDrop(object? sender, DragEventArgs e)
+    {
+        if (Data != null)
+        {
+            var result = e.DragEffects;
+            if ((result & DragDropEffects.Copy) != DragDropEffects.None)
+            {
+                AcceptImageDrop(e.Data);
+                if (Name == "_editImageControl")
+                {
+                    if (_model.InfluenceData.FocusedItem != null)
+                    {
+                        _model.InfluenceData.FocusedItem.DoResetSource();
+                    }
+                }
+            }
+        }
+    }
     protected bool IsMouseDown => _startPosition.HasValue;
 
 	protected void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
@@ -176,40 +277,53 @@ public abstract class BaseImage : UserControl
         var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
         _startPosition = null;
     }
+
     protected virtual void SetDragContents(DataObject dataObject)
     {
+        if (Data != null)
+        {
+            dataObject.Set(DataFormats.Files, new List<ImageData>() { Data });
+        }
     }
     protected virtual void AcceptImageDrop(IDataObject dataObject)
     {
-		if (dataObject.Contains(DataFormats.Files))
-		{
-			var data = dataObject.Get(DataFormats.Files);
-			if (data is IEnumerable<IStorageItem> dataList)
-			{
-				var firstFile = dataList.FirstOrDefault();
-				var path = firstFile?.Path.AbsolutePath ?? "";
-				if (path != "" && File.Exists(path))
-				{
-                    SetImage(new ImageData(ImageKind.File, path));
-				}
-			}
-			else if (data is IEnumerable<ImageData> stringList)
-			{
-				var first = stringList.First();
-				if (first != null)
-				{
-					SetImage(first);
-				}
-			}
-			else if (data is string filename)
-			{
-				SetImage(new ImageData(ImageKind.File, filename));
-			}
-		}
-	}
+        if (dataObject.Contains(DataFormats.Files))
+        {
+            var data = dataObject.Get(DataFormats.Files);
+            if (data is IEnumerable<IStorageItem> dataList)
+            {
+                var firstFile = dataList.FirstOrDefault();
+                var path = firstFile?.Path.AbsolutePath ?? "";
+                if (path != "" && File.Exists(path))
+                {
+                    Source = path;
+                    //SetImage(new ImageData(ImageKind.File, path));
+                }
+            }
+            else if (data is IEnumerable<ImageData> stringList)
+            {
+                var first = stringList.First();
+                if (first != null)
+                {
+                    Source = first.ProcessedPath;
+                    Data.ProcessedPath = first.ProcessedPath;
+                    //SetImage(first);
+                }
+            }
+            else if (data is string filename)
+            {
+                Source = filename;
+                //SetImage(new ImageData(ImageKind.File, filename));
+            }
+        }
+    }
     #endregion
 
-    protected abstract void RenderSkia(SKCanvas canvas);
+    protected virtual void RenderSkia(SKCanvas canvas)
+    {
+        var bmp = _data?.ProcessedImage;
+        DrawImage(canvas, bmp);
+    }
     public override void Render(DrawingContext context)
     {
         renderingLogic.Bounds = new Rect(0, 0, this.Bounds.Width, this.Bounds.Height);
@@ -226,17 +340,17 @@ public abstract class BaseImage : UserControl
             Rect viewPort = new Rect(Bounds.Size);
             Size sourceSize = new Size(img.Width, img.Height);
 
-                Vector scale = _stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
-                Size scaledSize = sourceSize * scale;
+            Vector scale = _stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
+            Size scaledSize = sourceSize * scale;
 
-                Rect destRect = viewPort
-                    .CenterRect(new Rect(scaledSize))
-                    .Intersect(viewPort);
-                Rect sourceRect = new Rect(sourceSize)
-                    .CenterRect(new Rect(destRect.Size / scale));
+            Rect destRect = viewPort
+                .CenterRect(new Rect(scaledSize))
+                .Intersect(viewPort);
+            Rect sourceRect = new Rect(sourceSize)
+                .CenterRect(new Rect(destRect.Size / scale));
 
-                var skSource = sourceRect.ToSKRect();
-                var skDest = destRect.ToSKRect();
+            var skSource = sourceRect.ToSKRect();
+            var skDest = destRect.ToSKRect();
 
             using (SKPaint paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High })
             {
@@ -250,11 +364,6 @@ public abstract class BaseImage : UserControl
     }
 
 }
-
-
-
-
-
 
 
 

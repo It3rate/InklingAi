@@ -54,7 +54,7 @@
 
             <Border Grid.Row="2" Grid.Column="2" Name="_border" Classes="image">	
 							<Grid>
-								<controls:SingleImage x:Name="_editImageControl" ImageDataItem="{Binding InfluenceData.FocusedItem}"/>
+								<controls:SingleImage x:Name="_editImageControl" Data="{Binding InfluenceData.FocusedItem}"/>
 								<ContentControl Content="{Binding InfluenceData.VectorImage}"/>
 							</Grid>
 						</Border>
@@ -69,7 +69,7 @@
           
 					<Border Classes="image">
 						<controls:SingleImage Grid.Row="0" Margin="0,0,0,8" Name="imgMain"
-              ImageDataItem="{Binding MainImage}"
+              Data="{Binding MainImage}"
 							Width="{Binding Width, ElementName=_galleryControl}"/>
 					</Border> 
           
