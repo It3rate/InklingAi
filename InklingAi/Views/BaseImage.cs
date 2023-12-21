@@ -39,8 +39,8 @@ public abstract class BaseImage : UserControl
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
-
-    public virtual SKBitmap? SourceImage
+    public virtual string CurrentPath { get => Source; set => Source = value; }
+    public virtual SKBitmap? CurrentImage
     {
         get => _data?.SourceImage;
         protected set { if (_data != null) _data.SourceImage = value; }
@@ -149,14 +149,6 @@ public abstract class BaseImage : UserControl
                 InvalidateVisual();
                 break;
 
-            case nameof(Source):
-                if (change.NewValue is string source)
-                {
-                    var imgData = Data ?? new ImageData(source);
-                    Data = imgData;
-                    //SetValue(DataProperty, imgData);
-                }
-                break;
         }
     }
 
@@ -285,9 +277,9 @@ public abstract class BaseImage : UserControl
                     //SetImage(new ImageData(ImageKind.File, path));
                 }
             }
-            else if (data is IEnumerable<ImageData> stringList)
+            else if (data is IEnumerable<ImageData> imageDataList)
             {
-                var first = stringList.First();
+                var first = imageDataList.First();
                 if (first != null)
                 {
                     Source = first.SourcePath;
@@ -306,7 +298,7 @@ public abstract class BaseImage : UserControl
 
     protected virtual void RenderSkia(SKCanvas canvas)
     {
-        DrawImage(canvas, SourceImage);
+        DrawImage(canvas, CurrentImage);
     }
     public override void Render(DrawingContext context)
     {

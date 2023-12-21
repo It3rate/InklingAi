@@ -11,7 +11,7 @@
     public class FixedPathsImage : BaseImage
     {
         public override ImageData? Data { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override SKBitmap? SourceImage { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override SKBitmap? CurrentImage { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
 
         protected override void RenderSkia(SKCanvas canvas)
         {

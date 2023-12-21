@@ -15,13 +15,10 @@
     using System;
     using System.Reflection;
     using AIEnv.Utils;
+    using static SkiaSharp.HarfBuzz.SKShaper;
 
     public class SingleImage : BaseImage
     {
-        public SingleImage()
-        {
-        }
-
         public static readonly StyledProperty<ImageData?> DataProperty =
             AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
         public override ImageData? Data
@@ -44,16 +41,39 @@
                     _data.ResetLinked += OnRedrawLinked;
                     if (_data is ProcessedImageData pid && pid.ControlNetConfig != null)
                     {
-                        pid.ControlNetConfig.RunFilter();
+                        //pid.ControlNetConfig.RunFilter();
                     }
                 }
             }
         }
-    private void OnRedrawLinked()
-    {
-        Source = _data?.SourcePath ?? "";
-        InvalidateVisual();
-    }
+        public override string CurrentPath
+        {
+            get => ProcessedImageData?.ProcessedPath ?? Source;
+            set
+            {
+                if (Data.Origin == ImageOrigin.Processed && ProcessedImageData != null)
+                {
+                    ProcessedImageData.ProcessedPath = value;
+                }
+                else
+                {
+                    Source = value;
+                }
+            }
+        }
+
+        private ProcessedImageData? ProcessedImageData => Data != null && Data is ProcessedImageData pid ? pid : null;
+        private bool IsProcessedPath => ProcessedImageData?.Origin == ImageOrigin.Processed;
+
+        public SingleImage()
+        {
+        }
+
+        private void OnRedrawLinked()
+        {
+            Source = _data?.SourcePath ?? "";
+            InvalidateVisual();
+        }
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             base.OnPropertyChanged(change);
@@ -61,10 +81,11 @@
             switch (prop.Name)
             {
                 case nameof(Source):
-                    if (change.NewValue is string source)
+                    if (change.NewValue is string source && Data != null)
                     {
-                        var imgData = Data ?? new ImageData(source);
-                        SetValue(DataProperty, imgData);
+                        IOUtils.CopyFile(source, CurrentPath);
+                        CurrentPath = source;
+                        Data = _data;
                     }
                     break;
             }

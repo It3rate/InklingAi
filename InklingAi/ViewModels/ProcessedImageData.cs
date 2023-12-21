@@ -15,13 +15,49 @@
     public class ProcessedImageData : ImageData
     {
         public override ImageKind ImageKind => VectorImage?.BrushSettings.ImageKind ?? ImageKind.None;
+        //private IImage? _undoImage;
+        //private IImage? _resetImage;
 
         public ControlNetConfig? ControlNetConfig { get; set; }
-        public ImageOrigin Origin { get; set; }
+        public string InputTitle => VectorImage?.BrushSettings.Name ?? "";
+        public int MinWidth => VectorImage?.BrushSettings.MinWidth ?? 1;
+        public int MaxWidth => VectorImage?.BrushSettings.MaxWidth ?? 100;
+        public int FeatherMin => VectorImage?.BrushSettings.FeatherMin ?? 0;
+        public int FeatherMax => VectorImage?.BrushSettings.FeatherMax ?? 50;
+        public int AlphaMin => VectorImage?.BrushSettings.AlphaMin ?? 0;
+        public int AlphaMax => VectorImage?.BrushSettings.AlphaMax ?? 255;
 
+
+        private string? _processedPath;
+        public string? ProcessedPath
+        {
+            get => _processedPath;
+            set
+            {
+                _processedPath = value;
+                ProcessedImage = _processedPath != null ? InklingIOUtils.LoadSKImage(_processedPath) : null;
+            }
+        }
+        public SKBitmap? ProcessedImage { get; private set; }
         public override SKBitmap? SourceImage 
-        { 
-            get => base.SourceImage;
+        {
+            get
+            {
+                SKBitmap? result = null;
+                switch (Origin)
+                {
+                    case ImageOrigin.Input:
+                    case ImageOrigin.Masked:
+                    case ImageOrigin.Composite:
+                        result = SourceImage;
+                        break;
+                    case ImageOrigin.Processed:
+                        result = ProcessedImage;
+                        break;
+
+                }
+                return result;
+            }
             set
             {
                 base.SourceImage = value;
@@ -32,39 +68,16 @@
             }
         }
 
-        private string? _processedPath;
-        public SKBitmap? ProcessedImage { get; private set; }
-        public string? ProcessedPath
-        {
-            get => _processedPath;
-            set
-            {
-                _processedPath = value;
-                ProcessedImage = _processedPath != null ? InklingIOUtils.LoadSKImage(_processedPath) : null;
-            }
-        }
-
-        //private IImage? _undoImage;
-        //private IImage? _resetImage;
-
-        public string InputTitle => VectorImage?.BrushSettings.Name ?? "";
-        public int MinWidth => VectorImage?.BrushSettings.MinWidth ?? 1;
-        public int MaxWidth => VectorImage?.BrushSettings.MaxWidth ?? 100;
-        public int FeatherMin => VectorImage?.BrushSettings.FeatherMin ?? 0;
-        public int FeatherMax => VectorImage?.BrushSettings.FeatherMax ?? 50;
-        public int AlphaMin => VectorImage?.BrushSettings.AlphaMin ?? 0;
-        public int AlphaMax => VectorImage?.BrushSettings.AlphaMax ?? 255;
-
         public ProcessedImageData(BrushSettings brushSettings, string folder) : base(folder + brushSettings.ImageKind.Name() + "_input.png")
         {
             VectorImage = new VectorImage(brushSettings);
             VectorImage.Name = InputTitle;
 
             Folder = folder;
-            //SourcePath = folder + ImageKind.Name() + "_input.png";
             ProcessedPath = folder + ImageKind.Name() + ".png";
-            //InklingIOUtils.LoadImage(ProcessedPath);
+            Origin = ImageOrigin.Processed;
         }
+
 
         public override void Dispose()
         {

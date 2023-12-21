@@ -16,10 +16,10 @@
 
     public class FileImage : BaseImage
     {
-        public override SKBitmap? SourceImage
+
+        public FileImage()
         {
-            get => _data?.SourceImage;
-            protected set { if (_data != null) _data.SourceImage = value; }
+            Data = new ImageData("");
         }
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
@@ -28,24 +28,14 @@
             switch (prop.Name)
             {
                 case nameof(Source):
-                    if (change.NewValue is string source)
+                    if (change.NewValue is string source && Data != null)
                     {
-                        var imgData = Data ?? new ImageData(source);
-                        SetValue(DataProperty, imgData);
+                        Data.SourcePath = source;
+                        //Data = _data;
+                        //SetValue(DataProperty, imgData);
                     }
                     break;
             }
-        }
-        protected override void RenderSkia(SKCanvas canvas)
-        {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                if (Source != null && File.Exists(Source))
-                {
-                    var img = InklingIOUtils.LoadSKImage(Source);
-                    DrawImage(canvas, img);
-                }
-            });
         }
     }
 }

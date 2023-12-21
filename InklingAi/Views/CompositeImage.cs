@@ -39,7 +39,7 @@
                 }
             }
         }
-        public override SKBitmap? SourceImage
+        public override SKBitmap? CurrentImage
         {
             get => _imageDataList[0].SourceImage;
             protected set => _imageDataList [0].SourceImage = value;

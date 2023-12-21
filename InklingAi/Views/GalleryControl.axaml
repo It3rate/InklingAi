@@ -51,49 +51,30 @@
 
 					<StackPanel Orientation="Horizontal" Background="Transparent">
 						<Border Classes="image" >
-							<controls:SingleImage
+							<controls:FileImage
 								Source="{Binding Path=[0]}" Margin="0.5,0,0,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
 						</Border>
             <Border Classes="image" >
-              <controls:SingleImage
+              <controls:FileImage
 								Source="{Binding Path=[1]}" Margin="0.5,0.5,0.5,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
             </Border>
             <Border Classes="image" >
-              <controls:SingleImage
+              <controls:FileImage
 								Source="{Binding Path=[2]}" Margin="0.5,0.5,0.5,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
             </Border>
 						<Border Classes="image" >
-							<controls:SingleImage
+							<controls:FileImage
 								Source="{Binding Path=[3]}" Margin="0,0.5,0,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
 						</Border>
 					</StackPanel>
-
-					<!--<StackPanel Orientation="Horizontal">
-					<ItemsControl ItemsSource="{Binding}">
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-							<controls:InkImage
-								Source="{Binding}"
-								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
-							   />
-								<Image Source="{Binding Converter={StaticResource PathToBitmapConverter}}"
-										Stretch="Uniform"
-										Width="{Binding HalfWidth, 
-												RelativeSource={RelativeSource FindAncestor, 
-												AncestorType=controls:GalleryControl}}"
-										Margin="2"/>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</StackPanel>-->
 
 				</DataTemplate>
 			</ListBox.ItemTemplate>

@@ -58,6 +58,7 @@
         public bool IsActive { get; set; } = false;
         public bool IsApplicable { get; set; } = true;
         public virtual ImageKind ImageKind => ImageKind.File;
+        public ImageOrigin Origin { get; set; } = ImageOrigin.Input;
         public VectorImage? VectorImage { get; protected set; }
 
 
@@ -71,6 +72,11 @@
                 _sourcePath = value;
                 SourceImage = _sourcePath != null ? InklingIOUtils.LoadSKImage(_sourcePath) : null;
             }
+        }
+        public virtual string CurrentPath
+        {
+            get => SourcePath;
+            set => SourcePath = value;
         }
         public ImageData(string path)
         {

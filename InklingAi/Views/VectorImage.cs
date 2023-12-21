@@ -26,7 +26,7 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
 
     // todo: Move vector data to it's own model class, add bitmap rendering on demand.
     public override ImageData? Data { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public override SKBitmap? SourceImage { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+    public override SKBitmap? CurrentImage { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
 
     public BrushPanelMode BrushPanelMode { get; set; } = BrushPanelMode.None;
     public DrawPanelMode DrawPanelMode { get; set; } = DrawPanelMode.Paint;
