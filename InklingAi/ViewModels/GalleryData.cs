@@ -3,6 +3,7 @@
     using Avalonia;
 	using InklingAi.Utils;
 	using InklingAi.Views;
+    using SkiaSharp;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -23,6 +24,12 @@
             get => _imageTuplePaths;
             set => SetProperty(ref _imageTuplePaths, value);
         }
+        private ObservableCollection<SKBitmap[]> _imageTuples = new();
+        public ObservableCollection<SKBitmap[]> ImageTuples
+        {
+            get => _imageTuples;
+            set => SetProperty(ref _imageTuples, value);
+        }
 
         public void LoadNextPage(int startIndex = -1)
         {
@@ -38,17 +45,27 @@
             var filesToLoad = allFiles.Skip(currentPage * itemsPerPage + 1).Take(itemsPerPage);
 
             var imageTuplePaths = new ObservableCollection<string[]>();
-            var imagePair = new List<String>();
+            var imageTuples = new ObservableCollection<SKBitmap[]>();
+            var imagePathSet = new List<String>();
+            var imageSet = new List<SKBitmap>();
             foreach (var file in filesToLoad)
             {
-                imagePair.Add(file);
-                if (imagePair.Count == itemsPerRow)
+                imagePathSet.Add(file);
+                var img = InklingIOUtils.LoadSKImage(file);
+                if(img != null)
                 {
-                    imageTuplePaths.Add(imagePair.ToArray());
-                    imagePair.Clear();
+                    imageSet.Add(img);
+                }
+                if (imagePathSet.Count == itemsPerRow)
+                {
+                    imageTuplePaths.Add(imagePathSet.ToArray());
+                    imageTuples.Add(imageSet.ToArray());
+                    imagePathSet.Clear();
+                    imageSet.Clear();
                 }
             }
             ImageTuplePaths = imageTuplePaths;
+            ImageTuples = imageTuples;
             currentPage++;
         }
     }

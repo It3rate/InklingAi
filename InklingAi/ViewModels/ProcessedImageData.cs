@@ -78,6 +78,8 @@
             }
         }
 
+        public ProcessedImageData(string path) : base(path)
+        { }
         public ProcessedImageData(BrushSettings brushSettings, string folder) : base(null)
         {
             VectorImage = new VectorImage(brushSettings);

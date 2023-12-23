@@ -30,52 +30,17 @@ public abstract class BaseImage : UserControl
     private Stretch _stretch = Stretch.UniformToFill;
 
     #region Avalonia Properties
-    public static readonly StyledProperty<string> SourceProperty =
-        AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
-            defaultBindingMode: BindingMode.TwoWay);
-    public string Source
-    {
-        get
-        {
-            var result = "";
-            if (_data != null)
-            {
-                result = _data.SourcePath;
-                GetValue(SourceProperty);
-            }
-            return result;
-        }
-        set
-        {
-            if (_data != null)
-            {
-                _data.SourcePath = value;
-                SetValue(SourceProperty, value);
-            }
-        }
-    }
-    //public string Source
-    //{
-    //    get => GetValue(SourceProperty);
-    //    set => SetValue(SourceProperty, value);
-    //}
-    public virtual SKBitmap? SourceImage
-    {
-        get => _data?.SourceImage;
-        protected set { if (_data != null) _data.SourceImage = value; }
-    }
 
-    protected ImageData? _data;
-    public static readonly StyledProperty<ImageData?> DataProperty =
-        AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
-    public virtual ImageData? Data
+    public string Source { get; set; }
+    public ProcessedImageData Data { get; protected set; }
+
+    public static readonly StyledProperty<SKBitmap?> SourceImageProperty =
+        AvaloniaProperty.Register<BaseImage, SKBitmap?>(nameof(SourceImage));
+    protected SKBitmap? _sourceImage;
+    public SKBitmap? SourceImage
     {
-        get => GetValue(DataProperty);
-        set
-        {
-            _data = value;
-            SetValue(DataProperty, value);
-        }
+        get => GetValue(SourceImageProperty);
+        set => SetValue(SourceImageProperty, value);
     }
 
     public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.UniformToFill);
@@ -130,7 +95,7 @@ public abstract class BaseImage : UserControl
         RemoveHandler(DragDrop.DropEvent, OnDrop);
         RemoveHandler(DragDrop.DragOverEvent, OnDragOver);
     }
-    protected virtual void SetImage(ImageData? imageData)
+    protected virtual void SetImage(ProcessedImageData? imageData)
     {
         if (imageData?.SourcePath != Data?.SourcePath)
         {
@@ -152,20 +117,27 @@ public abstract class BaseImage : UserControl
                 _stretch = Stretch;
                 break;
 
-            case nameof(Data):
-                if (change != null)
+            //case nameof(Data):
+            //    if (change != null)
+            //    {
+            //        if (change.NewValue == null)
+            //        {
+            //            Data.SourceImage = null;
+            //        }
+            //        else if (change.NewValue is ProcessedImageData imageData)
+            //        {
+            //            Data.SourceImage = imageData.SourceImage;
+            //        }
+            //    }
+            //    InvalidateMeasure();
+            //    InvalidateVisual();
+            //    break;
+
+            case nameof(SourceImage):
+                if (change.NewValue is SKBitmap sourceImage)
                 {
-                    if (change.NewValue == null)
-                    {
-                        Data = null;
-                    }
-                    else if (change.NewValue is ImageData imageData)
-                    {
-                        Data = imageData;
-                    }
+                    _sourceImage = sourceImage;
                 }
-                InvalidateMeasure();
-                InvalidateVisual();
                 break;
 
         }
@@ -317,7 +289,7 @@ public abstract class BaseImage : UserControl
 
     protected virtual void RenderSkia(SKCanvas canvas)
     {
-        DrawImage(canvas, SourceImage);
+        //DrawImage(canvas, SourceImage);
     }
     public override void Render(DrawingContext context)
     {

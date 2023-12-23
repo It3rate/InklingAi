@@ -22,54 +22,54 @@
 
     public class SingleImage : BaseImage
     {
-        public static readonly StyledProperty<string> SourceProperty =
-        AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
-            defaultBindingMode: BindingMode.TwoWay);
-        public string Source
-        {
-            get
-            {
-                var result = "";
-                if (_data != null)
-                {
-                    result = _data.SourcePath;
-                    GetValue(SourceProperty);
-                }
-                return result;
-            }
-            set
-            {
-                if (_data != null)
-                {
-                    _data.SourcePath = value;
-                    SetValue(SourceProperty, value);
-                }
-            }
-        }
+        //public static readonly StyledProperty<string> SourceProperty =
+        //AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
+        //    defaultBindingMode: BindingMode.TwoWay);
+        //public string Source
+        //{
+        //    get
+        //    {
+        //        var result = "";
+        //        if (_data != null)
+        //        {
+        //            result = _data.SourcePath;
+        //            GetValue(SourceProperty);
+        //        }
+        //        return result;
+        //    }
+        //    set
+        //    {
+        //        if (_data != null)
+        //        {
+        //            _data.SourcePath = value;
+        //            SetValue(SourceProperty, value);
+        //        }
+        //    }
+        //}
 
-        public static readonly StyledProperty<ImageData?> DataProperty =
-            AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
-        public override ImageData? Data
-        {
-            get => GetValue(DataProperty);
-            set
-            {
-                if (value != _data)
-                {
-                    if (_data != null)
-                    {
-                        _data.ResetLinked -= OnRedrawLinked;
-                    }
-                    _data = value;
-                }
-                SetValue(DataProperty, value);
+        //public static readonly StyledProperty<ImageData?> DataProperty =
+        //    AvaloniaProperty.Register<SingleImage, ImageData?>(nameof(Data));
+        //public override ImageData? Data
+        //{
+        //    get => GetValue(DataProperty);
+        //    set
+        //    {
+        //        if (value != _data)
+        //        {
+        //            if (_data != null)
+        //            {
+        //                _data.ResetLinked -= OnRedrawLinked;
+        //            }
+        //            _data = value;
+        //        }
+        //        SetValue(DataProperty, value);
 
-                if (_data != null)
-                {
-                    _data.ResetLinked += OnRedrawLinked;
-                }
-            }
-        }
+        //        if (_data != null)
+        //        {
+        //            _data.ResetLinked += OnRedrawLinked;
+        //        }
+        //    }
+        //}
 
         //private async void ProcessInput()
         //{
@@ -90,7 +90,7 @@
         {
             if (ProcessedImageData != null)
             {
-                if (_data is ProcessedImageData pid && pid.ControlNetConfig != null)
+                if (Data.ControlNetConfig != null)
                 {
                     //await Dispatcher.UIThread.InvokeAsync(() => Data.Origin = ImageOrigin.Input);
                     ProcessedImageData.ReloadSourceImage();
@@ -98,15 +98,13 @@
 
                     // Run CPU-bound work on a background thread
                     //var resultPath = await Task.Run(() => pid.ControlNetConfig.RunFilter());
-                    await pid.ControlNetConfig.RunFilter();
+                    await Data.ControlNetConfig.RunFilter();
                     // Again, update UI-bound properties on the UI thread
-                    if (_data != null)
-                    {
-                        await Dispatcher.UIThread.InvokeAsync(() => Data.Origin = ImageOrigin.Processed);
-                        ProcessedImageData.ReloadProcessedImage(); 
-                        InvalidateVisual();
-                        //Data = _data;
-                    }
+
+                    await Dispatcher.UIThread.InvokeAsync(() => Data.Origin = ImageOrigin.Processed);
+                    ProcessedImageData.ReloadProcessedImage(); 
+                    InvalidateVisual();
+                    //Data = _data;
                 }
             }
         }
@@ -118,11 +116,11 @@
         {
         }
 
-        private void OnRedrawLinked()
-        {
-            Source = _data?.SourcePath ?? "";
-            InvalidateVisual();
-        }
+        //private void OnRedrawLinked()
+        //{
+        //    Source = _data?.SourcePath ?? "";
+        //    InvalidateVisual();
+        //}
         protected override void RenderSkia(SKCanvas canvas)
         {
             //if (_data != null && ProcessedImageData != null && _data.Origin == ImageOrigin.Processed)
@@ -131,7 +129,7 @@
             //}
             //else
             //{
-                DrawImage(canvas, SourceImage);
+ //               DrawImage(canvas, SourceImage);
             //}
         }
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -144,7 +142,7 @@
                     if (change.NewValue is string source && Data != null)
                     {
                         IOUtils.CopyFile(source, ProcessedImageData.SourcePath);
-                        SourceImage = InklingIOUtils.LoadSKImage(ProcessedImageData.SourcePath);
+//                        SourceImage = InklingIOUtils.LoadSKImage(ProcessedImageData.SourcePath);
                         //Data = _data;
                         ProcessInput();
                     }

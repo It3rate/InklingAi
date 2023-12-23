@@ -16,26 +16,26 @@
 
     public class FileImage : BaseImage
     {
-
-        public FileImage()
+        protected override void RenderSkia(SKCanvas canvas)
         {
-            Data = new ImageData("");
+            DrawImage(canvas, _sourceImage);
+            //DrawImage(canvas, SourceImage);
         }
-        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-        {
-            base.OnPropertyChanged(change);
-            var prop = change.Property;
-            switch (prop.Name)
-            {
-                case nameof(Source):
-                    if (change.NewValue is string source && Data != null)
-                    {
-                        Data.SourcePath = source;
-                        //Data = _data;
-                        //SetValue(DataProperty, imgData);
-                    }
-                    break;
-            }
-        }
+        //protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        //{
+        //    base.OnPropertyChanged(change);
+        //    var prop = change.Property;
+        //    switch (prop.Name)
+        //    {
+        //        case nameof(SourceImage):
+        //            if (change.NewValue is SKBitmap sourceImage)
+        //            {
+        //                _sourceImage = sourceImage;
+        //                //Data = _data;
+        //                //SetValue(DataProperty, imgData);
+        //            }
+        //            break;
+        //    }
+        //}
     }
 }

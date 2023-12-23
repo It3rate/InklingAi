@@ -25,7 +25,7 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
     private KeyboardData _keyboardData => _model.KeyboardData;
 
     // todo: Move vector data to it's own model class, add bitmap rendering on demand.
-    public override ImageData? Data { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    //public override ImageData? Data { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public BrushPanelMode BrushPanelMode { get; set; } = BrushPanelMode.None;
     public DrawPanelMode DrawPanelMode { get; set; } = DrawPanelMode.Paint;
