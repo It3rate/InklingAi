@@ -62,9 +62,9 @@
         public VectorImage? VectorImage { get; protected set; }
 
 
-        private string? _sourcePath;
+        protected string? _sourcePath;
         public virtual SKBitmap? SourceImage { get; set; }
-        public string? SourcePath 
+        public virtual string? SourcePath 
         { 
             get => _sourcePath;
             set
@@ -72,11 +72,6 @@
                 _sourcePath = value;
                 SourceImage = _sourcePath != null ? InklingIOUtils.LoadSKImage(_sourcePath) : null;
             }
-        }
-        public virtual string CurrentPath
-        {
-            get => SourcePath;
-            set => SourcePath = value;
         }
         public ImageData(string path)
         {

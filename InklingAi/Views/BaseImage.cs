@@ -30,17 +30,36 @@ public abstract class BaseImage : UserControl
     private Stretch _stretch = Stretch.UniformToFill;
 
     #region Avalonia Properties
-
     public static readonly StyledProperty<string> SourceProperty =
         AvaloniaProperty.Register<SingleImage, string>(nameof(Source),
             defaultBindingMode: BindingMode.TwoWay);
     public string Source
     {
-        get => GetValue(SourceProperty);
-        set => SetValue(SourceProperty, value);
+        get
+        {
+            var result = "";
+            if (_data != null)
+            {
+                result = _data.SourcePath;
+                GetValue(SourceProperty);
+            }
+            return result;
+        }
+        set
+        {
+            if (_data != null)
+            {
+                _data.SourcePath = value;
+                SetValue(SourceProperty, value);
+            }
+        }
     }
-    public virtual string CurrentPath { get => Source; set => Source = value; }
-    public virtual SKBitmap? CurrentImage
+    //public string Source
+    //{
+    //    get => GetValue(SourceProperty);
+    //    set => SetValue(SourceProperty, value);
+    //}
+    public virtual SKBitmap? SourceImage
     {
         get => _data?.SourceImage;
         protected set { if (_data != null) _data.SourceImage = value; }
@@ -298,7 +317,7 @@ public abstract class BaseImage : UserControl
 
     protected virtual void RenderSkia(SKCanvas canvas)
     {
-        DrawImage(canvas, CurrentImage);
+        DrawImage(canvas, SourceImage);
     }
     public override void Render(DrawingContext context)
     {

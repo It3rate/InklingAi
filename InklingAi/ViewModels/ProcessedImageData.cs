@@ -27,15 +27,25 @@
         public int AlphaMin => VectorImage?.BrushSettings.AlphaMin ?? 0;
         public int AlphaMax => VectorImage?.BrushSettings.AlphaMax ?? 255;
 
+        public override string? SourcePath
+        {
+            get => _sourcePath;
+            set
+            {
+                ReloadSourceImage();
+                //_sourcePath = value;
+            }
+        }
 
-        private string? _processedPath;
+        private string _processedPath;
         public string? ProcessedPath
         {
             get => _processedPath;
             set
             {
-                _processedPath = value;
-                ProcessedImage = _processedPath != null ? InklingIOUtils.LoadSKImage(_processedPath) : null;
+                //_processedPath = value;
+                ReloadProcessedImage();
+                //ProcessedImage = InklingIOUtils.LoadSKImage(_processedPath);
             }
         }
         public SKBitmap? ProcessedImage { get; private set; }
@@ -61,23 +71,34 @@
             set
             {
                 base.SourceImage = value;
-                if (ControlNetConfig != null)
-                {
-                    ControlNetConfig.RunFilter();
-                }
+                //if (ControlNetConfig != null)
+                //{
+                //    ControlNetConfig.RunFilter();
+                //}
             }
         }
 
-        public ProcessedImageData(BrushSettings brushSettings, string folder) : base(folder + brushSettings.ImageKind.Name() + "_input.png")
+        public ProcessedImageData(BrushSettings brushSettings, string folder) : base(null)
         {
             VectorImage = new VectorImage(brushSettings);
             VectorImage.Name = InputTitle;
 
             Folder = folder;
-            ProcessedPath = folder + ImageKind.Name() + ".png";
+            _sourcePath = Folder + brushSettings.ImageKind.Name() + "_input.png";
+            _processedPath = Folder + ImageKind.Name() + ".png";
+            ReloadSourceImage();
+            ReloadProcessedImage();
             Origin = ImageOrigin.Processed;
         }
 
+        public void ReloadSourceImage()
+        {
+            SourceImage = _sourcePath != null ? InklingIOUtils.LoadSKImage(_sourcePath) : null;
+        }
+        public void ReloadProcessedImage()
+        {
+            ProcessedImage = _processedPath != null ? InklingIOUtils.LoadSKImage(_processedPath) : null;
+        }
 
         public override void Dispose()
         {

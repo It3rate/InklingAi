@@ -80,6 +80,7 @@ class StableDiffusionService:
 
         # note: if 'normal' and 'depth' are present and use the same image, these come from same model, so minor optimization potential
         for kind in kinds:
+            kind = kind[3:] if kind.startswith("cn_") else kind
             input_img:Optional[Image.Image] = ImageUtils.load_image(f"{folder}cn_{kind}_input.png")
             if input_img != None:
                 config = {}

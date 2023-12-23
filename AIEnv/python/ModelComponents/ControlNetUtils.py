@@ -29,7 +29,6 @@ class ControlNetUtils:
     
     def process_kind(self, img, kind:str, params={}):
         result = None
-        kind = kind[3:] if kind.startswith("cn_") else kind
         if kind in self.proc_map:
             proc = self.proc_map[kind]
             result = proc(img, **params)
