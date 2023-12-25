@@ -68,9 +68,9 @@
         <Grid RowDefinitions="Auto, *">
           
 					<Border Classes="image">
-						<!--<controls:SingleImage Grid.Row="0" Margin="0,0,0,8" Name="imgMain"
-              Data="{Binding MainImage}"
-							Width="{Binding Width, ElementName=_galleryControl}"/>-->
+						<controls:SingleImage Grid.Row="0" Margin="0,0,0,8" Name="imgMain"
+              CurrentImage="{Binding MainImage.CurrentImage}"
+							Width="{Binding Width, ElementName=_galleryControl}"/>
 					</Border> 
           
 					<controls:GalleryControl Grid.Row="1" Name="_galleryControl"/>

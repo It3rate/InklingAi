@@ -26,21 +26,27 @@ public abstract class BaseImage : UserControl
 
     protected RenderingLogic renderingLogic;
 
+
+    public string Source { get; set; }
+    public SKBitmap? SourceImage { get; protected set; }
     public float _widthExtra = 2f;
     private Stretch _stretch = Stretch.UniformToFill;
 
     #region Avalonia Properties
 
-    public string Source { get; set; }
-    public ProcessedImageData Data { get; protected set; }
-
-    public static readonly StyledProperty<SKBitmap?> SourceImageProperty =
-        AvaloniaProperty.Register<BaseImage, SKBitmap?>(nameof(SourceImage));
-    protected SKBitmap? _sourceImage;
-    public SKBitmap? SourceImage
+    public static readonly StyledProperty<ProcessedImageData> DataProperty = AvaloniaProperty.Register<BaseImage, ProcessedImageData>(nameof(Data));
+    public ProcessedImageData Data
     {
-        get => GetValue(SourceImageProperty);
-        set => SetValue(SourceImageProperty, value);
+        get => GetValue(DataProperty);
+        set => SetValue(DataProperty, value);
+    }
+
+    public static readonly StyledProperty<SKBitmap?> CurrentImageProperty = AvaloniaProperty.Register<BaseImage, SKBitmap?>(nameof(CurrentImage));
+    protected SKBitmap? _currentImage;
+    public SKBitmap? CurrentImage
+    {
+        get => GetValue(CurrentImageProperty);
+        set => SetValue(CurrentImageProperty, value);
     }
 
     public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.UniformToFill);
@@ -117,6 +123,24 @@ public abstract class BaseImage : UserControl
                 _stretch = Stretch;
                 break;
 
+            case nameof(Data):
+                if (change.NewValue == null)
+                {
+                    Data.CurrentImage = null;
+                }
+                else if (change.NewValue is ProcessedImageData pid)
+                {
+                    if(pid.InputTitle == "imgMain")
+                    {
+                        Data.CurrentImage = pid.CurrentImage;
+                    }
+                    else
+                    {
+                        pid.ResetLinked += OnResetLinked;
+                    }
+                }
+                break;
+
             //case nameof(Data):
             //    if (change != null)
             //    {
@@ -133,18 +157,30 @@ public abstract class BaseImage : UserControl
             //    InvalidateVisual();
             //    break;
 
+            case nameof(CurrentImage):
+                if (change.NewValue is SKBitmap currentImage)
+                {
+                    _currentImage = currentImage;
+                }
+                break;
             case nameof(SourceImage):
                 if (change.NewValue is SKBitmap sourceImage)
                 {
-                    _sourceImage = sourceImage;
+                    _currentImage = sourceImage;
+                    InvalidateVisual();
                 }
                 break;
 
         }
     }
+    private void OnResetLinked()
+    {
+        CurrentImage = Data?.CurrentImage;
+        InvalidateVisual();
+    }
 
-	#region Mouse Events
-	protected Point? _startPosition;
+    #region Mouse Events
+    protected Point? _startPosition;
 	protected Point _currentPosition;
 	public bool IsMouseInside { get; protected set; }
 	protected int _minDragDistance = 10;
@@ -180,7 +216,7 @@ public abstract class BaseImage : UserControl
                 {
                     if (_model.InfluenceData.FocusedItem != null)
                     {
-                        _model.InfluenceData.FocusedItem.DoResetSource();
+                        //_model.InfluenceData.FocusedItem.DoResetLinked();
                     }
                 }
             }
@@ -290,6 +326,7 @@ public abstract class BaseImage : UserControl
     protected virtual void RenderSkia(SKCanvas canvas)
     {
         //DrawImage(canvas, SourceImage);
+        DrawImage(canvas, _currentImage);
     }
     public override void Render(DrawingContext context)
     {

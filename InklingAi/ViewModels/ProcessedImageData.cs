@@ -11,6 +11,7 @@
     using InklingAi.Utils;
     using InklingAi.Views;
     using SkiaSharp;
+    using static SkiaSharp.HarfBuzz.SKShaper;
 
     public class ProcessedImageData : ImageData
     {
@@ -38,6 +39,7 @@
         }
 
         private string _processedPath;
+
         public string? ProcessedPath
         {
             get => _processedPath;
@@ -48,8 +50,10 @@
                 //ProcessedImage = InklingIOUtils.LoadSKImage(_processedPath);
             }
         }
-        public SKBitmap? ProcessedImage { get; private set; }
-        public override SKBitmap? SourceImage 
+        private SKBitmap? _processedImage;
+        public SKBitmap? ProcessedImage { get => _processedImage; private set => _processedImage = value; }
+
+        public override SKBitmap? CurrentImage
         {
             get
             {
@@ -70,7 +74,19 @@
             }
             set
             {
-                base.SourceImage = value;
+                switch (Origin)
+                {
+                    case ImageOrigin.Input:
+                    case ImageOrigin.Masked:
+                    case ImageOrigin.Composite:
+                        _sourceImage = value;
+                        break;
+                    case ImageOrigin.Processed:
+                        _processedImage = value;
+                        break;
+
+                }
+                DoResetLinked();
                 //if (ControlNetConfig != null)
                 //{
                 //    ControlNetConfig.RunFilter();

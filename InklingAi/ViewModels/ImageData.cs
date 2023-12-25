@@ -47,8 +47,8 @@
         // ocr
         // gen vs overlay
 
-        public event Action ResetLinked;
-        public void DoResetSource()
+        public event Action? ResetLinked;
+        protected void DoResetLinked()
         {
             ResetLinked?.Invoke();
         }
@@ -59,13 +59,27 @@
         public bool IsApplicable { get; set; } = true;
         public virtual ImageKind ImageKind => ImageKind.File;
         public ImageOrigin Origin { get; set; } = ImageOrigin.Input;
+        public virtual SKBitmap? CurrentImage
+        {
+            get
+            {
+                return _sourceImage;
+            }
+            set
+            {
+                _sourceImage = value;
+            }
+        }
+
         public VectorImage? VectorImage { get; protected set; }
 
 
         protected string? _sourcePath;
-        public virtual SKBitmap? SourceImage { get; set; }
-        public virtual string? SourcePath 
-        { 
+
+        protected SKBitmap? _sourceImage;
+        public SKBitmap? SourceImage { get => _sourceImage; set => _sourceImage = value; }
+        public virtual string? SourcePath
+        {
             get => _sourcePath;
             set
             {
@@ -73,6 +87,7 @@
                 SourceImage = _sourcePath != null ? InklingIOUtils.LoadSKImage(_sourcePath) : null;
             }
         }
+
         public ImageData(string path)
         {
             Folder = Path.GetPathRoot(path) ?? "";
