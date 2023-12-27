@@ -130,7 +130,7 @@ public abstract class BaseImage : UserControl
                 }
                 else if (change.NewValue is ProcessedImageData pid)
                 {
-                    if(pid.InputTitle == "imgMain")
+                    if(pid.InputTitle == "_editImageControl")
                     {
                         Data.CurrentImage = pid.CurrentImage;
                     }

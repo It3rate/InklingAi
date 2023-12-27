@@ -73,6 +73,10 @@
                     {
                         _currentImage = currentImage;
                     }
+                    else
+                    {
+                        _currentImage = null;
+                    }
                     break;
             }
         }

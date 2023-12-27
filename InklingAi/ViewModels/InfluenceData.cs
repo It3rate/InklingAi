@@ -37,13 +37,15 @@
         {
             ActiveItems = new ObservableCollection<ProcessedImageData>(InputItems.Where(item => item.IsActive));
         }
+        private ProcessedImageData? _emptyItem = new ProcessedImageData("");
         private ProcessedImageData? _focusedItem;
         public ProcessedImageData? FocusedItem
         {
             get => _focusedItem;
             set
             {
-                SetProperty(ref _focusedItem, value);
+                var targ = (value == null) ? _emptyItem : value;
+                SetProperty(ref _focusedItem, targ);
                 VectorImage = _focusedItem != null ? _focusedItem.VectorImage : null;
                 ResetActiveItems();
             }
