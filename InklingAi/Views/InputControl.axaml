@@ -21,7 +21,8 @@
 			</Grid>-->
 			<controls:SingleImage Grid.Column="1" Margin="2" Width="160"
                             Data="{Binding}"
-                            CurrentImage="{Binding CurrentImage}" />
+                            CurrentImage="{Binding CurrentImage}" 
+                            Origin="{Binding Origin}"/>
     </Grid>
 	</Expander>
 </UserControl>					

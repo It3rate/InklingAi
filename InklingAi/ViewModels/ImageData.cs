@@ -26,7 +26,7 @@
         Masked,
     }
 
-    public class ImageData : IDisposable
+    public abstract class ImageData : IDisposable
     {
         //private IImage? _latentImage;
         // transform matrix
@@ -74,10 +74,10 @@
         public VectorImage? VectorImage { get; protected set; }
 
 
-        protected string? _sourcePath;
 
         protected SKBitmap? _sourceImage;
         public SKBitmap? SourceImage { get => _sourceImage; set => _sourceImage = value; }
+        protected string? _sourcePath = "";
         public virtual string? SourcePath
         {
             get => _sourcePath;

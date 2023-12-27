@@ -37,8 +37,8 @@ public partial class InklingModel : ViewModelBase
 	public Engine Engine => Engine.Instance;
 
 
-    private ImageData? _mainImage;
-    public ImageData? MainImage
+    private ProcessedImageData? _mainImage;
+    public ProcessedImageData? MainImage
     {
         get => _mainImage;
         set => SetProperty(ref _mainImage, value);
@@ -46,7 +46,7 @@ public partial class InklingModel : ViewModelBase
 
     public InklingModel() // this needs to be public for design time access in MainView.
     {
-        MainImage = new ImageData(IOUtils.ImagePath("main"));
+        MainImage = new ProcessedImageData(IOUtils.ImagePath("main"));
         GalleryData.LoadNextPage();
         InfluenceData.LoadInputControls();
 
@@ -82,7 +82,7 @@ public partial class InklingModel : ViewModelBase
             path = await sdController.Generate(SDConfig);
         }
 
-        MainImage = path != null ? new ImageData(path) : null;
+        MainImage = path != null ? new ProcessedImageData(path) : null;
 
         GalleryData.LoadNextPage(0);
     }

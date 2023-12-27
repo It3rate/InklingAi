@@ -39,15 +39,6 @@
             var prop = change.Property;
             switch (prop.Name)
             {
-                case nameof(Source):
-                    if (change.NewValue is string source && Data != null)
-                    {
-                        IOUtils.CopyFile(source, Data.SourcePath);
-                        //SourceImage = InklingIOUtils.LoadSKImage(ProcessedImageData.SourcePath);
-                        //Data = _data;
-                        ProcessInput();
-                    }
-                    break;
                 case nameof(SourceImage):
                     if (change.NewValue is SKBitmap sourceImage)
                     {
@@ -77,6 +68,9 @@
                     {
                         _currentImage = null;
                     }
+                    break;
+                case nameof(Origin):
+                    InvalidateVisual();
                     break;
             }
         }

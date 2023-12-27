@@ -18,17 +18,25 @@
         private int currentPage = 0;
         private const int itemsPerPage = 50;
 
-        private ObservableCollection<string[]> _imageTuplePaths = new();
-        public ObservableCollection<string[]> ImageTuplePaths
+        //private ObservableCollection<string[]> _imageTuplePaths = new();
+        //public ObservableCollection<string[]> ImageTuplePaths
+        //{
+        //    get => _imageTuplePaths;
+        //    set => SetProperty(ref _imageTuplePaths, value);
+        //}
+
+        //private ObservableCollection<SKBitmap[]> _imageTuples = new();
+        //public ObservableCollection<SKBitmap[]> ImageTuples
+        //{
+        //    get => _imageTuples;
+        //    set => SetProperty(ref _imageTuples, value);
+        //}
+
+        private ObservableCollection<ProcessedImageData[]> _imageData = new();
+        public ObservableCollection<ProcessedImageData[]> ImageData
         {
-            get => _imageTuplePaths;
-            set => SetProperty(ref _imageTuplePaths, value);
-        }
-        private ObservableCollection<SKBitmap[]> _imageTuples = new();
-        public ObservableCollection<SKBitmap[]> ImageTuples
-        {
-            get => _imageTuples;
-            set => SetProperty(ref _imageTuples, value);
+            get => _imageData;
+            set => SetProperty(ref _imageData, value);
         }
 
         public void LoadNextPage(int startIndex = -1)
@@ -44,28 +52,38 @@
 
             var filesToLoad = allFiles.Skip(currentPage * itemsPerPage + 1).Take(itemsPerPage);
 
-            var imageTuplePaths = new ObservableCollection<string[]>();
-            var imageTuples = new ObservableCollection<SKBitmap[]>();
-            var imagePathSet = new List<String>();
-            var imageSet = new List<SKBitmap>();
+            var imageData = new ObservableCollection<ProcessedImageData[]>();
+            var imageDataSet = new List<ProcessedImageData>();
+            //var imageTuplePaths = new ObservableCollection<string[]>();
+            //var imageTuples = new ObservableCollection<SKBitmap[]>();
+            //var imagePathSet = new List<String>();
+            //var imageSet = new List<SKBitmap>();
             foreach (var file in filesToLoad)
             {
-                imagePathSet.Add(file);
-                var img = InklingIOUtils.LoadSKImage(file);
-                if(img != null)
+                imageDataSet.Add(new ProcessedImageData(file));
+                if (imageDataSet.Count == itemsPerRow)
                 {
-                    imageSet.Add(img);
+                    imageData.Add(imageDataSet.ToArray());
+                    imageDataSet.Clear();
                 }
-                if (imagePathSet.Count == itemsPerRow)
-                {
-                    imageTuplePaths.Add(imagePathSet.ToArray());
-                    imageTuples.Add(imageSet.ToArray());
-                    imagePathSet.Clear();
-                    imageSet.Clear();
-                }
+                //imagePathSet.Add(file);
+                //var img = InklingIOUtils.LoadSKImage(file);
+                //if(img != null)
+                //{
+                //    imageSet.Add(img);
+                //}
+
+                //if (imagePathSet.Count == itemsPerRow)
+                //{
+                //    imageTuplePaths.Add(imagePathSet.ToArray());
+                //    imageTuples.Add(imageSet.ToArray());
+                //    imagePathSet.Clear();
+                //    imageSet.Clear();
+                //}
             }
-            ImageTuplePaths = imageTuplePaths;
-            ImageTuples = imageTuples;
+            //ImageTuplePaths = imageTuplePaths;
+            //ImageTuples = imageTuples;
+            ImageData = imageData;
             currentPage++;
         }
     }

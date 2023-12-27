@@ -42,7 +42,7 @@
 		<ListBox
 			Name="lbGallery"
 			Padding="0"
-			ItemsSource="{Binding GalleryData.ImageTuples}"
+			ItemsSource="{Binding GalleryData.ImageData}"
 			ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 			ScrollViewer.VerticalScrollBarVisibility="Hidden">
 
@@ -51,26 +51,34 @@
 
 					<StackPanel Orientation="Horizontal" Background="Transparent">
 						<Border Classes="image" >
-							<controls:FileImage
-								CurrentImage="{Binding Path=[0]}" Margin="0.5,0,0,0"
+              <controls:FileImage
+								Data="{Binding Path=[0]}"
+                CurrentImage="{Binding [0].CurrentImage}"
+                Margin="0.5,0,0,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
 						</Border>
             <Border Classes="image" >
               <controls:FileImage
-								CurrentImage="{Binding Path=[1]}" Margin="0.5,0.5,0.5,0"
+								Data="{Binding Path=[1]}"
+								CurrentImage="{Binding [1].CurrentImage}"
+								Margin="0.5,0.5,0.5,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
             </Border>
             <Border Classes="image" >
               <controls:FileImage
-								CurrentImage="{Binding Path=[2]}" Margin="0.5,0.5,0.5,0"
+								Data="{Binding Path=[2]}"
+                CurrentImage="{Binding Path=[2].CurrentImage}"
+                Margin="0.5,0.5,0.5,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
             </Border>
 						<Border Classes="image" >
-							<controls:FileImage
-								CurrentImage="{Binding Path=[3]}" Margin="0,0.5,0,0"
+              <controls:FileImage
+								Data="{Binding Path=[3]}"
+                CurrentImage="{Binding Path=[3].CurrentImage}"
+								Margin="0,0.5,0,0"
 								Width="{Binding HalfWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:GalleryControl}}"
 							   />
 						</Border>

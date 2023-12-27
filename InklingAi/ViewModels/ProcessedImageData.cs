@@ -28,7 +28,7 @@
         public int AlphaMin => VectorImage?.BrushSettings.AlphaMin ?? 0;
         public int AlphaMax => VectorImage?.BrushSettings.AlphaMax ?? 255;
 
-        public override string? SourcePath
+        public override string SourcePath
         {
             get => _sourcePath;
             set
@@ -38,9 +38,9 @@
             }
         }
 
-        private string _processedPath;
+        private string _processedPath = "";
 
-        public string? ProcessedPath
+        public string ProcessedPath
         {
             get => _processedPath;
             set
@@ -95,7 +95,10 @@
         }
 
         public ProcessedImageData(string path) : base(path)
-        { }
+        {
+            _sourcePath = path;
+            ReloadSourceImage();
+        }
         public ProcessedImageData(BrushSettings brushSettings, string folder) : base(null)
         {
             VectorImage = new VectorImage(brushSettings);

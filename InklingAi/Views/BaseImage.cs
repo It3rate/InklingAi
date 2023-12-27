@@ -26,8 +26,6 @@ public abstract class BaseImage : UserControl
 
     protected RenderingLogic renderingLogic;
 
-
-    public string Source { get; set; }
     public SKBitmap? SourceImage { get; protected set; }
     public float _widthExtra = 2f;
     private Stretch _stretch = Stretch.UniformToFill;
@@ -46,7 +44,7 @@ public abstract class BaseImage : UserControl
     public SKBitmap? CurrentImage
     {
         get => GetValue(CurrentImageProperty);
-        set => SetValue(CurrentImageProperty, value);
+        set { SetValue(CurrentImageProperty, value); _currentImage = value; }
     }
 
     public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.UniformToFill);
@@ -61,6 +59,12 @@ public abstract class BaseImage : UserControl
     {
         get { return GetValue(AspectSizeProperty); }
         set { SetValue(AspectSizeProperty, value); }
+    }
+    public static readonly StyledProperty<ImageOrigin> OriginProperty = AvaloniaProperty.Register<BaseImage, ImageOrigin>(nameof(Origin));
+    public ImageOrigin Origin
+    {
+        get { return GetValue(OriginProperty); }
+        set { SetValue(OriginProperty, value); }
     }
 
     #endregion
@@ -101,12 +105,24 @@ public abstract class BaseImage : UserControl
         RemoveHandler(DragDrop.DropEvent, OnDrop);
         RemoveHandler(DragDrop.DragOverEvent, OnDragOver);
     }
-    protected virtual void SetImage(ProcessedImageData? imageData)
+    protected virtual void SetWith(ProcessedImageData imageData)
     {
-        if (imageData?.SourcePath != Data?.SourcePath)
-        {
-            Data = imageData;
-        }
+        Data.SourcePath = imageData.SourcePath;
+        Data.ReloadSourceImage();
+        Data.ProcessedPath = imageData.ProcessedPath;
+        Data.ReloadProcessedImage();
+        Data.Origin = ImageOrigin.Input;
+        InvalidateVisual();
+    }
+    protected virtual void CopyWith(ProcessedImageData imageData)
+    {
+        IOUtils.CopyFile(imageData.SourcePath, Data.SourcePath);
+        Data.ReloadSourceImage();
+        IOUtils.CopyFile(imageData.ProcessedPath, Data.ProcessedPath);
+        Data.ReloadProcessedImage();
+        Data.Origin = ImageOrigin.Input;
+        Data.CurrentImage = Data.SourceImage;
+        //InvalidateVisual();
     }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -286,7 +302,7 @@ public abstract class BaseImage : UserControl
     {
         if (Data != null)
         {
-            dataObject.Set(DataFormats.Files, new List<ImageData>() { Data });
+            dataObject.Set(DataFormats.Files, new List<ProcessedImageData>() { Data });
         }
     }
     protected virtual void AcceptImageDrop(IDataObject dataObject)
@@ -300,23 +316,26 @@ public abstract class BaseImage : UserControl
                 var path = firstFile?.Path.AbsolutePath ?? "";
                 if (path != "" && File.Exists(path))
                 {
-                    Source = path;
                     //SetImage(new ImageData(ImageKind.File, path));
                 }
             }
-            else if (data is IEnumerable<ImageData> imageDataList)
+            else if (data is IEnumerable<ProcessedImageData> imageDataList)
             {
                 var first = imageDataList.First();
                 if (first != null)
                 {
-                    Source = first.SourcePath;
-                    Data.SourcePath = first.SourcePath;
-                    //SetImage(first);
+                    if (Data.ImageKind.HasFixedPath())
+                    {
+                        CopyWith(first);
+                    }
+                    else
+                    {
+                        SetWith(first);
+                    }
                 }
             }
             else if (data is string filename)
             {
-                Source = filename;
                 //SetImage(new ImageData(ImageKind.File, filename));
             }
         }
