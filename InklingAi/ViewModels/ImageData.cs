@@ -9,9 +9,11 @@
     using AIEnv.Clients.StableDiffusion;
     using AIEnv.Utils;
     using Avalonia.Media;
+    using Avalonia.Threading;
     using InklingAi.Utils;
     using InklingAi.Views;
     using SkiaSharp;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
     using static SkiaSharp.HarfBuzz.SKShaper;
 
     public class ImageData : IDisposable
@@ -45,7 +47,24 @@
         public InputControl? InputControl { get; set; }
         public bool IsActive { get; set; } = false;
         public bool IsApplicable { get; set; } = true;
-        public ImageOrigin Origin { get; set; } = ImageOrigin.Input;
+        private ImageOrigin _origin = ImageOrigin.Input;
+        public ImageOrigin Origin
+        {
+            get => _origin;
+            set
+            {
+                _origin = value;
+                switch (_origin)
+                {
+                    case ImageOrigin.Input:
+                        CurrentImage = SourceImage;
+                        break;
+                    case ImageOrigin.Processed:
+                        CurrentImage = ProcessedImage;
+                        break;
+                }
+            }
+        }
         private ImageKind _imageKind = ImageKind.File;
         public ImageKind ImageKind => VectorImage?.BrushSettings.ImageKind ?? _imageKind;
         public bool IsFixedPath => ImageKind.HasFixedPath();
@@ -74,6 +93,7 @@
                 {
                     CurrentImage = _sourceImage;
                 }
+                ProcessInput();
             }
         }
         protected string _sourcePath = "";
@@ -146,6 +166,7 @@
         {
             Folder = Path.GetPathRoot(sourcePath) ?? "";
             SourcePath = sourcePath;
+            Origin = ImageOrigin.Input;
         }
         public ImageData(BrushSettings brushSettings, string folder)
         {
@@ -155,19 +176,38 @@
             Folder = folder;
             _sourcePath = Folder + brushSettings.ImageKind.Name() + "_input.png";
             _processedPath = Folder + ImageKind.Name() + ".png";
-            ReloadSourceImage();
+            ReloadSourceImage(false);
             ReloadProcessedImage();
             Origin = ImageOrigin.Processed;
         }
         public VectorImage? VectorImage { get; protected set; }
-        
-        public void ReloadSourceImage()
+
+        private async void ProcessInput()
         {
-            SourceImage = _sourcePath != null ? InklingIOUtils.LoadSKImage(_sourcePath) : null;
+            if (ControlNetConfig != null)
+            {
+                Origin = ImageOrigin.Input;
+
+                await ControlNetConfig.RunFilter();
+
+                ReloadProcessedImage();
+                Origin = ImageOrigin.Processed;
+            }
+        }
+        public void ReloadSourceImage(bool process = true)
+        {
+            if(process)
+            {
+                SourceImage = _sourcePath != null ? InklingIOUtils.LoadSKImage(_sourcePath) : null;
+            }
+            else
+            {
+                _sourceImage = _sourcePath != null ? InklingIOUtils.LoadSKImage(_sourcePath) : null;
+            }
         }
         public void ReloadProcessedImage()
         {
-            ProcessedImage = _processedPath != null ? InklingIOUtils.LoadSKImage(_processedPath) : null;
+            _processedImage = _processedPath != null ? InklingIOUtils.LoadSKImage(_processedPath) : null;
         }
 
         public void Dispose()

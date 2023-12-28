@@ -11,20 +11,6 @@
     {
         public SKBitmap? SourceImage { get; set; }
         public SKBitmap? ProcessedImage { get; set; }
-        private async void ProcessInput()
-        {
-            if (Data.ControlNetConfig != null)
-            {
-                Data.ReloadSourceImage();
-                InvalidateVisual();
-
-                await Data.ControlNetConfig.RunFilter();
-
-                await Dispatcher.UIThread.InvokeAsync(() => Data.Origin = ImageOrigin.Processed);
-                Data.ReloadProcessedImage(); 
-                InvalidateVisual();
-            }
-        }
 
         public SingleImage()
         {

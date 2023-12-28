@@ -19,6 +19,7 @@ using SkiaSharp;
 using InklingAi.Utils;
 using AIEnv.Utils;
 using Avalonia.Interactivity;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public abstract class BaseImage : UserControl
 {
@@ -40,11 +41,11 @@ public abstract class BaseImage : UserControl
     }
 
     public static readonly StyledProperty<SKBitmap?> CurrentImageProperty = AvaloniaProperty.Register<BaseImage, SKBitmap?>(nameof(CurrentImage));
-    protected SKBitmap? _currentImage;
+    //protected SKBitmap? _currentImage;
     public SKBitmap? CurrentImage
     {
         get => GetValue(CurrentImageProperty);
-        set { SetValue(CurrentImageProperty, value); _currentImage = value; }
+        set => SetValue(CurrentImageProperty, value);
     }
 
     public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<BaseImage, Stretch>(nameof(Stretch), Stretch.UniformToFill);
@@ -116,12 +117,13 @@ public abstract class BaseImage : UserControl
     {
         IOUtils.CopyFile(imageData.SourcePath, Data.SourcePath);
         Data.ReloadSourceImage();
-        IOUtils.CopyFile(imageData.ProcessedPath, Data.ProcessedPath);
-        Data.ReloadProcessedImage();
-        Data.Origin = ImageOrigin.Input;
-        Data.CurrentImage = Data.SourceImage;
+        //IOUtils.CopyFile(imageData.ProcessedPath, Data.ProcessedPath);
+        //Data.ReloadProcessedImage();
+        //Data.Origin = ImageOrigin.Input;
+        //Data.CurrentImage = Data.SourceImage;
         //InvalidateVisual();
     }
+    private SKBitmap? _currentImage;
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -138,14 +140,15 @@ public abstract class BaseImage : UserControl
                 break;
 
             case nameof(CurrentImage):
-                if (change.NewValue is SKBitmap currentImage)
-                {
-                    _currentImage = currentImage;
-                }
-                else
-                {
-                    _currentImage = null;
-                }
+                //if (change.NewValue is SKBitmap currentImage)
+                //{
+                //    Data.CurrentImage = currentImage;
+                //}
+                //else
+                //{
+                //    Data.CurrentImage = null;
+                //}
+                _currentImage = CurrentImage;
                 InvalidateVisual();
                 break;
         }
@@ -352,7 +355,6 @@ public class RenderingLogic : ICustomDrawOperation
     public event RenderEventHandler RenderCall;
 
     public Rect Bounds { get; set; }
-    public void Dispose() { }
     public bool Equals(ICustomDrawOperation? other) => other == this;
     public bool HitTest(Point p) { return true; }
 
@@ -370,6 +372,7 @@ public class RenderingLogic : ICustomDrawOperation
         }
     }
 
+    public void Dispose() { }
 }
 
 //private IImage? _latentImage;
