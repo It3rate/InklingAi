@@ -26,14 +26,14 @@ public abstract class BaseImage : UserControl
 
     protected RenderingLogic renderingLogic;
 
-    public SKBitmap? SourceImage { get; protected set; }
+    //public SKBitmap? SourceImage { get; protected set; }
     public float _widthExtra = 2f;
     private Stretch _stretch = Stretch.UniformToFill;
 
     #region Avalonia Properties
 
-    public static readonly StyledProperty<ProcessedImageData> DataProperty = AvaloniaProperty.Register<BaseImage, ProcessedImageData>(nameof(Data));
-    public ProcessedImageData Data
+    public static readonly StyledProperty<ImageData> DataProperty = AvaloniaProperty.Register<BaseImage, ImageData>(nameof(Data));
+    public ImageData Data
     {
         get => GetValue(DataProperty);
         set => SetValue(DataProperty, value);
@@ -105,16 +105,14 @@ public abstract class BaseImage : UserControl
         RemoveHandler(DragDrop.DropEvent, OnDrop);
         RemoveHandler(DragDrop.DragOverEvent, OnDragOver);
     }
-    protected virtual void SetWith(ProcessedImageData imageData)
+    protected virtual void SetWith(ImageData imageData)
     {
         Data.SourcePath = imageData.SourcePath;
-        Data.ReloadSourceImage();
         Data.ProcessedPath = imageData.ProcessedPath;
-        Data.ReloadProcessedImage();
         Data.Origin = ImageOrigin.Input;
         InvalidateVisual();
     }
-    protected virtual void CopyWith(ProcessedImageData imageData)
+    protected virtual void CopyWith(ImageData imageData)
     {
         IOUtils.CopyFile(imageData.SourcePath, Data.SourcePath);
         Data.ReloadSourceImage();
@@ -139,60 +137,18 @@ public abstract class BaseImage : UserControl
                 _stretch = Stretch;
                 break;
 
-            case nameof(Data):
-                if (change.NewValue == null)
-                {
-                    Data.CurrentImage = null;
-                }
-                else if (change.NewValue is ProcessedImageData pid)
-                {
-                    if(pid.InputTitle == "_editImageControl")
-                    {
-                        Data.CurrentImage = pid.CurrentImage;
-                    }
-                    else
-                    {
-                        pid.ResetLinked += OnResetLinked;
-                    }
-                }
-                break;
-
-            //case nameof(Data):
-            //    if (change != null)
-            //    {
-            //        if (change.NewValue == null)
-            //        {
-            //            Data.SourceImage = null;
-            //        }
-            //        else if (change.NewValue is ProcessedImageData imageData)
-            //        {
-            //            Data.SourceImage = imageData.SourceImage;
-            //        }
-            //    }
-            //    InvalidateMeasure();
-            //    InvalidateVisual();
-            //    break;
-
             case nameof(CurrentImage):
                 if (change.NewValue is SKBitmap currentImage)
                 {
                     _currentImage = currentImage;
                 }
-                break;
-            case nameof(SourceImage):
-                if (change.NewValue is SKBitmap sourceImage)
+                else
                 {
-                    _currentImage = sourceImage;
-                    InvalidateVisual();
+                    _currentImage = null;
                 }
+                InvalidateVisual();
                 break;
-
         }
-    }
-    private void OnResetLinked()
-    {
-        CurrentImage = Data?.CurrentImage;
-        InvalidateVisual();
     }
 
     #region Mouse Events
@@ -302,7 +258,7 @@ public abstract class BaseImage : UserControl
     {
         if (Data != null)
         {
-            dataObject.Set(DataFormats.Files, new List<ProcessedImageData>() { Data });
+            dataObject.Set(DataFormats.Files, new List<ImageData>() { Data });
         }
     }
     protected virtual void AcceptImageDrop(IDataObject dataObject)
@@ -319,7 +275,7 @@ public abstract class BaseImage : UserControl
                     //SetImage(new ImageData(ImageKind.File, path));
                 }
             }
-            else if (data is IEnumerable<ProcessedImageData> imageDataList)
+            else if (data is IEnumerable<ImageData> imageDataList)
             {
                 var first = imageDataList.First();
                 if (first != null)
@@ -415,3 +371,22 @@ public class RenderingLogic : ICustomDrawOperation
     }
 
 }
+
+//private IImage? _latentImage;
+// transform matrix
+// source rect
+// mask/alpha channel (can be vector)
+// latent data
+// process config (eg canny settings, or config that created the image)
+// application settings (skip last steps, etc - can be in config)
+
+// Composite settings:
+// Images[]
+// Blend stack
+// Blend percents
+
+// Text:
+// letters, styles, font, size, spans etc
+// path, matrix etc
+// ocr
+// gen vs overlay

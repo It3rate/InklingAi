@@ -5,29 +5,26 @@
     using InklingAi.ViewModels;
     using AIEnv.Utils;
     using Avalonia.Threading;
+    using System.Diagnostics;
 
     public class SingleImage : BaseImage
     {
+        public SKBitmap? SourceImage { get; set; }
         public SKBitmap? ProcessedImage { get; set; }
         private async void ProcessInput()
         {
-            if (Data != null)
+            if (Data.ControlNetConfig != null)
             {
-                if (Data.ControlNetConfig != null)
-                {
-                    Data.ReloadSourceImage();
-                    InvalidateVisual();
+                Data.ReloadSourceImage();
+                InvalidateVisual();
 
-                    await Data.ControlNetConfig.RunFilter();
+                await Data.ControlNetConfig.RunFilter();
 
-                    await Dispatcher.UIThread.InvokeAsync(() => Data.Origin = ImageOrigin.Processed);
-                    Data.ReloadProcessedImage(); 
-                    InvalidateVisual();
-                }
+                await Dispatcher.UIThread.InvokeAsync(() => Data.Origin = ImageOrigin.Processed);
+                Data.ReloadProcessedImage(); 
+                InvalidateVisual();
             }
         }
-
-        private bool IsProcessedPath => Data?.Origin == ImageOrigin.Processed;
 
         public SingleImage()
         {
@@ -39,42 +36,19 @@
             var prop = change.Property;
             switch (prop.Name)
             {
-                case nameof(SourceImage):
-                    if (change.NewValue is SKBitmap sourceImage)
+                case nameof(Data):
+                    if (change.NewValue is ImageData pid)
                     {
-                        if(Data != null)
-                        {
-                            IOUtils.SaveLocalImage(sourceImage, Data.SourcePath);
-                            Data.Origin = ImageOrigin.Input;
-                        }
-                        CurrentImage = sourceImage;
-                        ProcessInput();
+                        pid.ResetLinked += OnResetLinked;
                     }
-                    break;
-                case nameof(ProcessedImage):
-                    if (change.NewValue is SKBitmap processedImage && Data != null)
-                    {
-                        IOUtils.SaveLocalImage(processedImage, Data.ProcessedPath);
-                        Data.Origin = ImageOrigin.Processed;
-                        CurrentImage = processedImage;
-                    }
-                    break;
-                case nameof(CurrentImage):
-                    if (change.NewValue is SKBitmap currentImage)
-                    {
-                        _currentImage = currentImage;
-                    }
-                    else
-                    {
-                        _currentImage = null;
-                    }
-                    break;
-                case nameof(Origin):
-                    InvalidateVisual();
                     break;
             }
         }
 
+        protected void OnResetLinked()
+        {
+            CurrentImage = Data.CurrentImage;
+        }
 
     }
 }

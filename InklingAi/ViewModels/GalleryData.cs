@@ -32,8 +32,8 @@
         //    set => SetProperty(ref _imageTuples, value);
         //}
 
-        private ObservableCollection<ProcessedImageData[]> _imageData = new();
-        public ObservableCollection<ProcessedImageData[]> ImageData
+        private ObservableCollection<ImageData[]> _imageData = new();
+        public ObservableCollection<ImageData[]> ImageData
         {
             get => _imageData;
             set => SetProperty(ref _imageData, value);
@@ -52,15 +52,15 @@
 
             var filesToLoad = allFiles.Skip(currentPage * itemsPerPage + 1).Take(itemsPerPage);
 
-            var imageData = new ObservableCollection<ProcessedImageData[]>();
-            var imageDataSet = new List<ProcessedImageData>();
+            var imageData = new ObservableCollection<ImageData[]>();
+            var imageDataSet = new List<ImageData>();
             //var imageTuplePaths = new ObservableCollection<string[]>();
             //var imageTuples = new ObservableCollection<SKBitmap[]>();
             //var imagePathSet = new List<String>();
             //var imageSet = new List<SKBitmap>();
             foreach (var file in filesToLoad)
             {
-                imageDataSet.Add(new ProcessedImageData(file));
+                imageDataSet.Add(new ImageData(file));
                 if (imageDataSet.Count == itemsPerRow)
                 {
                     imageData.Add(imageDataSet.ToArray());
