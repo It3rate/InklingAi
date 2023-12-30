@@ -67,4 +67,42 @@ namespace InklingAi.ViewModels
             return 0d;  // Or another suitable default
         }
     }
+    public class PercentageConverter : IValueConverter
+    {
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            object? result;
+            switch (value)
+            {
+                case double doubleValue:
+                    result = doubleValue * 100;
+                    break;
+                case float floatValue:
+                    result = floatValue * 100;
+                    break;
+                default:
+                    result = value;
+                    break;
+            }
+            return result;
+        }
+
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            object? result;
+
+            double val = 0;
+            if (value is double || value is float || value is int || value is long)
+            {
+                val = System.Convert.ToDouble(value);
+            }
+
+            if (targetType == typeof(double))
+                result = val / 100;
+            else //if (targetType == typeof(float))
+                result = (float)(val / 100);
+
+            return result;
+        }
+    }
 }

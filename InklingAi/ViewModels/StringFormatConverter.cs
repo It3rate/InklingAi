@@ -21,8 +21,7 @@ public class StringFormatConverter : IMultiValueConverter
         return result;
     }
 }
-
-public class PercentageConverter : IValueConverter
+public class PercentStringConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -30,13 +29,16 @@ public class PercentageConverter : IValueConverter
         switch (value)
         {
             case double doubleValue:
-                result = doubleValue * 100;
+                result = (int)doubleValue + "%";
                 break;
             case float floatValue:
-                result = floatValue * 100;
+                result = (int)floatValue + "%";
+                break;
+            case int intValue:
+                result = intValue + "%";
                 break;
             default:
-                result = value;
+                result = value + "%";
                 break;
         }
         return result;
@@ -47,16 +49,19 @@ public class PercentageConverter : IValueConverter
         object? result;
 
         double val = 0;
-        if (value is double || value is float || value is int || value is long)
+        if(value is string s)
         {
-            val = System.Convert.ToDouble(value);
+            val = Double.Parse(s.Substring(0, s.Length - 1));
         }
 
         if (targetType == typeof(double))
-            result = val / 100;
-        else //if (targetType == typeof(float))
-            result = (float)(val / 100);
+            result = (double)val;
+        else if (targetType == typeof(float))
+            result = (float)(val);
+        else
+            result = (int)val;
 
         return result;
     }
 }
+

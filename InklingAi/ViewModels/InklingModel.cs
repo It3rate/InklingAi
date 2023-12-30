@@ -19,16 +19,17 @@ using AIEnv.Utils;
 using Avalonia.Controls.Shapes;
 using System.Diagnostics;
 using AIEnv.Onnx;
+using System.ComponentModel;
 
-public partial class InklingModel : ViewModelBase
+public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
 {
     public static string Title => "Inkling";
 
 	private static InklingModel _instance = new InklingModel();
     public static InklingModel Instance => _instance;
 
-    public StableDiffusionConfig _sdConfig = new();
-    //public OnnxSDController sdController;
+    public StableDiffusionConfig SDConfig { get; } = new();
+
     public StableDiffusionClient sdController;
 
     public GalleryData GalleryData { get; } = new();
@@ -43,6 +44,7 @@ public partial class InklingModel : ViewModelBase
         get => _mainImage;
         set => SetProperty(ref _mainImage, value);
     }
+
 
     public InklingModel() // this needs to be public for design time access in MainView.
     {
@@ -71,6 +73,7 @@ public partial class InklingModel : ViewModelBase
     private bool _useDalle = false;
     public async void OnGenerate()
     {
+        MergeInfluenceData();
         RandomizeSeed();
         string? path = null;
         if (_useDalle)
@@ -85,6 +88,26 @@ public partial class InklingModel : ViewModelBase
         MainImage = path != null ? new ImageData(path) : null;
 
         GalleryData.LoadNextPage(0);
+    }
+
+    private void MergeInfluenceData()
+    {
+        foreach (var item in InfluenceData.ActiveItems)
+        {
+            if (item.ImageKind.IsControlNet())
+            {
+
+            }
+            else if(item.ImageKind == ImageKind.Input)
+            {
+                SDConfig.InitialImageSource = item.SourcePath;
+                SDConfig.InitialImageName = item.ProcessedPath;
+            }
+            else if(item.ImageKind == ImageKind.Mask)
+            {
+
+            }
+        }
     }
     public void OnDelete()
     {
@@ -109,19 +132,6 @@ public partial class InklingModel : ViewModelBase
 
     private void OnGenerateUpdate(int currentIndex, SkiaSharp.SKBitmap? img)
     {
-    }
-
-    public StableDiffusionConfig SDConfig
-    {
-        get => _sdConfig;
-        set
-        {
-            if (_sdConfig != value)
-            {
-                _sdConfig = value;
-                OnPropertyChanged(nameof(SDConfig));
-            }
-        }
     }
 
     private Random _random = new Random();

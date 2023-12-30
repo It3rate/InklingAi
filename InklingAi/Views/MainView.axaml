@@ -5,7 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="400"
              xmlns:vm="clr-namespace:InklingAi.ViewModels"
              x:DataType="vm:InklingModel"
-		     xmlns:controls="using:InklingAi.Views"
+					   xmlns:controls="using:InklingAi.Views"
              xmlns:svg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Svg.Skia"
              x:Class="InklingAi.Views.MainView"
              x:CompileBindings="True">
@@ -37,7 +37,7 @@
 					<controls:InputControls/>
 				</Grid>
       
-			<Grid Grid.Column="2" Name="_mainContainer" >
+			<Grid Grid.Column="2" Name="_mainContainer" > 
 				<Viewbox Name="_viewbox" Stretch="Uniform" Margin="50,20,50,0" VerticalAlignment="Top">
           <Grid ColumnDefinitions="40,Auto" RowDefinitions="38,38, Auto">
             <Label Grid.Row="0" Grid.Column="1" >Influencing Image</Label>

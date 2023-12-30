@@ -49,6 +49,9 @@
         public int Seed { get => _seed; set => _seed = value; }
         [JsonProperty("callback_steps")]
         public int CallbackSteps { get => _callbackSteps; set => _callbackSteps = value; }
+        /// <summary>
+        /// Location of processed input image (may be masked, filtered, etc)
+        /// </summary>
         [JsonProperty("initial_image_name")]
         public string InitialImageName { get => _initialImageName; set => _initialImageName = value; }
         [JsonProperty("initial_latents_name")]
@@ -65,11 +68,16 @@
         public int Width { get => _aspectSize.Width; set => _aspectSize = new IntSize(value, _aspectSize.Height); }
         [JsonProperty("height")]
         public int Height { get => _aspectSize.Height; set => new IntSize(value, _aspectSize.Height); }
-        [JsonProperty("active_inputs")]
-        public string[] ActiveInputs { get => _activeInputs; set => _activeInputs = value; }
 
         [JsonProperty("start_inference_step")]
         public int StartInferenceStep { get => _startInferenceStep; set => _startInferenceStep = value; }
+
+
+        [JsonProperty("active_inputs")]
+        public string[] ActiveInputs { get => _activeInputs; set => _activeInputs = value; }
+        /// <summary>
+        /// File location of unprocessed input image.
+        /// </summary>
         [JsonProperty("initial_image_source")]
         public string InitialImageSource { get => _initialImageSource; set => _initialImageSource = value; }
 
