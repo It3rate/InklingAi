@@ -71,7 +71,7 @@
 
 
 
-        public ControlNetConfig? ControlNetConfig { get; set; }
+        public SideModuleConfig? SideModule { get; set; }
         public string InputTitle => VectorImage?.BrushSettings.Name ?? "";
         public int MinWidth => VectorImage?.BrushSettings.MinWidth ?? 1;
         public int MaxWidth => VectorImage?.BrushSettings.MaxWidth ?? 100;
@@ -177,21 +177,30 @@
             _sourcePath = Folder + brushSettings.ImageKind.Name() + "_input.png";
             _processedPath = Folder + ImageKind.Name() + ".png";
             ReloadSourceImage(false);
-            ReloadProcessedImage();
-            Origin = ImageOrigin.Processed;
+            if (ImageKind.CanProcess())
+            {
+                ReloadProcessedImage();
+                Origin = ImageOrigin.Processed;
+            }
+            else
+            {
+                Origin = ImageOrigin.Input;
+            }
         }
         public VectorImage? VectorImage { get; protected set; }
 
         private async void ProcessInput()
         {
-            if (ControlNetConfig != null)
+            if (ImageKind.CanProcess() && SideModule != null)
             {
                 Origin = ImageOrigin.Input;
-
-                await ControlNetConfig.RunFilter();
-
+                await SideModule.RunFilter();
                 ReloadProcessedImage();
                 Origin = ImageOrigin.Processed;
+            }
+            else
+            {
+                Origin = ImageOrigin.Input;
             }
         }
         public void ReloadSourceImage(bool process = true)

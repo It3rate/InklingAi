@@ -4,6 +4,7 @@
 
     public enum ModuleKind
     {
+        Mask,
         ControlNet,
         T2ia,
         Lora,

@@ -92,11 +92,11 @@
                 result[kind.Name()] = imageData;
                 if (kind.IsControlNet())
                 {
-                    imageData.ControlNetConfig = new ControlNetConfig(kind);
+                    imageData.SideModule = new ControlNetConfig(kind);
                 }
                 else if (kind == ImageKind.Mask) // || kind == ImageKind.ScratchPad)
                 {
-                    //_maskScratchPbs.Add(pb);
+                    imageData.SideModule = new MaskModuleConfig(imageData.SourcePath, imageData.ProcessedPath);
                 }
             }
             return result;

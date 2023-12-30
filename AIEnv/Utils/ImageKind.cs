@@ -51,7 +51,11 @@
             {ImageKind.Uniformer, "cn_uniformer" },
         };
         public static string Name(this ImageKind kind) => inputKindNames.ContainsKey(kind) ? inputKindNames[kind] : "";
-        public static bool IsControlNet(this ImageKind kind)
+        public static bool CanProcess(this ImageKind kind)
+        {
+            return kind == ImageKind.Mask || kind == ImageKind.Yolo || kind.IsControlNet(); 
+        }
+            public static bool IsControlNet(this ImageKind kind)
         {
             var result = false;
             switch (kind)
