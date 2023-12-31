@@ -57,7 +57,7 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         sdController = StableDiffusionClient.Instance;
         //sdController.OnUpdateStep += OnGenerateUpdate;
 
-        ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
+        //ChangeAspectSizeCommand = new RelayCommand<string>(ChangeAspectSize);
         GenerateCommand = new RelayCommand(OnGenerate);
         DeleteCommand = new RelayCommand(OnDelete);
         OnChangeModel("mnRevAnimated");
@@ -66,7 +66,7 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
     #region Commands
     public ICommand GenerateCommand { get; }
     public ICommand DeleteCommand { get; }
-    public ICommand ChangeAspectSizeCommand { get; }
+    //public ICommand ChangeAspectSizeCommand { get; }
 
     private DalleClient _dalle = new();
 
@@ -119,15 +119,15 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
     }
 
     public double AspectRatio => SDConfig.AspectSize.Width / SDConfig.AspectSize.Height;
-    private void ChangeAspectSize(string? aspect)
-    {
-        if (aspect == "Portrait")
-            SDConfig.AspectSize = new IntSize(512, 640);
-        else if (aspect == "Square")
-            SDConfig.AspectSize = new IntSize(512, 512);
-        else if (aspect == "Landscape")
-            SDConfig.AspectSize = new IntSize(640, 512);
-    }
+    //private void ChangeAspectSize(string? aspect)
+    //{
+    //    if (aspect == "Portrait")
+    //        SDConfig.AspectSize = new IntSize(512, 640);
+    //    else if (aspect == "Square")
+    //        SDConfig.AspectSize = new IntSize(512, 512);
+    //    else if (aspect == "Landscape")
+    //        SDConfig.AspectSize = new IntSize(640, 512);
+    //}
     #endregion
 
     private void OnGenerateUpdate(int currentIndex, SkiaSharp.SKBitmap? img)

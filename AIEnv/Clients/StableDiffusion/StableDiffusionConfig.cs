@@ -106,6 +106,29 @@
         [JsonIgnore]
         public int[]? GeneratedRegionSize;
 
+        private int _aspectIndex;
+        [JsonIgnore]
+        public int AspectIndex
+        {
+            get => _aspectIndex;
+            set
+            {
+                _aspectIndex = value;
+                switch (_aspectIndex)
+                {
+                    case 0:
+                        AspectSize = new IntSize(512, 640);
+                        break;
+                    case 1:
+                        AspectSize = new IntSize(512, 512);
+                        break;
+                    case 2:
+                        AspectSize = new IntSize(640, 512);
+                        break;
+                }
+            }
+        }
+
         [JsonConstructor]
         public StableDiffusionConfig(
             string basePrompt = "", string stylePrompt = "", string negativePrompt = "", int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
