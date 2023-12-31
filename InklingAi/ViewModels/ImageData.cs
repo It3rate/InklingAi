@@ -174,8 +174,8 @@
             VectorImage.Name = InputTitle;
 
             Folder = folder;
-            _sourcePath = Folder + brushSettings.ImageKind.Name() + "_input.png";
-            _processedPath = Folder + ImageKind.Name() + ".png";
+            _sourcePath = IOUtils.ImagePath(brushSettings.ImageKind.Name(), true);
+            _processedPath = IOUtils.ImagePath(brushSettings.ImageKind.Name(), false);
             ReloadSourceImage(false);
             if (ImageKind.CanProcess())
             {

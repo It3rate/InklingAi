@@ -107,14 +107,20 @@ class UnetComponent():
     def replace_unet(self, model_name:str):
         self.del_unet()
         filepath = f"{self.models_folder}{model_name}"
-        # data = self.get_model(filepath)
-        # if data != None:
-            #self.unet = Unet(data)
-        self.unet = UnetForOnnx(model_name)
-        #self.unet = UnetFromOnnx()
-        self.current_model_name = model_name
-        # else:
-        #     self.current_model_name = ""
+        data = self.get_model(filepath)
+        if data != None:
+            self.unet = Unet(data)
+            self.current_model_name = model_name
+        else:
+            self.current_model_name = ""
+        
+        # # if data != None:
+        #     #self.unet = Unet(data)
+        # self.unet = UnetForOnnx(model_name)
+        # #self.unet = UnetFromOnnx()
+        # self.current_model_name = model_name
+        # # else:
+        # #     self.current_model_name = ""
 
         return filepath
 

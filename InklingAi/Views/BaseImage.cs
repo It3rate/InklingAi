@@ -117,8 +117,8 @@ public abstract class BaseImage : UserControl
     {
         IOUtils.CopyFile(imageData.SourcePath, Data.SourcePath);
         Data.ReloadSourceImage();
-        //IOUtils.CopyFile(imageData.ProcessedPath, Data.ProcessedPath);
-        //Data.ReloadProcessedImage();
+        IOUtils.CopyFile(imageData.SourcePath, Data.ProcessedPath);
+        Data.ReloadProcessedImage();
         //Data.Origin = ImageOrigin.Input;
         //Data.CurrentImage = Data.SourceImage;
         //InvalidateVisual();

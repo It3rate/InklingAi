@@ -13,8 +13,6 @@
     {
         [JsonProperty("enabled")]
         public bool Enabled { get; set; } = false;
-        [JsonProperty("module")]
-        public string Module { get; set; } = ""; // mlsd
         [JsonProperty("model")]
         public string Model { get; set; } = ""; // control_mlsd - fp16[e3705cfa]
         [JsonProperty("weight")]
@@ -24,28 +22,18 @@
         [JsonProperty("guidance_end")]
         public float GuidanceEnd { get; set; } = 1f;
 
-        [JsonProperty("input_path")]
-        public string InputPath { get; set; } = "";
-        [JsonProperty("image_path")]
-        public string ImagePath { get; set; } = "";
-        [JsonProperty("upload_path")]
-        public string UploadPath { get; set; } = "";
 
         [JsonConstructor]
         public ControlNetConfig(
             string module, string model, float weight = 1f, float guidanceStart = 0f, float guidanceEnd = 1f,
-            float param0 = 0f, float param1 = 0f, params float[] extraParams)
+            float param0 = 0f, float param1 = 0f, params float[] extraParams) : base(module)
         {
-            Module = module;
             Model = model;
             Weight = weight;
             GuidanceStart = guidanceStart;
             GuidanceEnd = guidanceEnd;
             ExtraParamValues = extraParams;
 
-            InputPath = IOUtils.ImagePath(Module, true);
-            ImagePath = IOUtils.ImagePath(Module, false);
-            UploadPath = IOUtils.SDUploadsFolder + IOUtils.ImageName(Module, false);
         }
 
         public ControlNetConfig(ImageKind kind) : this(kind.Name()) { }
@@ -113,11 +101,11 @@
             ExtraParamDefaults = (float[])ExtraParamValues.Clone();
         }
 
-        public ControlNetConfig(ControlNetConfig config)
+        public ControlNetConfig(ControlNetConfig config) : base(config.Module)
         {
             CopyPropertiesFrom(config);
         }
-        private ControlNetConfig()
+        private ControlNetConfig() : base("")
         {
         }
         public ControlNetConfig Clone() => new ControlNetConfig(this);
@@ -245,14 +233,14 @@
                 }
 
             }
-
+            result.SetPaths(result.Module);
             return result;
         }
         public string GetExifString()
         {
             var sb = new StringBuilder();
             sb.Append("preprocessor: " + Module + ", ");
-            sb.Append("model: " + Model + ", ");
+            sb.Append("name: " + Model + ", ");
             sb.Append("weight: " + Weight.ToString() + ", ");
             sb.Append("starting/ending: (" + GuidanceStart + ", " + GuidanceEnd + "), ");
             sb.Append("preprocessor params: (" + string.Join(",", ExtraParamValues) + ")");
@@ -275,7 +263,7 @@
                         case "preprocessor":
                             Module = value;
                             break;
-                        case "model":
+                        case "name":
                             Model = value;
                             break;
                         case "weight":

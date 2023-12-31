@@ -19,7 +19,7 @@
 
         public string SourcePath{ get; private set; }
         public string DestinationPath { get; private set; }
-        public MaskModuleConfig(string sourcePath, string destinationPath)
+        public MaskModuleConfig(string sourcePath, string destinationPath) : base("mask")
         {
             SourcePath = sourcePath;
             DestinationPath = destinationPath;

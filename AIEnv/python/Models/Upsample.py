@@ -11,11 +11,11 @@ class Upsample(nn.Module):
         self.ordered_modules = [self.conv]
 
     @torch.no_grad()
-    def forward(self, hidden_states):#, output_size):
-        #if output_size == None:
-        hidden_states = F.interpolate(hidden_states, scale_factor=2.0, mode="nearest")
-        #else:
-        #    hidden_states = F.interpolate(hidden_states, size=output_size, mode="nearest")
+    def forward(self, hidden_states, output_size):
+        if output_size == None:
+            hidden_states = F.interpolate(hidden_states, scale_factor=2.0, mode="nearest")
+        else:
+            hidden_states = F.interpolate(hidden_states, size=output_size, mode="nearest")
             
         hidden_states = self.conv(hidden_states)
         return hidden_states

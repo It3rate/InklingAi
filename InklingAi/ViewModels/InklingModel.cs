@@ -20,6 +20,7 @@ using Avalonia.Controls.Shapes;
 using System.Diagnostics;
 using AIEnv.Onnx;
 using System.ComponentModel;
+using System.Reflection;
 
 public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
 {
@@ -82,6 +83,25 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         }
         else
         {
+            var activeNames = new List<string>();
+            SDConfig.ControlNetConfigs.Clear();
+            var aa = InfluenceData.ActiveItems;
+            foreach(var item in aa)
+            {
+                activeNames.Add(item.ImageKind.Name());
+                if (item.ImageKind.IsControlNet() && item.SideModule is ControlNetConfig cnc)
+                {
+                    SDConfig.ControlNetConfigs.Add(cnc);
+                    IOUtils.CopyFile(cnc.ImagePath, cnc.UploadPath);
+                }
+                else
+                {
+                    var uploadPath = IOUtils.SDUploadsFolder + IOUtils.ImageName(item.ImageKind.Name(), false);
+                    IOUtils.CopyFile(item.SourcePath, uploadPath);
+                }
+            }
+            SDConfig.ActiveInputs = activeNames.ToArray();
+
             path = await sdController.Generate(SDConfig);
         }
 
