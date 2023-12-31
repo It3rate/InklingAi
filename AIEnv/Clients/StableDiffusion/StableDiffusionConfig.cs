@@ -53,7 +53,8 @@
         /// Location of processed input image (may be masked, filtered, etc)
         /// </summary>
         [JsonProperty("initial_image_name")]
-        public string InitialImageName { get => _initialImageName; set => _initialImageName = value; }
+        public string InitialImageName { get => _initialImageName; 
+            set => _initialImageName = value; }
         [JsonProperty("initial_latents_name")]
         public string InitialLatentsName { get => _initialLatentsName; set => _initialLatentsName = value; }
         [JsonProperty("generated_image_name")]

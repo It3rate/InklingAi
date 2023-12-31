@@ -512,6 +512,16 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
 
     #region Render
 
+    public void RenderVectorsOnto(SKBitmap bmp)
+    {
+        using (SKCanvas canvas = new SKCanvas(bmp))
+        {
+            for (int i = 0; i < _paths.Count; i++) // Note: foreach can have collection modified issues
+            {
+                _renderUtil.DrawShape(canvas, _paths[i]);
+            }
+        }
+    }
     private UIRenderUtils _renderUtil = new UIRenderUtils();
     protected override void RenderSkia(SKCanvas canvas)
     {

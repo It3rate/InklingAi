@@ -92,12 +92,21 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
                 if (item.ImageKind.IsControlNet() && item.SideModule is ControlNetConfig cnc)
                 {
                     SDConfig.ControlNetConfigs.Add(cnc);
+                    if(item.VectorImage != null)
+                    {
+
+                    }
                     IOUtils.CopyFile(cnc.ImagePath, cnc.UploadPath);
                 }
                 else
                 {
                     var uploadPath = IOUtils.SDUploadsFolder + IOUtils.ImageName(item.ImageKind.Name(), false);
-                    IOUtils.CopyFile(item.SourcePath, uploadPath);
+                    var bmp = IOUtils.GetLocalImage(item.ProcessedPath);
+                    if(item.VectorImage != null)
+                    {
+                        item.VectorImage.RenderVectorsOnto(bmp);
+                    }
+                    IOUtils.SaveLocalImage(bmp, uploadPath);
                 }
             }
             SDConfig.ActiveInputs = activeNames.ToArray();
@@ -121,7 +130,7 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
             else if(item.ImageKind == ImageKind.Input)
             {
                 SDConfig.InitialImageSource = item.SourcePath;
-                SDConfig.InitialImageName = item.ProcessedPath;
+                SDConfig.InitialImageName = IOUtils.SDUploadsFolder + IOUtils.ImageName(item.ImageKind.Name(), false);
             }
             else if(item.ImageKind == ImageKind.Mask)
             {
