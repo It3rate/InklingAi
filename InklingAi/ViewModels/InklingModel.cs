@@ -83,34 +83,6 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         }
         else
         {
-            var activeNames = new List<string>();
-            SDConfig.ControlNetConfigs.Clear();
-            var aa = InfluenceData.ActiveItems;
-            foreach(var item in aa)
-            {
-                activeNames.Add(item.ImageKind.Name());
-                if (item.ImageKind.IsControlNet() && item.SideModule is ControlNetConfig cnc)
-                {
-                    SDConfig.ControlNetConfigs.Add(cnc);
-                    if(item.VectorImage != null)
-                    {
-
-                    }
-                    IOUtils.CopyFile(cnc.ImagePath, cnc.UploadPath);
-                }
-                else
-                {
-                    var uploadPath = IOUtils.SDUploadsFolder + IOUtils.ImageName(item.ImageKind.Name(), false);
-                    var bmp = IOUtils.GetLocalImage(item.ProcessedPath);
-                    if(item.VectorImage != null)
-                    {
-                        item.VectorImage.RenderVectorsOnto(bmp);
-                    }
-                    IOUtils.SaveLocalImage(bmp, uploadPath);
-                }
-            }
-            SDConfig.ActiveInputs = activeNames.ToArray();
-
             path = await sdController.Generate(SDConfig);
         }
 
@@ -121,22 +93,35 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
 
     private void MergeInfluenceData()
     {
+        var activeNames = new List<string>();
+        SDConfig.ControlNetConfigs.Clear();
         foreach (var item in InfluenceData.ActiveItems)
         {
-            if (item.ImageKind.IsControlNet())
+            activeNames.Add(item.ImageKind.Name());
+            if (item.ImageKind.IsControlNet() && item.SideModule is ControlNetConfig cnc)
             {
-
+                SDConfig.ControlNetConfigs.Add(cnc);
+                var bmp = IOUtils.GetLocalImage(item.ProcessedPath);
+                if (item.VectorImage != null && bmp != null)
+                {
+                    item.VectorImage.RenderVectorsOnto(bmp);
+                }
+                IOUtils.SaveLocalImage(bmp, cnc.UploadPath);
             }
-            else if(item.ImageKind == ImageKind.Input)
+            else
             {
                 SDConfig.InitialImageSource = item.SourcePath;
-                SDConfig.InitialImageName = IOUtils.SDUploadsFolder + IOUtils.ImageName(item.ImageKind.Name(), false);
-            }
-            else if(item.ImageKind == ImageKind.Mask)
-            {
-
+                var uploadPath = IOUtils.SDUploadsFolder + IOUtils.ImageName(item.ImageKind.Name(), false);
+                var bmp = IOUtils.GetLocalImage(item.ProcessedPath);
+                if (item.VectorImage != null && bmp != null)
+                {
+                    item.VectorImage.RenderVectorsOnto(bmp);
+                }
+                IOUtils.SaveLocalImage(bmp, uploadPath);
+                SDConfig.InitialImageName = uploadPath;
             }
         }
+        SDConfig.ActiveInputs = activeNames.ToArray();
     }
     public void OnDelete()
     {

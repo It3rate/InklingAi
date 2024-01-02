@@ -20,6 +20,8 @@ using InklingAi.Utils;
 using AIEnv.Utils;
 using Avalonia.Interactivity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using MathNet.Numerics;
+using Avalonia.Controls.Shapes;
 
 public abstract class BaseImage : UserControl
 {
@@ -108,20 +110,31 @@ public abstract class BaseImage : UserControl
     }
     protected virtual void SetWith(ImageData imageData)
     {
-        Data.SourcePath = imageData.SourcePath;
-        Data.ProcessedPath = imageData.ProcessedPath;
+        SetWith(imageData.SourcePath, imageData.ProcessedPath);
+    }
+    protected virtual void SetWith(string path, string processedPath = "")
+    {
+        if (Data.ImageKind.HasFixedPath())
+        {
+            IOUtils.CopyFile(path, Data.SourcePath);
+            if(processedPath != "")
+            {
+                IOUtils.CopyFile(processedPath, Data.ProcessedPath);
+            }
+            else
+            {
+                IOUtils.CopyFile(path, Data.ProcessedPath);
+            }
+            Data.SourcePath = Data.SourcePath;
+            Data.ProcessedPath = Data.ProcessedPath;
+        }
+        else
+        {
+            Data.SourcePath = path;
+            Data.ProcessedPath = processedPath == "" ? path : processedPath;
+        }
         Data.Origin = ImageOrigin.Input;
         InvalidateVisual();
-    }
-    protected virtual void CopyWith(ImageData imageData)
-    {
-        IOUtils.CopyFile(imageData.SourcePath, Data.SourcePath);
-        Data.ReloadSourceImage();
-        IOUtils.CopyFile(imageData.SourcePath, Data.ProcessedPath);
-        Data.ReloadProcessedImage();
-        //Data.Origin = ImageOrigin.Input;
-        //Data.CurrentImage = Data.SourceImage;
-        //InvalidateVisual();
     }
     private SKBitmap? _currentImage;
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -269,33 +282,30 @@ public abstract class BaseImage : UserControl
         if (dataObject.Contains(DataFormats.Files))
         {
             var data = dataObject.Get(DataFormats.Files);
+            string path = "";
+            string processedPath = "";
             if (data is IEnumerable<IStorageItem> dataList)
             {
                 var firstFile = dataList.FirstOrDefault();
-                var path = firstFile?.Path.AbsolutePath ?? "";
-                if (path != "" && File.Exists(path))
-                {
-                    //SetImage(new ImageData(ImageKind.File, path));
-                }
+                path = firstFile?.Path.AbsolutePath ?? "";
             }
             else if (data is IEnumerable<ImageData> imageDataList)
             {
                 var first = imageDataList.First();
                 if (first != null)
                 {
-                    if (Data.ImageKind.HasFixedPath())
-                    {
-                        CopyWith(first);
-                    }
-                    else
-                    {
-                        SetWith(first);
-                    }
+                    path = first.SourcePath;
+                    processedPath = first.ProcessedPath;
                 }
             }
-            else if (data is string filename)
+            else if (data is string sData)
             {
-                //SetImage(new ImageData(ImageKind.File, filename));
+                path = sData;
+            }
+
+            if (path != "" && File.Exists(path))
+            {
+                SetWith(path, processedPath);
             }
         }
     }
