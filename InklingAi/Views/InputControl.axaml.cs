@@ -11,20 +11,37 @@ namespace InklingAi.Views
 
     public partial class InputControl : UserControl
     {
+        private InklingModel _model = InklingModel.Instance;
+
         public static readonly StyledProperty<ImageData> ItemDataProperty =
             AvaloniaProperty.Register<InputControl, ImageData>(nameof(ItemData));
-
         public ImageData? ItemData
         {
             get { return GetValue(ItemDataProperty); }
             set { SetValue(ItemDataProperty, value); }
+        }
+
+        public static readonly StyledProperty<AspectKind> AspectKindProperty =
+            AvaloniaProperty.Register<InputControl, AspectKind>(nameof(AspectKind));
+        public AspectKind? AspectKind
+        {
+            get { return GetValue(AspectKindProperty); }
+            set { SetValue(AspectKindProperty, value); }
         }
         public InputControl()
         {
             InitializeComponent();
             _expander.Expanded += OnExpanded;
             _expander.Collapsed += OnCollapsed;
+            _model.AspectChanged += OnAspectChanged;
         }
+
+
+        private void OnAspectChanged()
+        {
+            //Trace.WriteLine("input control aspect change " + _model.SDConfig.AspectKind);
+        }
+
 
         protected override void OnLoaded(RoutedEventArgs e)
         {

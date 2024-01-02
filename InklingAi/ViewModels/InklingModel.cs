@@ -45,6 +45,7 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         get => _mainImage;
         set => SetProperty(ref _mainImage, value);
     }
+    public event Action AspectChanged;
 
 
     public InklingModel() // this needs to be public for design time access in MainView.
@@ -64,6 +65,10 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         OnChangeModel("mnRevAnimated");
     }
 
+    public void InvokeAspectChanged(AspectKind kind)
+    {
+        AspectChanged?.Invoke();
+    }
     #region Commands
     public ICommand GenerateCommand { get; }
     public ICommand DeleteCommand { get; }
@@ -132,15 +137,21 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         InfluenceData.AllowControlNet(modelName != "mnDalle3");
     }
 
-    public double AspectRatio => SDConfig.AspectSize.Width / SDConfig.AspectSize.Height;
-    //private void ChangeAspectSize(string? aspect)
+    //public double AspectRatio => SDConfig.AspectSize.Width / SDConfig.AspectSize.Height;
+    //private void ChangeAspectSize(AspectKind kind)
     //{
-    //    if (aspect == "Portrait")
-    //        SDConfig.AspectSize = new IntSize(512, 640);
-    //    else if (aspect == "Square")
-    //        SDConfig.AspectSize = new IntSize(512, 512);
-    //    else if (aspect == "Landscape")
-    //        SDConfig.AspectSize = new IntSize(640, 512);
+    //    switch (kind)
+    //    {
+    //        case AspectKind.Portrait:
+    //            SDConfig.AspectSize = new IntSize(512, 640);
+    //            break;
+    //        case AspectKind.Square:
+    //            SDConfig.AspectSize = new IntSize(512, 512);
+    //            break;
+    //        case AspectKind.Landscape:
+    //            SDConfig.AspectSize = new IntSize(640, 512);
+    //            break;
+    //    }
     //}
     #endregion
 

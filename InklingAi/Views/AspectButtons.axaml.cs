@@ -4,9 +4,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using InklingAi.ViewModels;
 
 public partial class AspectButtons : ButtonSet
 {
+    private InklingModel _model = InklingModel.Instance;
+
     public static readonly StyledProperty<int> SelectedIndexProperty =
         AvaloniaProperty.Register<AspectButtons, int>(nameof(SelectedIndex), defaultBindingMode: BindingMode.TwoWay);
 
@@ -34,5 +37,6 @@ public partial class AspectButtons : ButtonSet
                 SelectedIndex = 2;
                 break;
         }
+        _model.InvokeAspectChanged((AspectKind)SelectedIndex);
     }
 }

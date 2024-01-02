@@ -87,7 +87,7 @@
         public IntSize _aspectSize = new IntSize(640, 512);
         [JsonIgnore]
         //[JsonProperty("aspect_size")]
-        public IntSize AspectSize { get => _aspectSize; set => _aspectSize = value; }
+        public IntSize AspectSize { get => _aspectSize; private set => _aspectSize = value; }
 
         [JsonIgnore]
         private bool _seedUnlocked = true;
@@ -107,23 +107,23 @@
         [JsonIgnore]
         public int[]? GeneratedRegionSize;
 
-        private int _aspectIndex;
+        private AspectKind _aspectKind;
         [JsonIgnore]
-        public int AspectIndex
+        public AspectKind AspectKind
         {
-            get => _aspectIndex;
+            get => _aspectKind;
             set
             {
-                _aspectIndex = value;
-                switch (_aspectIndex)
+                _aspectKind = value;
+                switch (_aspectKind)
                 {
-                    case 0:
+                    case AspectKind.Portrait:
                         AspectSize = new IntSize(512, 640);
                         break;
-                    case 1:
+                    case AspectKind.Square:
                         AspectSize = new IntSize(512, 512);
                         break;
-                    case 2:
+                    case AspectKind.Landscape:
                         AspectSize = new IntSize(640, 512);
                         break;
                 }

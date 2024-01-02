@@ -19,7 +19,9 @@
 			<ListBox ItemsSource="{Binding InfluenceData.InputItems}" >
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<controls:InputControl ItemData="{Binding}"/>
+						<controls:InputControl 
+              AspectKind="{Binding Prompt.AspectKind, Mode=TwoWay}"
+              ItemData="{Binding}"/>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
