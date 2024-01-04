@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using DynamicData;
+using InklingAi.Utils;
 using InklingAi.Views;
 using InkPad.Adapters;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -104,12 +105,6 @@ public class Selection : IEnumerable<ISelectableElement>
     IEnumerator IEnumerable.GetEnumerator() => _internalList.GetEnumerator();
     public int[] GetIds() => _internalList.Select(item => item.Id).ToArray();
 
-    public SKMatrix Transform(float dx, float dy, float rotation)
-    {
-        var matrix = CreateTransformMatrix(Bounds, dx, dy, rotation);
-        ApplyMatrixToPaths(matrix);
-        return matrix;
-    }
     public SKRect Bounds
     {
         get
@@ -127,15 +122,12 @@ public class Selection : IEnumerable<ISelectableElement>
             return totalBounds;
         }
     }
-    public static SKMatrix CreateTransformMatrix(SKRect boundingBox, float dx, float dy, float rotationDegrees)
+    public SKMatrix Transform(float dx, float dy, float rotation)
     {
-        var matrix = SKMatrix.CreateIdentity();
-        matrix = matrix.PreConcat(SKMatrix.CreateTranslation(-boundingBox.MidX, -boundingBox.MidY));
-        matrix = matrix.PreConcat(SKMatrix.CreateRotationDegrees(rotationDegrees));
-        matrix = matrix.PreConcat(SKMatrix.CreateTranslation(boundingBox.MidX + dx, boundingBox.MidY + dy));
+        var matrix = Bounds.CreateTransformMatrix(dx, dy, rotation);
+        ApplyMatrixToPaths(matrix);
         return matrix;
     }
-
     public void ApplyMatrixToPaths(SKMatrix matrix)
     {
         foreach (var path in _internalList)

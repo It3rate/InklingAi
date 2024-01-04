@@ -70,6 +70,8 @@ public abstract class BaseImage : UserControl
         set { SetValue(OriginProperty, value); }
     }
 
+    public SKMatrix Matrix { get; set; } = SKMatrix.Identity;
+
     #endregion
 
     public BaseImage()
@@ -325,24 +327,17 @@ public abstract class BaseImage : UserControl
     protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize.ToAvaloniaSize(), StretchDirection.Both);
     protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize.ToAvaloniaSize());
 
+    private SKMatrix _matrix = SKMatrix.CreateIdentity();// CreateScale(1.2f, 1.2f);
     protected void DrawImage(SKCanvas canvas, SKBitmap? img, double alpha = 1.0)
     {
         if (img != null && Bounds.Width > 0 && Bounds.Height > 0)
         {
-            Rect viewPort = new Rect(Bounds.Size);
-            Size sourceSize = new Size(img.Width, img.Height);
+            var skDest = SKRect.Create(Bounds.Size.ToSKSize()); // may be non zero at top left
+            var skSource = img.Rect().AspectFit(skDest.Size);
 
-            Vector scale = _stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection.Both);
-            Size scaledSize = sourceSize * scale;
-
-            Rect destRect = viewPort
-                .CenterRect(new Rect(scaledSize))
-                .Intersect(viewPort);
-            Rect sourceRect = new Rect(sourceSize)
-                .CenterRect(new Rect(destRect.Size / scale));
-
-            var skSource = sourceRect.ToSKRect();
-            var skDest = destRect.ToSKRect();
+            SKMatrix currentMatrix = canvas.TotalMatrix;
+            SKMatrix combinedMatrix = SKMatrix.Concat(currentMatrix, _matrix);
+            canvas.SetMatrix(combinedMatrix);
 
             using (SKPaint paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High })
             {
@@ -352,6 +347,7 @@ public abstract class BaseImage : UserControl
                 }
                 canvas.DrawBitmap(img, skSource, skDest, paint);
             }
+            canvas.SetMatrix(currentMatrix);
         }
     }
 

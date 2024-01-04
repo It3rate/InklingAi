@@ -160,5 +160,6 @@
     {
         public static IntSize ToIntSize(this Avalonia.Size size) => new IntSize((int)size.Width, (int)size.Height);
         public static Avalonia.Size ToAvaloniaSize(this IntSize intSize) => new Avalonia.Size(intSize.Width, intSize.Height);
+        public static SKSize ToSKSize(this IntSize intSize) => new SKSize(intSize.Width, intSize.Height);
     }
 }

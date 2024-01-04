@@ -40,6 +40,14 @@ namespace InklingAi.Views
         private void OnAspectChanged()
         {
             //Trace.WriteLine("input control aspect change " + _model.SDConfig.AspectKind);
+            var aspectSize = _model.SDConfig.AspectSize;
+            _image.AspectSize = aspectSize;
+            //var ratio = aspectSize.Width / aspectSize.Height;
+            //var b = Bounds;
+            //Bounds = new Rect(b.X, b.Y, b.Width, b.Width / ratio);
+            InvalidateVisual();
+            InvalidateMeasure();
+            InvalidateArrange();
         }
 
 
