@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using Xunit;
     using System.IO;
-    using global::InklingAi.StableDiffusion;
     using InklingAi.Utils;
     using System.Collections;
     using AIEnv.Clients.StableDiffusion;
@@ -228,7 +227,7 @@
                 GeneratedImageName = "NewGeneratedImageName",
                 MaskImageName = "NewMaskImageName",
                 MaskBounds = new int[] { 5, 6, 7, 8 },
-                ImagePreservation = 1.0f,
+                ImagePreservation = 0.45f,
                 ActiveInputs = new string[] { "NewInput1", "NewInput2" },
                 StartInferenceStep = 15,
                 InitialImageSource = "NewInitialImageSource",

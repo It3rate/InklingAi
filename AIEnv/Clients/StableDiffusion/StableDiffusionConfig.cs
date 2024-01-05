@@ -22,7 +22,7 @@
         private string _generatedImageName = "";
         private string _maskImageName = "";
         private int[] _maskBounds = new int[0];
-        private float _imagePreservation = 1f; // noise strength
+        private float _imagePreservation = 0.45f; // noise strength
         private string[] _activeInputs = new string[0];
 
         private int _startInferenceStep = 0;
@@ -87,7 +87,7 @@
         public IntSize _aspectSize = new IntSize(640, 512);
         [JsonIgnore]
         //[JsonProperty("aspect_size")]
-        public IntSize AspectSize { get => _aspectSize; private set => _aspectSize = value; }
+        public IntSize AspectSize { get => _aspectSize; set => _aspectSize = value; }
 
         [JsonIgnore]
         private bool _seedUnlocked = true;
@@ -133,7 +133,7 @@
         [JsonConstructor]
         public StableDiffusionConfig(
             string basePrompt = "", string stylePrompt = "", string negativePrompt = "", int steps = 25, int startStep = 0, float guidanceScale = 7.5f,
-            int seed = -1, int callbackSteps = 5, float imagePreservation = 1f,
+            int seed = -1, int callbackSteps = 5, float imagePreservation = 0.45f,
             string initialImageName = "", string initialLatentsName = "",
             string generatedImageName = "", string maskImageName = "", int[]? maskBounds = null,
             int width = 640, int height = 512,
@@ -148,7 +148,7 @@
             GuidanceScale = guidanceScale;
             Seed = seed > -1 ? seed : new Random().Next(0, int.MaxValue);
             CallbackSteps = callbackSteps;
-            ImagePreservation = initialImageName == "" && initialLatentsName == "" ? 1 : imagePreservation;
+            ImagePreservation = initialImageName == "" && initialLatentsName == "" ? 0.45f : imagePreservation;
             InitialImageName = initialImageName;
             InitialLatentsName = initialLatentsName;
             GeneratedImageName = generatedImageName;

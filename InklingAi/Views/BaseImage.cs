@@ -350,7 +350,6 @@ public abstract class BaseImage : UserControl
             canvas.SetMatrix(currentMatrix);
         }
     }
-
 }
 
 
