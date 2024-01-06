@@ -27,7 +27,7 @@ namespace InklingAi.Views
             InitializeComponent();
             _expander.Expanded += OnExpanded;
             _expander.Collapsed += OnCollapsed;
-            _model.AspectChanged += OnAspectChanged;
+            _model.SDConfig.AspectChanged += OnAspectChanged;
         }
 
 

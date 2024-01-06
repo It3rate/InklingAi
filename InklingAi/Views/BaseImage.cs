@@ -324,8 +324,26 @@ public abstract class BaseImage : UserControl
         context.Custom((ICustomDrawOperation)renderingLogic);
         base.Render(context);
     }
-    protected override Size MeasureOverride(Size availableSize) => Stretch.CalculateSize(availableSize, AspectSize.ToAvaloniaSize(), StretchDirection.Both);
-    protected override Size ArrangeOverride(Size finalSize) => Stretch.CalculateSize(finalSize, AspectSize.ToAvaloniaSize());
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        Size sz;
+        if(Bounds.Width > 0)
+        {
+            var w = Bounds.Width;
+            sz = new Size(w, w / AspectSize.Ratio);
+        }
+        else
+        {
+            sz = AspectSize.ToAvaloniaSize();
+        }
+        var result = Stretch.CalculateSize(availableSize, sz, StretchDirection.Both);
+        return result;
+    }
+    //protected override Size ArrangeOverride(Size finalSize)
+    //{
+    //    var sz = Stretch.CalculateSize(finalSize, AspectSize.ToAvaloniaSize());
+    //    return sz;
+    //}
 
     private SKMatrix _matrix = SKMatrix.CreateIdentity();// CreateScale(1.2f, 1.2f);
     protected void DrawImage(SKCanvas canvas, SKBitmap? img, double alpha = 1.0)

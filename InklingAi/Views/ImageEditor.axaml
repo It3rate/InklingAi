@@ -11,8 +11,8 @@
     <vm:InklingModel />
   </Design.DataContext>
   
-    <Grid ColumnDefinitions="40,Auto" RowDefinitions="38,38, Auto">
-      <Label Grid.Row="0" Grid.Column="1" >Influencing Image</Label>
+    <Grid ColumnDefinitions="40,Auto" RowDefinitions="18,38, Auto">
+      <Label Grid.Row="0" Grid.Column="1" >Editor</Label>
 
       <controls:BrushToolbar
         Grid.Row="1" Grid.Column="1"
@@ -24,12 +24,13 @@
         VectorImage="{Binding InfluenceData.VectorImage}"
         Background="#303033" Margin="0,0,4,0" />
 
-      <Border Grid.Row="2" Grid.Column="2" Name="_border" Classes="image">
+      <Border Grid.Row="2" Grid.Column="2" Name="_border" Classes="image" MaxHeight="800">
         <Grid>
-          <controls:SingleImage x:Name="_editImageControl"
+          <controls:SingleImage x:Name="_editImageControl" 
             Data="{Binding InfluenceData.FocusedItem}"
             CurrentImage="{Binding InfluenceData.FocusedItem.CurrentImage}"/>
-          <ContentControl Content="{Binding InfluenceData.VectorImage}"/>
+          <ContentControl  
+            Content="{Binding InfluenceData.VectorImage}"/>
         </Grid>
       </Border>
 

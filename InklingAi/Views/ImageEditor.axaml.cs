@@ -1,3 +1,4 @@
+using System;
 using AIEnv.Clients.StableDiffusion;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,7 +12,7 @@ public partial class ImageEditor : UserControl
     public ImageEditor()
     {
         InitializeComponent();
-        _model.AspectChanged += OnAspectChanged;
+        _model.SDConfig.AspectChanged += OnAspectChanged;
     }
     private void OnAspectChanged()
     {

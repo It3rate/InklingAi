@@ -45,7 +45,6 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         get => _mainImage;
         set => SetProperty(ref _mainImage, value);
     }
-    public event Action AspectChanged;
 
 
     public InklingModel() // this needs to be public for design time access in MainView.
@@ -65,10 +64,6 @@ public partial class InklingModel : ViewModelBase, INotifyPropertyChanged
         OnChangeModel("mnRevAnimated");
     }
 
-    public void InvokeAspectChanged(AspectKind kind)
-    {
-        AspectChanged?.Invoke();
-    }
     #region Commands
     public ICommand GenerateCommand { get; }
     public ICommand DeleteCommand { get; }

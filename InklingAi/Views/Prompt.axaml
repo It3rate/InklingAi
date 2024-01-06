@@ -42,8 +42,8 @@
 			<Label>Aspect Ratio</Label>
 		</Grid>
 		<Grid Grid.Row="7" Height="50" Margin="4,0,0,0">
-			<controls:AspectButtons Grid.Column="0" 
-                              SelectedIndex="{Binding SDConfig.AspectKind, Mode=TwoWay}"/>
+			<controls:AspectButtons Grid.Column="0" Name="_aspectButtons"
+               SelectedIndex="{Binding SDConfig.AspectKind, Mode=TwoWay}"/>
 		</Grid>
 
 		<Grid Grid.Row="8" Classes="title">

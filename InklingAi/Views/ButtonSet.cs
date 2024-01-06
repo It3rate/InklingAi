@@ -29,7 +29,7 @@ public class ButtonSet : UserControl
         this.AttachedToVisualTree += OnAttachedToVisualTree;
     }
 
-    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    protected void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -61,7 +61,7 @@ public class ButtonSet : UserControl
         }
     }
 
-    private void ResetButtons(Button? selected)
+    protected void ResetButtons(Button? selected)
     {
         if (selected != null)
         {

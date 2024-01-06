@@ -8,8 +8,10 @@
     using System.IO;
     using System.Text.RegularExpressions;
 
-    public class StableDiffusionConfig 
+    public class StableDiffusionConfig
     {
+        public event Action AspectChanged;
+
         private string _basePrompt = "Gunslinger, wild west";
         private string _stylePrompt = "colorful, Victorian illustration, decorative border, style of Alphonse Mucha, Turner";
         private string _negativePrompt = "lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature";
@@ -90,6 +92,9 @@
         public IntSize AspectSize { get => _aspectSize; set => _aspectSize = value; }
 
         [JsonIgnore]
+        public float AspectRatio => _aspectSize.Width / (float)_aspectSize.Height;
+
+        [JsonIgnore]
         private bool _seedUnlocked = true;
         [JsonIgnore]
         //[JsonProperty("seed_unlocked")]
@@ -107,7 +112,7 @@
         [JsonIgnore]
         public int[]? GeneratedRegionSize;
 
-        private AspectKind _aspectKind;
+        private AspectKind _aspectKind = AspectKind.Landscape;
         [JsonIgnore]
         public AspectKind AspectKind
         {
@@ -127,6 +132,7 @@
                         AspectSize = new IntSize(640, 512);
                         break;
                 }
+                InvokeAspectChanged(_aspectKind);
             }
         }
 
@@ -168,6 +174,10 @@
         public StableDiffusionConfig(StableDiffusionConfig config)
         {
             CopyPropertiesFrom(config);
+        }
+        public void InvokeAspectChanged(AspectKind kind)
+        {
+            AspectChanged?.Invoke();
         }
 
         public string GenerateImageName()

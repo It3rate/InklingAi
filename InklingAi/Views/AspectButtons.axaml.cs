@@ -23,6 +23,21 @@ public partial class AspectButtons : ButtonSet
     {
         InitializeComponent();
     }
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        var prop = change.Property;
+        switch (prop.Name)
+        {
+            case nameof(SelectedIndex):
+                if (SelectedIndex >= 0 && _buttons.Count > SelectedIndex)
+                {
+                    ResetButtons(_buttons[SelectedIndex]);
+                    _model.SDConfig.AspectKind = (AspectKind)SelectedIndex;
+                }
+                break;
+        }
+    }
     private void OnButtonClicked(object sender, RoutedEventArgs e)
     {
         var button = (Button)sender;
@@ -38,6 +53,5 @@ public partial class AspectButtons : ButtonSet
                 SelectedIndex = 2;
                 break;
         }
-        _model.InvokeAspectChanged((AspectKind)SelectedIndex);
     }
 }
