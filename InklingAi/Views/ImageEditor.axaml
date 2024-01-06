@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					   xmlns:controls="using:InklingAi.Views"
+						 xmlns:vm="clr-namespace:InklingAi.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="InklingAi.Views.ImageEditor">
+
+  <Design.DataContext>
+    <vm:InklingModel />
+  </Design.DataContext>
+  
+    <Grid ColumnDefinitions="40,Auto" RowDefinitions="38,38, Auto">
+      <Label Grid.Row="0" Grid.Column="1" >Influencing Image</Label>
+
+      <controls:BrushToolbar
+        Grid.Row="1" Grid.Column="1"
+        VectorImage="{Binding InfluenceData.VectorImage}"
+        Background="#303033" Margin="0,0,0,4" />
+
+      <controls:DrawingToolbar
+        Grid.Row="2" Grid.Column="0"
+        VectorImage="{Binding InfluenceData.VectorImage}"
+        Background="#303033" Margin="0,0,4,0" />
+
+      <Border Grid.Row="2" Grid.Column="2" Name="_border" Classes="image">
+        <Grid>
+          <controls:SingleImage x:Name="_editImageControl"
+            Data="{Binding InfluenceData.FocusedItem}"
+            CurrentImage="{Binding InfluenceData.FocusedItem.CurrentImage}"/>
+          <ContentControl Content="{Binding InfluenceData.VectorImage}"/>
+        </Grid>
+      </Border>
+
+    </Grid>
+  
+</UserControl>

@@ -8,8 +8,8 @@
     using Xunit;
     using System.IO;
     using InklingAi.Utils;
-    using System.Collections;
     using AIEnv.Clients.StableDiffusion;
+    using AIEnv.Utils;
 
     public class StableDiffusionConfigTests
     {

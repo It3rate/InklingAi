@@ -85,7 +85,7 @@ public class TransformElementTask : TaskBase
 		return result;
 	}
 
-    private bool _wasRun = false;
+ //   private bool _wasRun = false;
 	public override void RunTask()
     {
         var selected = Target.Selection ?? throw new ArgumentNullException(nameof(Target.Selection));

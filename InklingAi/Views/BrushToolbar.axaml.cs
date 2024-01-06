@@ -28,7 +28,7 @@ public partial class BrushToolbar : UserControl
 		set => SetValue(VectorImageProperty, value);
 	}
 
-	private ColorButton<InklingColorPickerWindow> _colBtn;
+	//private ColorButton<InklingColorPickerWindow> _colBtn;
 	public BrushToolbar()
     {
 		InitializeComponent();

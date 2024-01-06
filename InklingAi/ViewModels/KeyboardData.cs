@@ -120,9 +120,9 @@ public class KeyboardData
 		}
 		else if (IsShiftDown)
 		{
-			switch (e.Key)
-			{
-			}
+			//switch (e.Key)
+			//{
+			//}
 		}
 		else
 		{

@@ -20,7 +20,6 @@ using SkiaSharp;
 
 public class VectorImage : BaseImage, INotifyPropertyChanged
 {
-	private InklingModel _model => InklingModel.Instance;
 	private Engine _engine => _model.Engine;
     private KeyboardData _keyboardData => _model.KeyboardData;
 

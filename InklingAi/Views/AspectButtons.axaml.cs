@@ -1,5 +1,6 @@
 namespace InklingAi.Views;
 
+using AIEnv.Clients.StableDiffusion;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
