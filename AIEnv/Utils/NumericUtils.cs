@@ -19,7 +19,7 @@
         public int Width { get; }
         public int Height { get; }
 
-        public float Ratio => Width / (float)Height;
+        public float Ratio => Height != 0 ? Width / (float)Height : 0;
 
         public override bool Equals(object? obj)
         {

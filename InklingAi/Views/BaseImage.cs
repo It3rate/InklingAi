@@ -22,6 +22,7 @@ using Avalonia.Interactivity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using MathNet.Numerics;
 using Avalonia.Controls.Shapes;
+using System.Diagnostics;
 
 public abstract class BaseImage : UserControl
 {
@@ -324,26 +325,21 @@ public abstract class BaseImage : UserControl
         context.Custom((ICustomDrawOperation)renderingLogic);
         base.Render(context);
     }
+    
     protected override Size MeasureOverride(Size availableSize)
     {
-        Size sz;
-        if(Bounds.Width > 0)
-        {
-            var w = Bounds.Width;
-            sz = new Size(w, w / AspectSize.Ratio);
-        }
-        else
-        {
-            sz = AspectSize.ToAvaloniaSize();
-        }
+        Size sz = AspectSize.ToAvaloniaSize();
         var result = Stretch.CalculateSize(availableSize, sz, StretchDirection.Both);
         return result;
     }
-    //protected override Size ArrangeOverride(Size finalSize)
-    //{
-    //    var sz = Stretch.CalculateSize(finalSize, AspectSize.ToAvaloniaSize());
-    //    return sz;
-    //}
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var wr = (float)finalSize.Width / (float)AspectSize.Width;
+        var hr = (float)finalSize.Height / (float)AspectSize.Height;
+        var r = MathF.Min(MathF.Max(wr, hr), 1f / AspectSize.Ratio);
+        var sz = new Size(AspectSize.Width / r, AspectSize.Height / r);
+        return sz;
+    }
 
     private SKMatrix _matrix = SKMatrix.CreateIdentity();// CreateScale(1.2f, 1.2f);
     protected void DrawImage(SKCanvas canvas, SKBitmap? img, double alpha = 1.0)
