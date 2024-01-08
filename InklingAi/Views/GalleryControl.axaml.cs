@@ -34,35 +34,8 @@ namespace InklingAi.Views
         private void UpdateHalfWidth()
         {
             var itemsPerRow = 4f;// (float)lbGallery.Items.Count;
-            HalfWidth = (int)(Math.Floor(lbGallery.Bounds.Width / itemsPerRow) -( 6f));
-        }
-        private Avalonia.Point? _startPoint;
-
-        private void OnImagePointerPressed(object sender, PointerPressedEventArgs e)
-        {
-            _startPoint = e.GetPosition(this);
+            HalfWidth = (int)(Math.Floor(lbGallery.Bounds.Width / itemsPerRow) - 4);
         }
 
-        private void OnImagePointerMoved(object sender, PointerEventArgs e)
-        {
-            if (!_startPoint.HasValue)
-                return;
-
-            var currentPosition = e.GetPosition(this);
-            var diff = currentPosition - _startPoint.Value;
-
-            //if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-            //    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
-            //{
-            //    // Start the drag operation
-            //    DragDrop.DoDragDrop(new DataObject(DataFormats.FileDrop, new string[] { /* paths */ }), DragDropEffects.Copy);
-            //    _startPoint = null;
-            //}
-        }
-
-        private void OnImagePointerReleased(object sender, PointerReleasedEventArgs e)
-        {
-            _startPoint = null;
-        }
     }
 }
