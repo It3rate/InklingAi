@@ -23,9 +23,7 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
 	private Engine _engine => _model.Engine;
     private KeyboardData _keyboardData => _model.KeyboardData;
 
-    // todo: Move vector data to it's own model class, add bitmap rendering on demand.
-    //public override ImageData? Data { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
+    public ImageData? BackingImageData { get; set; }
     public BrushPanelMode BrushPanelMode { get; set; } = BrushPanelMode.None;
     public DrawPanelMode DrawPanelMode { get; set; } = DrawPanelMode.Paint;
     public DrawState CurrentDrawState { get; set; } = DrawState.Black;
@@ -139,6 +137,9 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
             case DrawPanelMode.Paint:
                 _curPath.AddPoint(currentPosition.X, currentPosition.Y);
                 break;
+            case DrawPanelMode.ZoomPan:
+                BackingImageData.WorkingMatrix = SKMatrix.Identity;
+                break;
         }
     }
     protected override void OnMouseMove(Point currentPosition)
@@ -176,6 +177,10 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
             case DrawPanelMode.Paint:
                 _curPath.AddPoint(currentPosition.X, currentPosition.Y);
                 break;
+            case DrawPanelMode.ZoomPan:
+                BackingImageData.WorkingMatrix.TransX = (float)(currentPosition.X - _startDragPoint.X);
+                BackingImageData.WorkingMatrix.TransY = (float)(currentPosition.Y - _startDragPoint.Y);
+                break;
         }
 
         InvalidateVisual();
@@ -209,6 +214,13 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
                 break;
             case DrawPanelMode.Paint:
                 _curPath.AddPoint(currentPosition.X, currentPosition.Y);
+                break;
+            case DrawPanelMode.ZoomPan:
+                BackingImageData.WorkingMatrix.TransX = (float)(currentPosition.X - _startDragPoint.X);
+                BackingImageData.WorkingMatrix.TransY = (float)(currentPosition.Y - _startDragPoint.Y);
+                // add to real matrix
+                BackingImageData.Matrix = BackingImageData.Matrix.PostConcat(BackingImageData.WorkingMatrix);
+                BackingImageData.WorkingMatrix = SKMatrix.Identity;
                 break;
         }
 
@@ -524,6 +536,14 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
     private UIRenderUtils _renderUtil = new UIRenderUtils();
     protected override void RenderSkia(SKCanvas canvas)
     {
+        SKMatrix baseMatrix = canvas.TotalMatrix;
+        if (BackingImageData != null)
+        {
+            var combinedMatrix = SKMatrix.Concat(baseMatrix, BackingImageData.Matrix);
+            combinedMatrix = SKMatrix.Concat(combinedMatrix, BackingImageData.WorkingMatrix);
+            canvas.SetMatrix(combinedMatrix);
+        }
+
         for (int i = 0; i < _paths.Count; i++) // Note: foreach can have collection modified issues
         {
             _renderUtil.DrawShape(canvas, _paths[i]);
@@ -538,6 +558,7 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
         }
         else
         {
+            canvas.SetMatrix(baseMatrix);
             if (_curPath != null && _curPath.HasContent)
             {
                 _renderUtil.DrawShape(canvas, _curPath, true); // in progress drawing
@@ -549,6 +570,8 @@ public class VectorImage : BaseImage, INotifyPropertyChanged
 		    }
         }
         _selectionHandles.RenderSkia(canvas);
+        canvas.SetMatrix(baseMatrix);
+
     }
 
     #endregion

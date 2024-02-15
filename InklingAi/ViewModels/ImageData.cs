@@ -162,6 +162,9 @@
             }
         }
 
+        public SKMatrix Matrix { get; set; } = SKMatrix.Identity;
+        public SKMatrix WorkingMatrix = SKMatrix.Identity;
+
         public ImageData(string sourcePath)
         {
             Folder = Path.GetPathRoot(sourcePath) ?? "";
@@ -172,6 +175,7 @@
         {
             VectorImage = new VectorImage(brushSettings);
             VectorImage.Name = InputTitle;
+            VectorImage.BackingImageData = this;
 
             Folder = folder;
             _sourcePath = IOUtils.ImagePath(brushSettings.ImageKind.Name(), true);

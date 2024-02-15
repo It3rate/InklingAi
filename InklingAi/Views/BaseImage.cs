@@ -23,6 +23,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using MathNet.Numerics;
 using Avalonia.Controls.Shapes;
 using System.Diagnostics;
+using InkPad.Pads;
 
 public abstract class BaseImage : UserControl
 {
@@ -36,11 +37,12 @@ public abstract class BaseImage : UserControl
 
     #region Avalonia Properties
 
+    protected ImageData _data;
     public static readonly StyledProperty<ImageData> DataProperty = AvaloniaProperty.Register<BaseImage, ImageData>(nameof(Data));
     public ImageData Data
     {
         get => GetValue(DataProperty);
-        set => SetValue(DataProperty, value);
+        set { _data = value; SetValue(DataProperty, value); }
     }
 
     public static readonly StyledProperty<SKBitmap?> CurrentImageProperty = AvaloniaProperty.Register<BaseImage, SKBitmap?>(nameof(CurrentImage));
@@ -146,6 +148,9 @@ public abstract class BaseImage : UserControl
         var prop = change.Property;
         switch (prop.Name)
         {
+            case nameof(Data):
+                _data = Data;
+                break;
             case nameof(AspectSize):
                 InvalidateMeasure();
                 InvalidateVisual();
@@ -324,8 +329,10 @@ public abstract class BaseImage : UserControl
         renderingLogic.Bounds = new Rect(0, 0, this.Bounds.Width, this.Bounds.Height);
         context.Custom((ICustomDrawOperation)renderingLogic);
         base.Render(context);
+
     }
-    
+
+
     protected override Size MeasureOverride(Size availableSize)
     {
         Size sz = AspectSize.ToAvaloniaSize();
@@ -341,7 +348,6 @@ public abstract class BaseImage : UserControl
         return sz;
     }
 
-    private SKMatrix _matrix = SKMatrix.CreateIdentity();// CreateScale(1.2f, 1.2f);
     protected void DrawImage(SKCanvas canvas, SKBitmap? img, double alpha = 1.0)
     {
         if (img != null && Bounds.Width > 0 && Bounds.Height > 0)
@@ -350,8 +356,12 @@ public abstract class BaseImage : UserControl
             var skSource = img.Rect().AspectFit(skDest.Size);
 
             SKMatrix currentMatrix = canvas.TotalMatrix;
-            SKMatrix combinedMatrix = SKMatrix.Concat(currentMatrix, _matrix);
-            canvas.SetMatrix(combinedMatrix);
+            if (_data != null)
+            {
+                var combinedMatrix = SKMatrix.Concat(currentMatrix, _data.Matrix);
+                combinedMatrix = SKMatrix.Concat(combinedMatrix, _data.WorkingMatrix);
+                canvas.SetMatrix(combinedMatrix);
+            }
 
             using (SKPaint paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High })
             {
@@ -361,7 +371,11 @@ public abstract class BaseImage : UserControl
                 }
                 canvas.DrawBitmap(img, skSource, skDest, paint);
             }
-            canvas.SetMatrix(currentMatrix);
+
+            if (_data != null)
+            {
+                canvas.SetMatrix(currentMatrix);
+            }
         }
     }
 }
